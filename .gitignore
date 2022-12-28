@@ -1,0 +1,10 @@
+# files created during and after compilation
+build/
+bin/
+
+# files and folders created while packing releases (plus the release itself)
+release-tmp/
+Open-Manifold.zip
+
+# test-compilation script
+test.bat

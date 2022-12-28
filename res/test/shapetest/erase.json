@@ -1,0 +1,189 @@
+[
+	{
+		"name":"Erase",
+		"bg_color": 15,
+		"bpm": 120
+	},
+	{
+		"shape": 1,
+		"color": 0,
+		"x": 7,
+		"y": 7,
+		"scale": 8
+	},
+	{
+		"shape": 0,
+		"color": 16,
+		"x": 7,
+		"y": 4,
+		"scale": 4
+	},
+	{
+		"shape": 2,
+		"color": 16,
+		"x": 3,
+		"y": 5,
+		"scale": 2
+	},
+	{
+		"shape": 2,
+		"color": 16,
+		"x": 11,
+		"y": 5,
+		"scale": 2
+	},
+	{
+		"shape": 2,
+		"color": 16,
+		"x": 4,
+		"y": 2,
+		"scale": 2
+	},
+	{
+		"shape": 2,
+		"color": 16,
+		"x": 10,
+		"y": 2,
+		"scale": 2
+	},
+	{
+		"shape": 1,
+		"color": 16,
+		"x": 7,
+		"y": 1,
+		"scale": 2
+	},
+	{
+		"shape": 1,
+		"color": 16,
+		"x": 7,
+		"y": 10,
+		"scale": 3
+	},
+	{
+		"shape": 2,
+		"color": 16,
+		"x": 4,
+		"y": 8,
+		"scale": 1
+	},
+	{
+		"shape": 2,
+		"color": 16,
+		"x": 10,
+		"y": 8,
+		"scale": 1
+	},
+	{
+		"shape": 1,
+		"color": 16,
+		"x": 12,
+		"y": 10,
+		"scale": 2
+	},
+	{
+		"shape": 1,
+		"color": 16,
+		"x": 2,
+		"y": 10,
+		"scale": 2
+	},
+	{
+		"shape": 2,
+		"color": 16,
+		"x": 1,
+		"y": 9,
+		"scale": 2
+	},
+	{
+		"shape": 2,
+		"color": 16,
+		"x": 13,
+		"y": 9,
+		"scale": 2
+	},
+	{
+		"shape": 0,
+		"color": 16,
+		"x": 13,
+		"y": 12,
+		"scale": 2
+	},
+	{
+		"shape": 0,
+		"color": 16,
+		"x": 1,
+		"y": 12,
+		"scale": 2
+	},
+	{
+		"shape": 1,
+		"color": 16,
+		"x": 5,
+		"y": 13,
+		"scale": 1
+	},
+	{
+		"shape": 0,
+		"color": 16,
+		"x": 4,
+		"y": 14,
+		"scale": 2
+	},
+	{
+		"shape": 1,
+		"color": 16,
+		"x": 9,
+		"y": 13,
+		"scale": 1
+	},
+	{
+		"shape": 0,
+		"color": 16,
+		"x": 10,
+		"y": 14,
+		"scale": 2
+	},
+	{
+		"shape": 1,
+		"color": 0,
+		"x": 5,
+		"y": 4,
+		"scale": 1
+	},
+	{
+		"shape": 1,
+		"color": 0,
+		"x": 9,
+		"y": 4,
+		"scale": 1
+	},
+	{
+		"shape": 2,
+		"color": 0,
+		"x": 7,
+		"y": 10,
+		"scale": 2
+	},
+	{
+		"shape": 0,
+		"color": 16,
+		"x": 7,
+		"y": 9,
+		"scale": 2
+	},
+	{
+		"shape": 0,
+		"color": 0,
+		"x": 7,
+		"y": 10,
+		"scale": 1
+	},
+	{
+		"shape": 2,
+		"color": 0,
+		"x": 7,
+		"y": 9,
+		"scale": 1
+	}
+]

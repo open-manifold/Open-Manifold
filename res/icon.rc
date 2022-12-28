@@ -1,0 +1,22 @@
+#include "../src/version.h"
+
+id ICON "icon.ico"
+1 VERSIONINFO
+FILEVERSION VERSION_MAJOR, VERSION_MINOR, VERSION_PATCH, 0
+PRODUCTVERSION VERSION_MAJOR, VERSION_MINOR, VERSION_PATCH, 0
+BEGIN
+    BLOCK "StringFileInfo"
+    BEGIN
+        BLOCK "040904E4"
+        BEGIN
+            VALUE "FileDescription", "Open Manifold"
+            VALUE "InternalName", "Open-Manifold"
+            VALUE "LegalCopyright", "(c) 2021-2022 SuperFromND et al."
+            VALUE "ProductName", "Open Manifold"
+        END
+    END
+    BLOCK "VarFileInfo"
+    BEGIN
+        VALUE "Translation", 0x409, 1252
+    END
+END

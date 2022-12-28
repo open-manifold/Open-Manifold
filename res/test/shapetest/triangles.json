@@ -1,0 +1,63 @@
+[
+	{
+		"name":"Triangles",
+		"bg_color": 9,
+		"bpm": 120
+	},
+	{
+		"shape": 2,
+		"color": 15,
+		"x": 7,
+		"y": 7,
+		"scale": 8
+	},
+	{
+		"shape": 2,
+		"color": 0,
+		"x": 6,
+		"y": 8,
+		"scale": 7
+	},
+	{
+		"shape": 2,
+		"color": 15,
+		"x": 5,
+		"y": 9,
+		"scale": 6
+	},
+	{
+		"shape": 2,
+		"color": 0,
+		"x": 4,
+		"y": 10,
+		"scale": 5
+	},
+	{
+		"shape": 2,
+		"color": 15,
+		"x": 3,
+		"y": 11,
+		"scale": 4
+	},
+	{
+		"shape": 2,
+		"color": 0,
+		"x": 2,
+		"y": 12,
+		"scale": 3
+	},
+	{
+		"shape": 2,
+		"color": 15,
+		"x": 1,
+		"y": 13,
+		"scale": 2
+	},
+	{
+		"shape": 2,
+		"color": 0,
+		"x": 0,
+		"y": 14,
+		"scale": 1
+	}
+]

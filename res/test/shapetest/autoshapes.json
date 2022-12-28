@@ -1,0 +1,53 @@
+[
+	{
+		"name": "Auto Shapes",
+		"bpm": 120,
+		"bg_color": 0
+	},
+	{
+		"shape": 0,
+		"color": 6,
+		"x": 4,
+		"y": 7,
+		"scale": 1,
+		"auto_shapes": [
+			{
+				"shape": 1,
+				"color": 5,
+				"x": 7,
+				"y": 7,
+				"scale": 1
+			},
+			{
+				"shape": 2,
+				"color": 3,
+				"x": 10,
+				"y": 7,
+				"scale": 1
+			}
+		]
+	},
+	{
+		"shape": 0,
+		"color": 2,
+		"x": 7,
+		"y": 4,
+		"scale": 1,
+		"auto_shapes": [
+			{
+				"shape": 1,
+				"color": 1,
+				"x": 7,
+				"y": 10,
+				"scale": 1
+			},
+			{
+				"shape": 2,
+				"color": 4,
+				"x": 10,
+				"y": 10,
+				"scale": 1
+			}
+		]
+	}
+]
