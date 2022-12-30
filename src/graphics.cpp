@@ -1309,8 +1309,8 @@ bool draw_title(int menu_selection, int frame_time) {
     return true;
 }
 
-bool draw_options(int option_selection, int music_volume, int sfx_volume, bool mono, int frame_cap, bool fps, bool vsync, bool fullscreen, bool grid, int frame_time) {
-    const char *menu_items[10][2] = {
+bool draw_options(int option_selection, int music_volume, int sfx_volume, bool mono, int frame_cap, bool fps, bool vsync, bool fullscreen, bool grid, int controller_index, int frame_time) {
+    const char *menu_items[11][2] = {
         {"Music Volume",    "Controls the volume of music."},
         {"SFX Volume",      "Controls the volume of sound effects."},
         {"Speaker Output",  "Controls whether to output audio in mono or stereo."},
@@ -1319,6 +1319,7 @@ bool draw_options(int option_selection, int music_volume, int sfx_volume, bool m
         {"Frame Cap",       "The maximum framerate the game runs at, if V-Sync is disabled."},
         {"Fullscreen",      "Sets the game's resolution to your monitor's resolution; known as 'borderless' fullscreen."},
         {"Display Grid",    "Controls whether to display the grid overlay during gameplay."},
+        {"Controller Index","Sets which game controller to use."},
         {"Save Settings",   "Saves your settings and returns to the main menu."},
         {"Exit",            "Returns to the main menu. No changes will be saved."}
     };
@@ -1343,7 +1344,7 @@ bool draw_options(int option_selection, int music_volume, int sfx_volume, bool m
     SDL_RenderFillRect(renderer, &rect);
 
     // draws option items
-    for (int i = 0; i < 10; i++) {
+    for (int i = 0; i < 11; i++) {
         SDL_Color text_highlight = {255, 255, 255};
         string option_value = "";
 
@@ -1361,6 +1362,7 @@ bool draw_options(int option_selection, int music_volume, int sfx_volume, bool m
             case 5: option_value = std::to_string(frame_cap); break;
             case 6: option_value = fullscreen ? "Enabled" : "Disabled"; break;
             case 7: option_value = grid ? "Enabled" : "Disabled"; break;
+            case 8: option_value = std::to_string(controller_index); break;
             default: break;
         }
         

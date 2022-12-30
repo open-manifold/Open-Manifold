@@ -59,6 +59,7 @@ bool true_fullscreen_toggle = false;    // note: not used in the options menu!
 bool vsync_toggle = false;
 bool grid_toggle = true;
 bool debug_toggle = false;
+int controller_index = 0;
 
 // main-game variables
 int score = 0;
@@ -209,6 +210,7 @@ void save_settings() {
     new_config["vsync"] = vsync_toggle;
     new_config["frame_cap"] = frame_cap;
     new_config["display_grid"] = grid_toggle;
+    new_config["controller_index"] = controller_index;
 
     printf("Saving to config.json...\n");
 
@@ -238,14 +240,15 @@ void load_settings(int argc, char* argv[]) {
     }
 
     // if we're at this point, that means the JSON was parsed correctly
-    if (json_data.contains("display_fps"))  {fps_toggle = json_data["display_fps"];}
-    if (json_data.contains("fullscreen"))   {fullscreen_toggle = json_data["fullscreen"];}
-    if (json_data.contains("vsync"))        {vsync_toggle = json_data["vsync"];}
-    if (json_data.contains("frame_cap"))    {frame_cap = json_data["frame_cap"];}
-    if (json_data.contains("display_grid")) {grid_toggle = json_data["display_grid"];}
-    if (json_data.contains("music_volume")) {music_volume = json_data["music_volume"];}
-    if (json_data.contains("sfx_volume"))   {sfx_volume = json_data["sfx_volume"];}
-    if (json_data.contains("mono_toggle"))  {mono_toggle = json_data["mono_toggle"];}
+    if (json_data.contains("display_fps"))      {fps_toggle = json_data["display_fps"];}
+    if (json_data.contains("fullscreen"))       {fullscreen_toggle = json_data["fullscreen"];}
+    if (json_data.contains("vsync"))            {vsync_toggle = json_data["vsync"];}
+    if (json_data.contains("frame_cap"))        {frame_cap = json_data["frame_cap"];}
+    if (json_data.contains("display_grid"))     {grid_toggle = json_data["display_grid"];}
+    if (json_data.contains("music_volume"))     {music_volume = json_data["music_volume"];}
+    if (json_data.contains("sfx_volume"))       {sfx_volume = json_data["sfx_volume"];}
+    if (json_data.contains("mono_toggle"))      {mono_toggle = json_data["mono_toggle"];}
+    if (json_data.contains("controller_index")) {controller_index = json_data["controller_index"];}
 
     // note these parameters, they aren't exposed in the options and aren't saved in the config by default
     // however, they can still be added manually to a config if a user desires
@@ -368,7 +371,11 @@ void init_controller() {
         printf("gamecontrollerdb.txt mappings loaded.\n");
     }
 
-    controller = SDL_GameControllerOpen(0);
+    // closes current controller
+    SDL_GameControllerClose(controller);
+    controller = NULL;
+
+    controller = SDL_GameControllerOpen(controller_index);
 
     if (controller == NULL) {
         printf("[!] Error initializing controller: %s\n", SDL_GetError());
@@ -1825,10 +1832,10 @@ int main(int argc, char *argv[]) {
 
                                     case 7: grid_toggle = !grid_toggle; break;
 
-                                    case 8: save_settings();
+                                    case 9: save_settings();
                                             // the lack of break here is deliberate
 
-                                    case 9: transition_state = TITLE;
+                                    case 10: transition_state = TITLE;
                                             fade_out++;
                                             break;
 
@@ -1851,8 +1858,8 @@ int main(int argc, char *argv[]) {
                                     option_selected--;
                                 }
 
-                                if (option_selected > 9) {option_selected = 0;}
-                                if (option_selected < 0) {option_selected = 9;}
+                                if (option_selected > 10) {option_selected = 0;}
+                                if (option_selected < 0) {option_selected = 10;}
 
                                 break;
 
@@ -1862,8 +1869,8 @@ int main(int argc, char *argv[]) {
                                     option_selected++;
                                 }
 
-                                if (option_selected > 9) {option_selected = 0;}
-                                if (option_selected < 0) {option_selected = 9;}
+                                if (option_selected > 10) {option_selected = 0;}
+                                if (option_selected < 0) {option_selected = 10;}
 
                                 break;
 
@@ -1874,6 +1881,16 @@ int main(int argc, char *argv[]) {
                                         case 0: music_volume = fmax(0, music_volume - 1); set_music_volume(); break;
                                         case 1: sfx_volume = fmax(0, sfx_volume - 1); set_sfx_volume(); break;
                                         case 5: frame_cap = fmax(30, frame_cap - 1); frame_cap_ms = (1000 / frame_cap); break;
+                                        case 8: {
+                                            int max_gamepad_index = SDL_NumJoysticks() - 1;
+                                            controller_index--;
+            
+                                            if (controller_index > max_gamepad_index) {controller_index = 0;}
+                                            if (controller_index < 0) {controller_index = max_gamepad_index;}
+                                            if (max_gamepad_index <= 0) {controller_index = 0;}
+                                            init_controller();
+                                            break;
+                                        }
                                         default: break;
                                     }
                                 }
@@ -1886,6 +1903,16 @@ int main(int argc, char *argv[]) {
                                         case 0: music_volume = fmin(100, music_volume + 1); set_music_volume(); break;
                                         case 1: sfx_volume = fmin(100, sfx_volume + 1); set_sfx_volume(); break;
                                         case 5: frame_cap = fmin(1000, frame_cap + 1); frame_cap_ms = (1000 / frame_cap); break;
+                                        case 8: {
+                                            int max_gamepad_index = SDL_NumJoysticks() - 1;
+                                            controller_index++;
+            
+                                            if (controller_index > max_gamepad_index) {controller_index = 0;}
+                                            if (controller_index < 0) {controller_index = max_gamepad_index;}
+                                            if (max_gamepad_index <= 0) {controller_index = 0;}
+                                            init_controller();
+                                            break;
+                                        }
                                         default: break;
                                     }
                                 }
@@ -2030,7 +2057,7 @@ int main(int argc, char *argv[]) {
                 break;
 
             case OPTIONS:
-                draw_options(option_selected, music_volume, sfx_volume, mono_toggle, frame_cap, fps_toggle, vsync_toggle, fullscreen_toggle, grid_toggle, frame_time);
+                draw_options(option_selected, music_volume, sfx_volume, mono_toggle, frame_cap, fps_toggle, vsync_toggle, fullscreen_toggle, grid_toggle, controller_index, frame_time);
                 break;
 
             case EXIT:
