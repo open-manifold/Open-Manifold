@@ -39,8 +39,8 @@ void test_background_effect(bg_data bg_data) {
 void test_background_effect_init() {
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
     SDL_RenderClear(renderer);
-    //aux_texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGB24, SDL_TEXTUREACCESS_TARGET, height, height);
-    //SDL_QueryTexture(aux_texture, NULL, NULL, &aux_texture_w, &aux_texture_h);    
+    //aux_texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGB24, SDL_TEXTUREACCESS_TARGET, width, height);
+    //SDL_QueryTexture(aux_texture, NULL, NULL, &aux_texture_w, &aux_texture_h);
     return;
 }
 
