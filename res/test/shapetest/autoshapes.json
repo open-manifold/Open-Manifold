@@ -1,8 +1,8 @@
 [
 	{
 		"name": "Auto Shapes",
-		"bpm": 120,
 		"bg_color": 0
+		"bpm": 120,
 	},
 	{
 		"shape": 0,
