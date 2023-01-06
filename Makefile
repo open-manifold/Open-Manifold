@@ -25,7 +25,6 @@ chartest:
 
 icon: 
 	rm -rf res/icon.res
-	cd res && magick convert 256.png 128.png 64.png 32.png 16.png -compress jpeg icon.ico
 	windres res/icon.rc -O coff -o res/icon.res
 
 pkg: clean icon all
@@ -75,7 +74,7 @@ help:
 	@echo install  - Copies game assets into bin folder.
 	@echo build    - Creates build and bin folders.
 	@echo pkg      - Cleans, builds the game, and makes a ZIP. Requires Bash and 7zip!
-	@echo icon     - Creates Windows resource file. Requires ImageMagick!
+	@echo icon     - Creates Windows resource file.
 	@echo clean    - Deletes all object files.
 	@echo help     - Prints this text.
 	@echo -----------------------------------------------------------------
