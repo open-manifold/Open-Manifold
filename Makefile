@@ -25,7 +25,7 @@ chartest:
 
 icon: 
 	rm -rf res/icon.res
-	windres res/icon.rc -O coff -o res/icon.res
+	-windres res/icon.rc -O coff -o res/icon.res
 
 pkg: clean icon all
 	@echo Creating temporary directory...
