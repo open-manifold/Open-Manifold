@@ -44,7 +44,8 @@ ifeq ($(OS),Windows_NT)
 endif
 	
 	@if [ -d "./release" ]; then echo Copying release-version contents...; cp -r ./release/. ./release-tmp/assets; fi
-	
+
+zip: pkg
 	@echo Zipping via 7zip...
 	7z a Open-Manifold.zip ./release-tmp/*
 	
@@ -73,7 +74,8 @@ help:
 	@echo chartest - Builds a character file test program.
 	@echo install  - Copies game assets into bin folder.
 	@echo build    - Creates build and bin folders.
-	@echo pkg      - Cleans, builds the game, and makes a ZIP. Requires Bash and 7zip!
+	@echo pkg      - Cleans, builds the game, and makes a release folder. Requires Bash!
+	@echo zip      - Runs make pkg, then makes the folder a ZIP. Requires 7zip!
 	@echo icon     - Creates Windows resource file.
 	@echo clean    - Deletes all object files.
 	@echo help     - Prints this text.
