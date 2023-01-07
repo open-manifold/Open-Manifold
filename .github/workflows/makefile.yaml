@@ -27,6 +27,26 @@ jobs:
           path: release-tmp
           retention-days: 14
 
+  build-macos:
+    runs-on: macOS-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Get dependencies
+        run: |
+          brew install SDL2 SDL2_image SDL2_mixer
+
+      - name: Build package
+        run: make pkg LDFLAGS:="-lSDL2 -lSDL2_image -lSDL2_mixer"
+
+      - name: Upload package
+        uses: actions/upload-artifact@v3.1.2
+        with:
+          name: Open-Manifold-git-macOS
+          path: release-tmp
+          retention-days: 14
+
   build-windows:
     runs-on: windows-latest
 
