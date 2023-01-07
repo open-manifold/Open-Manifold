@@ -1,0 +1,82 @@
+name: Build Stuff
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+    branches: ["main"]
+
+jobs:
+  build-linux:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Get dependencies
+        run: |
+          sudo apt-get install libsdl2-dev libsdl2-image-dev libsdl2-mixer-dev
+
+      - name: Build package
+        run: make pkg
+
+      - name: Upload package
+        uses: actions/upload-artifact@v3.1.2
+        with:
+          name: Open-Manifold-git-linux
+          path: release-tmp
+          retention-days: 14
+
+  build-windows:
+    runs-on: windows-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup directories
+        run: |
+          mkdir SDL2-dl
+          mkdir lib
+
+      - name: Download SDL2
+        uses: albin-johansson/download-sdl2@v2
+        with:
+          version: 2.0.18
+          sources_destination: SDL2-dl
+          binaries_destination: .
+
+      - name: Download SDL2 Image
+        uses: albin-johansson/download-sdl2-image@v2
+        with:
+          version: 2.0.5
+          sources_destination: SDL2-dl
+          binaries_destination: .
+
+      - name: Download SDL2 Mixer
+        uses: albin-johansson/download-sdl2-mixer@v1
+        with:
+          version: 2.6.2
+          sources_destination: SDL2-dl
+          binaries_destination: .
+
+      - name: Configure SDL2
+        run: |
+          mkdir include/SDL2
+          Copy-Item -Force SDL2-dl/SDL2-2.0.18/include/* include/SDL2
+          Copy-Item -Force SDL2-dl/SDL2_image-2.0.5/include/* include/SDL2
+          Copy-Item -Force SDL2-dl/SDL2_mixer-2.6.2/include/* include/SDL2
+          Copy-Item -Force SDL2-dl/SDL2-2.0.18/lib/x64/* lib
+          Copy-Item -Force SDL2-dl/SDL2_image-2.0.5/lib/x64/* lib
+          Copy-Item -Force SDL2-dl/SDL2_mixer-2.6.2/lib/x64/* lib
+          dir lib
+
+      - name: Build package
+        run: |
+          make pkg LDFLAGS:="-Llib -lSDL2main -lSDL2 -lSDL2_image -lSDL2_mixer -lstdc++fs"
+
+      - name: Upload package
+        uses: actions/upload-artifact@v3.1.2
+        with:
+          name: Open-Manifold-git-win64
+          path: release-tmp
+          retention-days: 14
