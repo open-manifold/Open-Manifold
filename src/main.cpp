@@ -49,6 +49,7 @@ extern int width;
 extern int height;
 
 // various options
+extern int option_count;
 int music_volume = 75;
 int sfx_volume = 75;
 bool mono_toggle = false;
@@ -1858,8 +1859,8 @@ int main(int argc, char *argv[]) {
                                     option_selected--;
                                 }
 
-                                if (option_selected > 10) {option_selected = 0;}
-                                if (option_selected < 0) {option_selected = 10;}
+                                if (option_selected > option_count - 1) {option_selected = 0;}
+                                if (option_selected < 0) {option_selected = option_count - 1;}
 
                                 break;
 
@@ -1869,8 +1870,8 @@ int main(int argc, char *argv[]) {
                                     option_selected++;
                                 }
 
-                                if (option_selected > 10) {option_selected = 0;}
-                                if (option_selected < 0) {option_selected = 10;}
+                                if (option_selected > option_count - 1) {option_selected = 0;}
+                                if (option_selected < 0) {option_selected = option_count - 1;}
 
                                 break;
 
