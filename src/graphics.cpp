@@ -201,6 +201,30 @@ void load_logo() {
     return;
 }
 
+void load_fallback_font() {
+    // this is called if, for whatever reason, assets/font.png isn't found
+    // loads pixel data from the below header file directly into a surface
+    #include "font.h"
+    
+    Uint32 rmask, gmask, bmask, amask;
+    
+    #if SDL_BYTEORDER == SDL_BIG_ENDIAN
+        int shift = (fallback_font.bytes_per_pixel == 3) ? 8 : 0;
+        rmask = 0xff000000 >> shift;
+        gmask = 0x00ff0000 >> shift;
+        bmask = 0x0000ff00 >> shift;
+        amask = 0x000000ff >> shift;
+    #else
+        rmask = 0x000000ff;
+        gmask = 0x0000ff00;
+        bmask = 0x00ff0000;
+        amask = (fallback_font.bytes_per_pixel == 3) ? 0 : 0xff000000;
+    #endif
+    
+    font = SDL_CreateRGBSurfaceFrom((void*)fallback_font.pixel_data, fallback_font.width, fallback_font.height, fallback_font.bytes_per_pixel*8, fallback_font.bytes_per_pixel*fallback_font.width, rmask, gmask, bmask, amask);
+    return;
+}
+
 void load_font() {
     SDL_FreeSurface(font);
     SDL_DestroyTexture(font_texture);
@@ -208,8 +232,8 @@ void load_font() {
     font = IMG_Load("assets/font.png");
 
     if (font == NULL) {
-        printf("[!] %s\n[!] In-game text will not render!\n", SDL_GetError());
-        font = SDL_CreateRGBSurface(0, 1, 1, 4, 0, 0, 0, 0);
+        printf("[!] %s\nLoading fallback font...\n", SDL_GetError());
+        load_fallback_font();
     }
 
     font_texture = SDL_CreateTextureFromSurface(renderer, font);

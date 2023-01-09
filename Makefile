@@ -23,6 +23,9 @@ bgtest:
 chartest:
 	$(CXX) src/tests/character_test.cpp -o bin/character_test.exe $(CXXFLAGS) $(LDFLAGS)
 
+fonttest:
+	$(CXX) src/tests/font_test.cpp -o bin/font_test.exe $(CXXFLAGS) $(LDFLAGS)
+
 icon: 
 	rm -rf res/icon.res
 	-windres res/icon.rc -O coff -o res/icon.res
@@ -72,6 +75,7 @@ help:
 	@echo [none]   - Builds the game executable.
 	@echo bgtest   - Builds a background test program.
 	@echo chartest - Builds a character file test program.
+	@echo fonttest - Builds a font-fallback test program.
 	@echo install  - Copies game assets into bin folder.
 	@echo build    - Creates build and bin folders.
 	@echo pkg      - Cleans, builds the game, and makes a release folder. Requires Bash!
