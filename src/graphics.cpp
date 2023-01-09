@@ -34,6 +34,7 @@
 #include "main.h"
 #include "character.h"
 #include "background.h"
+#include "font.h"
 
 using nlohmann::json;
 using std::string;
@@ -203,11 +204,12 @@ void load_logo() {
 
 void load_fallback_font() {
     // this is called if, for whatever reason, assets/font.png isn't found
-    // loads pixel data from the below header file directly into a surface
-    #include "font.h"
+    // loads pixel data from font.h directly into the font surface
+    // implementation courtesy of https://blog.gibson.sh/2015/04/13/how-to-integrate-your-sdl2-window-icon-or-any-image-into-your-executable/
     
     Uint32 rmask, gmask, bmask, amask;
     
+    // set color masks based on SDL endianness
     #if SDL_BYTEORDER == SDL_BIG_ENDIAN
         int shift = (fallback_font.bytes_per_pixel == 3) ? 8 : 0;
         rmask = 0xff000000 >> shift;
