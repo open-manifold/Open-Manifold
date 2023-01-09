@@ -17,13 +17,13 @@ all: build $(OBJS)
 $(OBJS): build/%.o: src/%.cpp
 	$(CXX) -c $< $(CXXFLAGS) $(LDFLAGS) -o $@
 	
-bgtest:
+bg-test:
 	$(CXX) src/tests/bg_test.cpp -o bin/background_test.exe $(CXXFLAGS) $(LDFLAGS)
 
-chartest:
+char-test:
 	$(CXX) src/tests/character_test.cpp -o bin/character_test.exe $(CXXFLAGS) $(LDFLAGS)
 
-fonttest:
+font-test:
 	$(CXX) src/tests/font_test.cpp -o bin/font_test.exe $(CXXFLAGS) $(LDFLAGS)
 
 icon: 
@@ -72,15 +72,15 @@ clean:
 help:
 	@echo -----------------------------------------------------------------
 	@echo Targets:
-	@echo [none]   - Builds the game executable.
-	@echo bgtest   - Builds a background test program.
-	@echo chartest - Builds a character file test program.
-	@echo fonttest - Builds a font-fallback test program.
-	@echo install  - Copies game assets into bin folder.
-	@echo build    - Creates build and bin folders.
-	@echo pkg      - Cleans, builds the game, and makes a release folder. Requires Bash!
-	@echo zip      - Runs make pkg, then makes the folder a ZIP. Requires 7zip!
-	@echo icon     - Creates Windows resource file.
-	@echo clean    - Deletes all object files.
-	@echo help     - Prints this text.
+	@echo [none]    - Builds the game executable.
+	@echo bg-test   - Builds a background test program.
+	@echo char-test - Builds a character file test program.
+	@echo font-test - Builds a font-fallback test program.
+	@echo install   - Copies game assets into bin folder.
+	@echo build     - Creates build and bin folders.
+	@echo pkg       - Cleans, builds the game, and makes a release folder. Requires Bash!
+	@echo zip       - Runs make pkg, then makes the folder a ZIP. Requires 7zip!
+	@echo icon      - Creates Windows resource file.
+	@echo clean     - Deletes all object files.
+	@echo help      - Prints this text.
 	@echo -----------------------------------------------------------------
