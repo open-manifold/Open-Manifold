@@ -474,6 +474,17 @@ void draw_background_test(bg_data bg_data, int frame_time) {
     return;
 }
 
+void draw_background_solid(bg_data bg_data, int frame_time) {
+    SDL_Color darkened_color;
+    darkened_color.r = fmax(bg_data.grid_color.r * 0.75, 0);
+    darkened_color.g = fmax(bg_data.grid_color.g * 0.75, 0);
+    darkened_color.b = fmax(bg_data.grid_color.b * 0.75, 0);
+
+    SDL_SetRenderDrawColor(renderer, darkened_color.r, darkened_color.g, darkened_color.b, 255);
+    SDL_RenderClear(renderer);
+    return;
+}
+
 void draw_background_tile(bg_data bg_data, int frame_time) {
     int max_tile_count = 12;
     int greater_axis = fmax(width, height);
@@ -879,6 +890,7 @@ void draw_background_effect(background_effect effect_id, bg_data bg_data, int fr
     // bg_data: struct containing various values (see background.h; draw_game())
 
     switch (effect_id) {
+        case solid:         draw_background_solid       (bg_data, frame_time);  break;
         case checkerboard:  draw_background_checkerboard(bg_data, frame_time);  break;
         case tile:          draw_background_tile        (bg_data, frame_time);  break;
         case fire:          draw_background_fire        (bg_data, frame_time);  break;

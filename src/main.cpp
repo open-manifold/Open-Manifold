@@ -773,6 +773,7 @@ background_effect get_level_background_effect() {
 
     string background_name = json_file[0].value("background_effect", "none");
 
+    if (background_name == "solid")         return solid;
     if (background_name == "tile")          return tile;
     if (background_name == "checkerboard")  return checkerboard;
     if (background_name == "fire")          return fire;

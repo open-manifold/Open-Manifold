@@ -5,6 +5,7 @@
 // strings are converted to this and used internally
 enum background_effect {
     none,
+    solid,
     tile,
     fire,
     checkerboard,
