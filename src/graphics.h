@@ -31,7 +31,7 @@ void unload_logo();
 void load_font();
 
 void init_background_effect(background_effect);
-void draw_background_effect(background_effect, int, int, bool, int, int, int, SDL_Color, int);
+void draw_background_effect(background_effect, bg_data, int);
 void draw_menu_background(int);
 
 void load_character_tileset();

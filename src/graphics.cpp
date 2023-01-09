@@ -53,18 +53,6 @@ struct shape {
     int color;
 };
 
-// stores data that can be used by background
-// we do it this way to make functions more readable
-struct bg_data {
-    int song_tick;
-    int beat_tick;
-    bool beat_advanced;
-    int beat_count;
-    int start_offset;
-    int measure_length;
-    SDL_Color grid_color;
-};
-
 int width  = 1280;
 int height = 720;
 float fade_in  = 255;
@@ -859,27 +847,10 @@ void init_background_effect(background_effect effect_id) {
     return;
 }
 
-void draw_background_effect(background_effect effect_id, int song_tick, int beat_tick, bool beat_advanced, int beat_count, int start_offset, int measure_length, SDL_Color grid_color, int frame_time) {
+void draw_background_effect(background_effect effect_id, bg_data bg_data, int frame_time) {
     // Master function that calls various background FX drawing functions
     // ----------------------------------------------------------
-    // effect_id: numeric ID for function (see switch statement below)
-    // song_tick: how long the song has been playing in MS
-    // beat_tick: how long the current beat has been set for (this resets to 0 after every beat)
-    // beat_advanced: bool flag for whether or not the beat has advanced
-    // beat_count: current beat number (including intro beats, in other words start_offset)
-    // start_offset: how many beats before the song starts (default: 32)
-    // measure_length: how many beats in a measure (default: 16)
-    // grid_color: the background color of the grid
-
-    bg_data bg_data = {
-        song_tick,
-        beat_tick,
-        beat_advanced,
-        beat_count,
-        start_offset,
-        measure_length,
-        grid_color
-    };
+    // bg_data: struct containing various values (see background.h; draw_game())
 
     switch (effect_id) {
         case checkerboard:  draw_background_checkerboard(bg_data, frame_time);  break;
@@ -938,11 +909,13 @@ void draw_grid(int x = width/2, int y = height/2, int scale = height/22, SDL_Col
 }
 
 void draw_hud(int life, int score) {
-    // Draws the HUD during the main game only
+    // Draws the HUD during the main game
+    
     int scale_mul = fmax(floor(height/360), 1);
     string score_string = std::to_string(score);
     score_string.insert(0, 8 - score_string.length(), '0');
     
+    // draws the underlay (the black part)
     SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 128);
     
@@ -957,14 +930,18 @@ void draw_hud(int life, int score) {
     
     SDL_RenderFillRect(renderer, &hud_bar);
     
+    // draws the life bar
     SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_NONE);
     SDL_RenderFillRect(renderer, &life_bar);
     
     life_bar.w = life * (life_bar.w/100.f);
     SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
     SDL_RenderFillRect(renderer, &life_bar);
+    
+    // draws text versions of life bar, and score
     draw_text(std::to_string(life) + "%", life_bar.x, life_bar.y, scale_mul, 1, hud_bar.w);
     draw_text(score_string, width - life_bar.x, life_bar.y, scale_mul, -1, hud_bar.w);
+    
     return;
 }
 
@@ -1096,7 +1073,7 @@ void draw_character(int beat_count = 0) {
 }
 
 void draw_menu_background(int frame_time) {
-    // Draws a scrolling array of shapes
+    // Draws a sine-wave array of shapes
     // Used in menus as a decoration
 
     int time = SDL_GetTicks() / 32;
@@ -1142,6 +1119,9 @@ void draw_fps(bool toggle, int fps, int frame_time) {
 }
 
 void draw_fade(int fadein_mul, int fadeout_mul, int frame_time) {
+    // Draws both the fade-in and fade-out effects
+    // Called every frame whenever transitioning between screens
+    
     if (fade_in == 0 && fade_out == 255) {return;}
 
     if (fade_in >= 0) {fade_in -= (fadein_mul * 0.0625) * frame_time;}
@@ -1494,8 +1474,19 @@ bool draw_game(int beat_count, int start_offset, int measure_length, int song_st
     SDL_Color bg_color = get_color(get_bg_color());
 
     int character_beat_count = ((beat_count - start_offset) <= 0) ? 0: (beat_count - (start_offset + 1));
+    
+    // sets up bg_data
+    bg_data bg_data = {
+        (current_ticks - song_start_time), 
+        (int)(current_ticks - beat_start_time),
+        beat_advanced,
+        beat_count - 1,
+        start_offset - 1,
+        measure_length,
+        bg_color
+    };
 
-    draw_background_effect(background_id, (current_ticks - song_start_time), (current_ticks - beat_start_time), beat_advanced, beat_count - 1, start_offset - 1, measure_length, bg_color, frame_time);
+    draw_background_effect(background_id, bg_data, frame_time);
     draw_character(character_beat_count);
     draw_grid(width/2, height/2, height/22, bg_color, !grid_toggle);
 
@@ -1571,8 +1562,19 @@ bool draw_sandbox(background_effect background_id, shape active_shape, std::vect
     int scale_mul = fmax(floor(fmin(height, width)/360), 1);
 
     SDL_RenderClear(renderer);
+    
+    // sets up a dummy bgdata
+    bg_data bg_data = {
+        (int)SDL_GetTicks(), 
+        0, 
+        false, 
+        0, 
+        0, 
+        0, 
+        get_color(15)
+    };
 
-    draw_background_effect(background_id, SDL_GetTicks(), 0, false, 0, 0, 0, get_color(15), frame_time);
+    draw_background_effect(background_id, bg_data, frame_time);
     draw_grid(width/2, height/2, height/22, get_color(15));
 
     SDL_Rect grid_area;
