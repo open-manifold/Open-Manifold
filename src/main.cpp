@@ -731,10 +731,14 @@ int get_level_time_signature(bool top_or_bottom) {
     }
 }
 
+int get_level_measure_length() {
+    int top = get_level_time_signature(true);
+    int bot = get_level_time_signature(false);
+    return top * bot;
+}
+
 int get_level_intro_delay() {
-    int time_signature_top = get_level_time_signature(true);
-    int time_signature_bottom = get_level_time_signature(false);
-    int sequence_length = (time_signature_top * time_signature_bottom) * 2;
+    int sequence_length = get_level_measure_length() * 2;
 
     return json_file[0].value("offset", sequence_length);
 }
@@ -866,10 +870,7 @@ json parse_level_file(string file) {
 
     // this entire block generates sequences if they aren't present
     // note that we generate these even if they're already present in order to ensure a level is actually beatable
-
-    int time_signature_top = get_level_time_signature(true);
-    int time_signature_bottom = get_level_time_signature(false);
-    int max_sequence_length = time_signature_top * time_signature_bottom;
+    int max_sequence_length = get_level_measure_length();
 
     for (int i = 1; i < parsed_json.size(); i++) {
         int shape = parsed_json[i].value("shape", 0);
@@ -1136,7 +1137,7 @@ void reset_shapes() {
 
 void reset_sequences() {
     // resets sequences to blank strings
-    int measure_length = get_level_time_signature(true) * get_level_time_signature(false);
+    int measure_length = get_level_measure_length();
     
     cpu_sequence.clear();
     player_sequence.clear();
@@ -1153,7 +1154,7 @@ int check_beat_timing_window() {
     int current_time = SDL_GetTicks();
     int current_beat_length = (current_time - beat_start_time);
     int time_to_next_beat = length - current_beat_length;
-    int measure_length = get_level_time_signature(true) * get_level_time_signature(false);
+    int measure_length = get_level_measure_length();
     int start_offset = get_level_intro_delay();
     bool valid_beat_window_start = false;
     bool valid_beat_window_end = false;
@@ -1291,7 +1292,7 @@ string modify_sequence(char opcode, int beat_side) {
     // opcode: single letter that represents an action (see modify_current_shape())
     // beat_side: returned from check_beat_timing_window(); 1 = beat end, 2 = beat start
     
-    int measure_length = get_level_time_signature(true) * get_level_time_signature(false);
+    int measure_length = get_level_measure_length();
     int start_offset = get_level_intro_delay();
     int current_beat_count = (beat_count - start_offset) % measure_length;
     
@@ -2051,7 +2052,7 @@ int main(int argc, char *argv[]) {
 
             case GAME:
                 loop(json_file, get_level_intro_delay(), get_level_time_signature(true), get_level_time_signature(false), song_start_time, frame_time);
-                draw_game(beat_count, get_level_intro_delay(), get_level_time_signature(true) * get_level_time_signature(false), song_start_time, beat_start_time, SDL_GetTicks(), intro_beat_length, beat_advanced, background_id, active_shape, result_shape, previous_shapes, grid_toggle, song_over, game_over, frame_time);
+                draw_game(beat_count, get_level_intro_delay(), get_level_measure_length(), song_start_time, beat_start_time, SDL_GetTicks(), intro_beat_length, beat_advanced, background_id, active_shape, result_shape, previous_shapes, grid_toggle, song_over, game_over, frame_time);
                 break;
 
             case SANDBOX:
