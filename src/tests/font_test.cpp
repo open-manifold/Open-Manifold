@@ -2,12 +2,9 @@
 // This is separate from the main game; as such, it is not to be included in the list of source files when building.
 
 #include <cstdlib>
-#include <cmath>
 #include <string>
-#include <fstream>
 
 #include <SDL2/SDL.h>
-#include <SDL2/SDL_image.h>
 #include "../font.h"
 
 // Declare global variables
