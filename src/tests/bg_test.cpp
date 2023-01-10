@@ -164,7 +164,7 @@ int main(int argc, char *argv[]) {
         // calculate background data stuff
         // some of these are just filled in with default values
         bg_data bg_data = {
-            SDL_GetTicks(),
+            (int)SDL_GetTicks(),
             time_passed,
             false,
             beat_count,
