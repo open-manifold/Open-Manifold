@@ -278,12 +278,12 @@ void load_settings(int argc, char* argv[]) {
     
     // populates the keymap
     if (json_data.contains("key_map")) {
-        printf("Setting key map...\n");
+        printf("Reading keyboard mappings...\n");
         for (int i = 0; i < 12; i++) {
             std::string key_name = json_data["key_map"][i];
             SDL_Keycode key_code = SDL_GetKeyFromName(key_name.c_str());
             
-            if (key_code == SDLK_UNKNOWN) {printf("[!] Unrecognized key: %s\n", key_name.c_str()); continue;}
+            if (key_code == SDLK_UNKNOWN) {printf("[!] Unrecognized keycode: %s\n", key_name.c_str()); continue;}
             keymap[i] = key_code;
         }
     }
