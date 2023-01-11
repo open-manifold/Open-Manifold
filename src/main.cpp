@@ -157,6 +157,23 @@ enum controller_buttons {
     SELECT,
 };
 
+// array that contains SDL keyboard keymap
+// (this should correspond to controller_buttons in terms of order)
+SDL_Keycode keymap[12] = {
+    SDLK_UP,
+    SDLK_DOWN,
+    SDLK_LEFT,
+    SDLK_RIGHT,
+    SDLK_z,
+    SDLK_x,
+    SDLK_c,
+    SDLK_v,
+    SDLK_a,
+    SDLK_s,
+    SDLK_RETURN,
+    SDLK_BACKSPACE
+};
+
 // the controller, if one is needed
 SDL_GameController *controller;
 
@@ -465,35 +482,30 @@ void take_screenshot() {
 
 controller_buttons keyboard_to_abstract_button(int input, bool in_game) {
     // converts keyboard keys to the abstract controller
-    // the bool is there to switch which keys are what
-    // depending on the current game state (see main)
-    // this is done to make the menu more intuitive on KB
 
-    switch (input) {
-        case SDLK_UP:           return UP;
-        case SDLK_DOWN:         return DOWN;
-        case SDLK_LEFT:         return LEFT;
-        case SDLK_RIGHT:        return RIGHT;
-        case SDLK_a:            return LB;
-        case SDLK_s:            return RB;
-        case SDLK_RETURN:       return START;
-        case SDLK_BACKSPACE:    return SELECT;
-    }
+    // we're using if statements here because "switch" doesn't
+    // accept array members as case arguments (unfortuantely)
+    if (input == keymap[0])         return UP;
+    if (input == keymap[1])         return DOWN;
+    if (input == keymap[2])         return LEFT;
+    if (input == keymap[3])         return RIGHT;
+    if (input == keymap[8])         return LB;
+    if (input == keymap[9])         return RB;
+    if (input == keymap[10])        return START;
+    if (input == keymap[11])        return SELECT;
 
+    // the bool is there to switch keys around between menus/gameplay
+    // this is done to make the menu more intuitive to control on KB
     if (in_game) {
-        switch (input) {
-            case SDLK_z:            return CIRCLE;
-            case SDLK_x:            return SQUARE;
-            case SDLK_c:            return TRIANGLE;
-            case SDLK_v:            return CROSS;
-        }
+        if (input == keymap[4])     return CIRCLE;
+        if (input == keymap[5])     return SQUARE;
+        if (input == keymap[6])     return TRIANGLE;
+        if (input == keymap[7])     return CROSS;
     } else {
-        switch (input) {
-            case SDLK_z:            return CROSS;
-            case SDLK_x:            return CIRCLE;
-            case SDLK_c:            return SQUARE;
-            case SDLK_v:            return TRIANGLE;
-        }
+        if (input == keymap[4])     return CROSS;
+        if (input == keymap[5])     return CIRCLE;
+        if (input == keymap[6])     return SQUARE;
+        if (input == keymap[7])     return TRIANGLE;
     }
 
     return NONE;
