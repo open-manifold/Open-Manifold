@@ -1318,6 +1318,32 @@ shape modify_current_shape(char opcode, shape current_shape, bool is_player = fa
     return modified_shape;
 }
 
+bool check_available_sequence(int beat_side) {
+    // returns true if the current sequence op is blank, false if it isn't
+    // this ensures that both a sequence can't be overwritten and that only
+    // ONE input is registered, preventing "diagonals" for example
+    // ----------------------------------------------------------
+    // beat_side: returned from check_beat_timing_window(); 1 = beat end, 2 = beat start
+    
+    int measure_length = get_level_measure_length();
+    int start_offset = get_level_intro_delay();
+    int current_beat_count = (beat_count - start_offset) % measure_length;
+    
+    int index = 0;
+    string sequence = get_player_sequence();
+    
+    if (beat_side == 0) {return false;}
+    if (beat_side == 1) {index = current_beat_count - 1;}
+    if (beat_side == 2) {index = current_beat_count;}
+    
+    if (index <= 0) {index = 0;}
+    if (index >= measure_length) {index = measure_length;}
+    
+    if (sequence[index] == '.') {return true;}
+    
+    return false;
+}
+
 string modify_sequence(char opcode, int beat_side) {
     // records the player's moves to the player sequence
     // ----------------------------------------------------------
@@ -1727,7 +1753,11 @@ int main(int argc, char *argv[]) {
                             char op = '.';
                             
                             if (input_value != SELECT) {
+                                // 0 means we're NOT within a timing window
                                 if (beat_side == 0) {break;}
+                                
+                                // this prevents multiple inputs from going through during a single window
+                                if (check_available_sequence(beat_side) == false) {break;}
                             }
                             
                             switch(input_value) {
