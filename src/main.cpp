@@ -219,6 +219,13 @@ void save_settings() {
 
         ifs.close();
     }
+    
+    // convert current keymap into string array
+    string keymap_strings[12];
+    
+    for (int i = 0; i < 12; i++) {
+        keymap_strings[i] = SDL_GetKeyName(keymap[i]);
+    }
 
     new_config["music_volume"] = music_volume;
     new_config["sfx_volume"] = sfx_volume;
@@ -229,6 +236,7 @@ void save_settings() {
     new_config["frame_cap"] = frame_cap;
     new_config["display_grid"] = grid_toggle;
     new_config["controller_index"] = controller_index;
+    new_config["key_map"] = keymap_strings;
 
     printf("Saving to config.json...\n");
 
@@ -267,6 +275,18 @@ void load_settings(int argc, char* argv[]) {
     if (json_data.contains("sfx_volume"))       {sfx_volume = json_data["sfx_volume"];}
     if (json_data.contains("mono_toggle"))      {mono_toggle = json_data["mono_toggle"];}
     if (json_data.contains("controller_index")) {controller_index = json_data["controller_index"];}
+    
+    // populates the keymap
+    if (json_data.contains("key_map")) {
+        printf("Setting key map...\n");
+        for (int i = 0; i < 12; i++) {
+            std::string key_name = json_data["key_map"][i];
+            SDL_Keycode key_code = SDL_GetKeyFromName(key_name.c_str());
+            
+            if (key_code == SDLK_UNKNOWN) {printf("[!] Unrecognized key: %s\n", key_name.c_str()); continue;}
+            keymap[i] = key_code;
+        }
+    }
 
     // note these parameters, they aren't exposed in the options and aren't saved in the config by default
     // however, they can still be added manually to a config if a user desires
