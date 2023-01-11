@@ -982,7 +982,7 @@ void draw_hud(int life, int score) {
     return;
 }
 
-void draw_game_over() {
+void draw_game_over(int time) {
     // Draws the game over screen
     int scale_mul = fmax(floor(height/360), 1);
     int font_height = font->h * scale_mul;
@@ -993,7 +993,6 @@ void draw_game_over() {
     SDL_RenderFillRect(renderer, NULL);
     
     // color-cycle for game over text color
-    int time = SDL_GetTicks();
     Uint8 color_pulse = abs(sin(time*0.4/180)) * 200;
     
     draw_text("GAME OVER", width/2, height/2 - font_height, scale_mul * 2, 0, width, {255, color_pulse, 0, 255});
@@ -1588,7 +1587,7 @@ bool draw_game(int beat_count, int start_offset, int measure_length, int song_st
     SDL_RenderCopy(renderer, shape_texture, NULL, &grid_area);
     SDL_DestroyTexture(shape_texture);
     
-    if (game_over) {draw_game_over();}
+    if (game_over) {draw_game_over(current_ticks);}
     draw_hud(get_life(), get_score());
     draw_level_intro_fade(song_start_time, current_ticks, intro_beat_length);
     draw_fade(255, 8, frame_time);

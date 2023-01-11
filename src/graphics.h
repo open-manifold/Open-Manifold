@@ -21,7 +21,6 @@ void draw_gradient(int, int, int, int, SDL_Color);
 void draw_text(std::string, int, int, int, int, int, SDL_Color = {255, 255, 255});
 void draw_grid(int, int, int, SDL_Color, bool);
 void draw_hud(int, int);
-void draw_game_over();
 void draw_shape(int, int, int, int, SDL_Color, int, int, float);
 void draw_fps(bool, int, int);
 void draw_fade(int, int, int);
