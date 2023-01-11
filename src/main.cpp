@@ -500,7 +500,7 @@ void take_screenshot() {
     return;
 }
 
-controller_buttons keyboard_to_abstract_button(int input, bool in_game) {
+controller_buttons keyboard_to_abstract_button(SDL_Keycode input, bool in_game) {
     // converts keyboard keys to the abstract controller
 
     // we're using if statements here because "switch" doesn't
