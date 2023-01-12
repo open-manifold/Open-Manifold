@@ -70,6 +70,7 @@ int life = 100;
 // BG flags
 // set to true for one frame when applicable
 bool beat_advanced = false;
+bool shape_advanced = false;
 
 // timekeeping flags (and some other data)
 float beat_start_time;
@@ -1377,6 +1378,7 @@ bool loop(json json_file, int start_offset, int time_signature_top, int time_sig
     
     // reset BG flags to false
     beat_advanced = false;
+    shape_advanced = true;
 
     // locks off loop when lives are 0
     if (game_over == false) {
@@ -1411,6 +1413,7 @@ bool loop(json json_file, int start_offset, int time_signature_top, int time_sig
                             float timer = (song_beat_position + song_step_amount) * ((60.f/bpm * 2.f) / time_signature_bottom);
                             Mix_SetMusicPosition(timer);
                             song_beat_position += song_step_amount;
+                            shape_advanced = true;
     
                             // pushes shapes to vector for drawing
                             active_shape.color = json_file[shape_count].value("color", 0);
@@ -2114,7 +2117,7 @@ int main(int argc, char *argv[]) {
 
             case GAME:
                 loop(json_file, get_level_intro_delay(), get_level_time_signature(true), get_level_time_signature(false), song_start_time, frame_time);
-                draw_game(beat_count, get_level_intro_delay(), get_level_measure_length(), song_start_time, beat_start_time, SDL_GetTicks(), intro_beat_length, beat_advanced, background_id, active_shape, result_shape, previous_shapes, grid_toggle, song_over, game_over, frame_time);
+                draw_game(beat_count, get_level_intro_delay(), get_level_measure_length(), song_start_time, beat_start_time, SDL_GetTicks(), intro_beat_length, beat_advanced, shape_advanced, background_id, active_shape, result_shape, previous_shapes, grid_toggle, song_over, game_over, frame_time);
                 break;
 
             case SANDBOX:

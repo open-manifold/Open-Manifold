@@ -1504,7 +1504,7 @@ bool draw_level_select(json json_file, int frame_time) {
     return true;
 }
 
-bool draw_game(int beat_count, int start_offset, int measure_length, int song_start_time, float beat_start_time, int current_ticks, int intro_beat_length, bool beat_advanced, background_effect background_id, shape active_shape, shape result_shape, std::vector<shape> previous_shapes, bool grid_toggle, bool song_over, bool game_over, int frame_time) {
+bool draw_game(int beat_count, int start_offset, int measure_length, int song_start_time, float beat_start_time, int current_ticks, int intro_beat_length, bool beat_advanced, bool shape_advanced, background_effect background_id, shape active_shape, shape result_shape, std::vector<shape> previous_shapes, bool grid_toggle, bool song_over, bool game_over, int frame_time) {
     // TODO: the # of arguments here could be heavily reduced with "get_foobar"-style functions
     SDL_RenderClear(renderer);
     SDL_Color bg_color = get_color(get_bg_color());
@@ -1516,6 +1516,7 @@ bool draw_game(int beat_count, int start_offset, int measure_length, int song_st
         (current_ticks - song_start_time), 
         (int)(current_ticks - beat_start_time),
         beat_advanced,
+        shape_advanced,
         beat_count - 1,
         start_offset - 1,
         measure_length,
@@ -1603,7 +1604,8 @@ bool draw_sandbox(background_effect background_id, shape active_shape, std::vect
     bg_data bg_data = {
         (int)SDL_GetTicks(), 
         0, 
-        false, 
+        false,
+        false,
         0, 
         0, 
         0, 

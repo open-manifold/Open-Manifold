@@ -7,6 +7,8 @@
 
 #include <SDL2/SDL.h>
 
+#include "../background.h"
+
 // Declare global variables
 SDL_Window* window;
 SDL_Renderer* renderer;
@@ -20,15 +22,6 @@ SDL_Texture* aux_texture;
 int aux_texture_w;
 int aux_texture_h;
 
-struct bg_data {
-    int song_tick;
-    int beat_tick;
-    bool beat_advanced;
-    int beat_count;
-    int start_offset;
-    int measure_length;
-    SDL_Color grid_color;
-};
 
 // Edit this function! This is the background effect to test.
 // Note that bg_data parameters are NOT provided as of yet
@@ -166,6 +159,7 @@ int main(int argc, char *argv[]) {
         bg_data bg_data = {
             (int)SDL_GetTicks(),
             time_passed,
+            false,
             false,
             beat_count,
             8,
