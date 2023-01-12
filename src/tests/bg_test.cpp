@@ -117,6 +117,7 @@ int main(int argc, char *argv[]) {
     // main loop that runs while the game is active
     while (program_running) {
         start_time = SDL_GetTicks();
+        bool shape_advanced = false;
         
         // handles all events
         while (SDL_PollEvent(&evt) != 0) {
@@ -144,6 +145,10 @@ int main(int argc, char *argv[]) {
                             color = get_color(bg_color);
                             break;
                             
+                        case SDLK_SPACE:
+                            shape_advanced = true;
+                            break;
+                            
                         default:
                             break;
                     }
@@ -160,7 +165,7 @@ int main(int argc, char *argv[]) {
             (int)SDL_GetTicks(),
             time_passed,
             false,
-            false,
+            shape_advanced,
             beat_count,
             8,
             16,
