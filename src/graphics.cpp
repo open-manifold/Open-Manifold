@@ -556,6 +556,7 @@ void draw_background_checkerboard(bg_data bg_data, int frame_time) {
 void draw_background_fire(bg_data bg_data, int frame_time) {
     SDL_Rect shape;
     int square_size = (fmax(aux_texture_w, aux_texture_h) * 0.01) + 1;
+    int square_size_pad = 0;
     int slow_song_tick = bg_data.song_tick * (square_size * 0.025);
     int direction_speed;
     int wave;
@@ -563,11 +564,20 @@ void draw_background_fire(bg_data bg_data, int frame_time) {
     SDL_SetRenderTarget(renderer, aux_texture);
     SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
     
+    // increases the size of each fire square when moving to the next shape
+    // gives a cool "burst" effect to the fire
+    if (bg_data.shape_advanced == true) aux_int = 1000;
+    if (aux_int > 0) {
+        aux_int = fmax(aux_int - frame_time, 0);
+        square_size_pad = aux_int / 5.f;
+    }
+    
     // darken previous texture
-    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 16);
+    SDL_SetRenderDrawColor(renderer, 0, 0, 0, fmax(frame_time, 1));
     SDL_RenderFillRect(renderer, NULL);
     
     for (int i = -4; i < (fmax(aux_texture_w, aux_texture_h)/square_size) + 4; i++) {
+        // alternates the direction of every other fire particle
         if (i%2 == 0) {
             direction_speed = 10 * -square_size;
             wave = cos(slow_song_tick / 360.f) * 100;
@@ -577,9 +587,9 @@ void draw_background_fire(bg_data bg_data, int frame_time) {
         }
 
         shape.y = aux_texture_h - (slow_song_tick + (i*7) * (i*11)) % aux_texture_h;
-        shape.x = wave + (i * square_size) + ((shape.y * direction_speed) / aux_texture_h);
-        shape.w = square_size + (shape.y/4);
-        shape.h = square_size + (shape.y/4);
+        shape.x = wave + (i * square_size) + ((shape.y * direction_speed) / aux_texture_h) - square_size_pad/2;
+        shape.w = square_size_pad + square_size + (shape.y/4);
+        shape.h = square_size_pad + square_size + (shape.y/4);
 
         int scaled_color = (shape.y * 255) / aux_texture_h;
 
