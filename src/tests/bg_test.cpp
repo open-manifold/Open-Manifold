@@ -22,10 +22,10 @@ SDL_Texture* aux_texture;
 int aux_texture_w;
 int aux_texture_h;
 
+void test_background_effect(bg_data bg_data, int frame_time) {
 
 // Edit this function! This is the background effect to test.
 // Note that bg_data parameters are NOT provided as of yet
-void test_background_effect(bg_data bg_data) {
     return;
 }
 
@@ -172,7 +172,7 @@ int main(int argc, char *argv[]) {
             color
         };
         
-        test_background_effect(bg_data);
+        test_background_effect(bg_data, frame_time);
         SDL_RenderPresent(renderer);
         
         // calculates FPS
