@@ -1378,7 +1378,7 @@ bool loop(json json_file, int start_offset, int time_signature_top, int time_sig
     
     // reset BG flags to false
     beat_advanced = false;
-    shape_advanced = true;
+    shape_advanced = false;
 
     // locks off loop when lives are 0
     if (game_over == false) {
