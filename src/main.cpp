@@ -1734,7 +1734,8 @@ int main(int argc, char *argv[]) {
                         if (check_fade_activity()) {break;}
 
                         // disables key repeats from being registered, so a player cant just hold a key to "buffer" inputs
-                        if (evt.key.repeat != 0) {break;}
+                        // we check for event type because, for some reason, gamepad events will return non-zero for key repeats
+                        if (evt.type == SDL_KEYDOWN && evt.key.repeat != 0) {break;}
 
                         // handles the game over inputs
                         if (game_over) {
