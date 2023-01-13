@@ -895,7 +895,7 @@ void draw_background_munching(bg_data bg_data, int frame_time) {
     SDL_Rect tile;
     
     tile.x = tile.y = 0;
-    tile.h = tile.w = aux_texture_w;
+    tile.h = tile.w = aux_texture_w*2;
     
     if (bg_data.shape_advanced) aux_int = 2000;
     
@@ -940,8 +940,8 @@ void draw_background_munching(bg_data bg_data, int frame_time) {
     SDL_UnlockTexture(aux_texture);
     
     // tile resulting texture to fill screen
-    for (int i = 0; i < width; i += aux_texture_w) {
-        for (int j = 0; j < height; j += aux_texture_h) {
+    for (int i = 0; i < width; i += tile.w) {
+        for (int j = 0; j < height; j += tile.h) {
             tile.x = i;
             tile.y = j;
             SDL_RenderCopy(renderer, aux_texture, NULL, &tile);
