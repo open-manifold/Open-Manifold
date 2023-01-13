@@ -895,7 +895,7 @@ void draw_background_munching(bg_data bg_data, int frame_time) {
     SDL_Rect tile;
     
     tile.x = tile.y = 0;
-    tile.h = tile.w = 256;
+    tile.h = tile.w = aux_texture_w;
     
     if (bg_data.shape_advanced) aux_int = 2000;
     
@@ -917,9 +917,9 @@ void draw_background_munching(bg_data bg_data, int frame_time) {
             Uint32 shade = 0;
             Uint8 r, g, b;
             
-            r = (Uint8)((x ^ y) + sin(bg_data.song_tick/munch_rate_r) * 128);
-            g = (Uint8)((x ^ y) + sin(bg_data.song_tick/munch_rate_g) * 128);
-            b = (Uint8)((x ^ y) + sin(bg_data.song_tick/munch_rate_b) * 128);
+            r = (Uint8)((x ^ y)*2 + sin(bg_data.song_tick/munch_rate_r) * 128);
+            g = (Uint8)((x ^ y)*2 + sin(bg_data.song_tick/munch_rate_g) * 128);
+            b = (Uint8)((x ^ y)*2 + sin(bg_data.song_tick/munch_rate_b) * 128);
             
             if (SDL_BYTEORDER == SDL_BIG_ENDIAN) {
                 shade += 0xff;
@@ -999,7 +999,7 @@ void init_background_effect(background_effect effect_id) {
             break;
             
         case munching:
-            aux_texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGBA32, SDL_TEXTUREACCESS_STREAMING, 256, 256);
+            aux_texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGBA32, SDL_TEXTUREACCESS_STREAMING, 128, 128);
             SDL_QueryTexture(aux_texture, NULL, NULL, &aux_texture_w, &aux_texture_h);
             break;
 
