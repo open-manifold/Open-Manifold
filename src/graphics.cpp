@@ -886,6 +886,71 @@ void draw_background_hexagon(bg_data bg_data, int frame_time) {
     return;
 }
 
+void draw_background_munching(bg_data bg_data, int frame_time) {
+    void *pixels;
+    int pitch;
+    float munch_rate_r = 200;
+    float munch_rate_g = 200;
+    float munch_rate_b = 200;
+    SDL_Rect tile;
+    
+    tile.x = tile.y = 0;
+    tile.h = tile.w = 256;
+    
+    if (bg_data.shape_advanced) aux_int = 2000;
+    
+    // offsets each RGB channel's "munch" rate
+    if (aux_int > 0) {
+        aux_int = fmax(aux_int - frame_time, 0);
+        
+        munch_rate_r = 250;
+        munch_rate_g = 350;
+        munch_rate_b = 150;
+    }
+    
+    SDL_LockTexture(aux_texture, NULL, &pixels, &pitch);
+    
+    // generate the moire texture
+    for (int y = 0; y < aux_texture_h; y++) {
+        Uint32* dest = (Uint32*)((Uint8*)pixels + y * pitch);
+        for (int x = 0; x < aux_texture_w; x++) {
+            Uint32 shade = 0;
+            Uint8 r, g, b;
+            
+            r = (Uint8)((x ^ y) + sin(bg_data.song_tick/munch_rate_r) * 128);
+            g = (Uint8)((x ^ y) + sin(bg_data.song_tick/munch_rate_g) * 128);
+            b = (Uint8)((x ^ y) + sin(bg_data.song_tick/munch_rate_b) * 128);
+            
+            if (SDL_BYTEORDER == SDL_BIG_ENDIAN) {
+                shade += 0xff;
+                shade += b << 8;
+                shade += g << 16;
+                shade += r << 24;
+            } else {
+                shade += r;
+                shade += g << 8;
+                shade += b << 16;
+                shade += 0xff << 24;
+            }
+            
+            *dest++ = shade;
+        }
+    }
+    
+    SDL_UnlockTexture(aux_texture);
+    
+    // tile resulting texture to fill screen
+    for (int i = 0; i < width; i += aux_texture_w) {
+        for (int j = 0; j < height; j += aux_texture_h) {
+            tile.x = i;
+            tile.y = j;
+            SDL_RenderCopy(renderer, aux_texture, NULL, &tile);
+        }
+    }
+
+    return;
+}
+
 void init_background_effect(background_effect effect_id) {
     // Initialize function for background effects
     // Used for setting up things like auxillary textures
@@ -932,6 +997,11 @@ void init_background_effect(background_effect effect_id) {
             aux_texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGBA32, SDL_TEXTUREACCESS_STREAMING, 320, 240);
             SDL_QueryTexture(aux_texture, NULL, NULL, &aux_texture_w, &aux_texture_h);
             break;
+            
+        case munching:
+            aux_texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGBA32, SDL_TEXTUREACCESS_STREAMING, 256, 256);
+            SDL_QueryTexture(aux_texture, NULL, NULL, &aux_texture_w, &aux_texture_h);
+            break;
 
         case none:
         default: break;
@@ -955,6 +1025,7 @@ void draw_background_effect(background_effect effect_id, bg_data bg_data, int fr
         case wave:          draw_background_wave        (bg_data, frame_time);  break;
         case starfield:     draw_background_starfield   (bg_data, frame_time);  break;
         case hexagon:       draw_background_hexagon     (bg_data, frame_time);  break;
+        case munching:      draw_background_munching    (bg_data, frame_time);  break;
         case none:
         default: break;
     }

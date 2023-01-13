@@ -12,8 +12,9 @@ enum background_effect {
     conway,
     monitor,
     wave,
-	starfield,
-	hexagon
+    starfield,
+    hexagon,
+    munching
 };
 
 // stores data that can be used by the background
