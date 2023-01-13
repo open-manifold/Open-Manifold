@@ -889,13 +889,13 @@ void draw_background_hexagon(bg_data bg_data, int frame_time) {
 void draw_background_munching(bg_data bg_data, int frame_time) {
     void *pixels;
     int pitch;
-    float munch_rate_r = 200;
-    float munch_rate_g = 200;
-    float munch_rate_b = 200;
+    float munch_rate_r = sin(bg_data.song_tick/200.f);
+    float munch_rate_g = sin(bg_data.song_tick/200.f);
+    float munch_rate_b = sin(bg_data.song_tick/200.f);
     SDL_Rect tile;
     
     tile.x = tile.y = 0;
-    tile.h = tile.w = aux_texture_w*2;
+    tile.h = tile.w = aux_texture_w;
     
     if (bg_data.shape_advanced) aux_int = 2000;
     
@@ -903,23 +903,23 @@ void draw_background_munching(bg_data bg_data, int frame_time) {
     if (aux_int > 0) {
         aux_int = fmax(aux_int - frame_time, 0);
         
-        munch_rate_r = 250;
-        munch_rate_g = 350;
-        munch_rate_b = 150;
+        munch_rate_r = sin(bg_data.song_tick/250.f);
+        munch_rate_g = sin(bg_data.song_tick/350.f);
+        munch_rate_b = sin(bg_data.song_tick/150.f);
     }
     
     SDL_LockTexture(aux_texture, NULL, &pixels, &pitch);
     
-    // generate the moire texture
+    // generate the munch texture
     for (int y = 0; y < aux_texture_h; y++) {
         Uint32* dest = (Uint32*)((Uint8*)pixels + y * pitch);
         for (int x = 0; x < aux_texture_w; x++) {
             Uint32 shade = 0;
             Uint8 r, g, b;
             
-            r = (Uint8)((x ^ y)*2 + sin(bg_data.song_tick/munch_rate_r) * 128);
-            g = (Uint8)((x ^ y)*2 + sin(bg_data.song_tick/munch_rate_g) * 128);
-            b = (Uint8)((x ^ y)*2 + sin(bg_data.song_tick/munch_rate_b) * 128);
+            r = (Uint8)((x ^ y) + munch_rate_r * 128);
+            g = (Uint8)((x ^ y) + munch_rate_g * 128);
+            b = (Uint8)((x ^ y) + munch_rate_b * 128);
             
             if (SDL_BYTEORDER == SDL_BIG_ENDIAN) {
                 shade += 0xff;
@@ -999,7 +999,7 @@ void init_background_effect(background_effect effect_id) {
             break;
             
         case munching:
-            aux_texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGBA32, SDL_TEXTUREACCESS_STREAMING, 128, 128);
+            aux_texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGBA32, SDL_TEXTUREACCESS_STREAMING, 256, 256);
             SDL_QueryTexture(aux_texture, NULL, NULL, &aux_texture_w, &aux_texture_h);
             break;
 
