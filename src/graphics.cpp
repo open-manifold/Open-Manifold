@@ -688,6 +688,8 @@ void draw_background_monitor(bg_data bg_data, int frame_time) {
     int scanline_height = fmax(fmax(width, height) * 0.0025, 1);
     int slow_song_tick = bg_data.song_tick * (scanline_height * 0.0075);
     int scanline_yoffset = slow_song_tick % (scanline_height * 6);
+    
+    if (bg_data.shape_advanced) aux_int = 750;
 
     shape.x = 0;
     shape.w = width;
@@ -703,14 +705,54 @@ void draw_background_monitor(bg_data bg_data, int frame_time) {
 
     SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
     SDL_SetRenderDrawColor(renderer, 255, 255, 255, 32);
+    
+    if (aux_int > 0) {
+        aux_int = fmax(aux_int - frame_time, 0);
+        
+        // generate and display noise texture
+        void *pixels;
+        int pitch;
+        
+        SDL_LockTexture(aux_texture, NULL, &pixels, &pitch);
+        
+        for (int y = 0; y < aux_texture_h; y++) {
+            Uint32* dest = (Uint32*)((Uint8*)pixels + y * pitch);
+            for (int x = 0; x < aux_texture_w; x++) {
+                Uint32 shade = 0;
+                Uint8 r, g, b, a;
+                
+                r = (Uint8)rand();
+                g = (Uint8)rand();
+                b = (Uint8)rand();
+                a = (Uint8)rand()/4;
+                
+                if (SDL_BYTEORDER == SDL_BIG_ENDIAN) {
+                    shade += a;
+                    shade += b << 8;
+                    shade += g << 16;
+                    shade += r << 24;
+                } else {
+                    shade += r;
+                    shade += g << 8;
+                    shade += b << 16;
+                    shade += a << 24;
+                }
+                
+                *dest++ = shade;
+            }
+        }
+        
+        SDL_UnlockTexture(aux_texture);
+    
+        SDL_SetTextureBlendMode(aux_texture, SDL_BLENDMODE_ADD);
+        SDL_RenderCopy(renderer, aux_texture, NULL, NULL);
+        SDL_SetTextureBlendMode(aux_texture, SDL_BLENDMODE_BLEND);
+    }
 
     for (int y = scanline_height * -1; y < height; y += scanline_height * 6) {
         shape.y = y + scanline_yoffset;
         SDL_RenderFillRect(renderer, &shape);
     }
-
-    SDL_RenderCopy(renderer, aux_texture, NULL, NULL);
-    SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_NONE);
     return;
 }
 
@@ -884,6 +926,11 @@ void init_background_effect(background_effect effect_id) {
                 }
             }
 
+            break;
+        
+        case monitor:
+            aux_texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGBA32, SDL_TEXTUREACCESS_STREAMING, 320, 240);
+            SDL_QueryTexture(aux_texture, NULL, NULL, &aux_texture_w, &aux_texture_h);
             break;
 
         case none:
