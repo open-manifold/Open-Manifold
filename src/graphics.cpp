@@ -210,17 +210,17 @@ void load_fallback_font() {
     Uint32 rmask, gmask, bmask, amask;
     
     // set color masks based on SDL endianness
-    #if SDL_BYTEORDER == SDL_BIG_ENDIAN
+    if (SDL_BYTEORDER == SDL_BIG_ENDIAN) {
         rmask = 0xff000000;
         gmask = 0x00ff0000;
         bmask = 0x0000ff00;
         amask = 0x000000ff;
-    #else
+    } else {
         rmask = 0x000000ff;
         gmask = 0x0000ff00;
         bmask = 0x00ff0000;
         amask = 0xff000000;
-    #endif
+    }
     
     font = SDL_CreateRGBSurfaceFrom((void*)fallback_font.pixel_data, fallback_font.width, fallback_font.height, fallback_font.bytes_per_pixel*8, fallback_font.bytes_per_pixel*fallback_font.width, rmask, gmask, bmask, amask);
     return;
