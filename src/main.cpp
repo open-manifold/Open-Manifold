@@ -1470,7 +1470,7 @@ bool loop(json json_file, int start_offset, int time_signature_top, int time_sig
     
                 // triggers for every beat where the player has control
                 if ((beat_count - start_offset) % (measure_length*2) >= measure_length) {
-                    // not currently used for anything, but it might be in the future!
+                    if (beat_count%2 == 0) {SDL_GameControllerRumble(controller, 0xFFFF, 0xFFFF, 120);}
                 }
     
                 // triggers for every beat where the CPU has control
