@@ -1,0 +1,124 @@
+[
+    {
+        "name": "Amber Dye",
+        "song_author": "SuperFromND",
+        "level_author": "SuperFromND",
+        "genre": "Trance",
+        "bpm": 120,
+        "bg_color": 12,
+        "background_effect": "wave"
+    },
+    {
+        "shape": 0,
+        "color": 0,
+        "x": 7,
+        "y": 7,
+        "scale": 8,
+        "sequence": "Z.S.S.S.S.S.S.S."
+    },
+    {
+        "shape": 0,
+        "color": 15,
+        "x": 3,
+        "y": 7,
+        "scale": 3,
+        "sequence": "Z.S.S...L.L.L.L.",
+        "song_step": 0
+    },
+    {
+        "shape": 0,
+        "color": 15,
+        "x": 11,
+        "y": 7,
+        "scale": 3,
+        "sequence": "Z.S.S...R.R.R.R."
+    },
+    {
+        "shape": 1,
+        "color": 0,
+        "x": 10,
+        "y": 8,
+        "scale": 1,
+        "sequence": "X...R...R.R.D...",
+        "song_step": 0
+    },
+    {
+        "shape": 1,
+        "color": 0,
+        "x": 4,
+        "y": 8,
+        "scale": 1,
+        "sequence": "X...L...L.L.D..."
+    },
+    {
+        "shape": 0,
+        "color": 0,
+        "x": 2,
+        "y": 2,
+        "scale": 3,
+        "sequence": "Z.SS.LLLLLUUUUU."
+    },
+    {
+        "shape": 0,
+        "color": 15,
+        "x": 2,
+        "y": 2,
+        "scale": 2,
+        "sequence": "Z.S.LLLLL.UUUUU."
+    },
+    {
+        "shape": 0,
+        "color": 0,
+        "x": 3,
+        "y": 3,
+        "scale": 2,
+        "sequence": "Z.SLLL..L.UUUU..",
+        "auto_shapes": [
+            {
+                "shape": 0,
+                "color": 0,
+                "x": 12,
+                "y": 2,
+                "scale": 3
+            },
+            {
+                "shape": 0,
+                "color": 15,
+                "x": 12,
+                "y": 2,
+                "scale": 2
+            },
+            {
+                "shape": 0,
+                "color": 0,
+                "x": 11,
+                "y": 3,
+                "scale": 2
+            }
+        ]
+    },
+    {
+        "shape": 0,
+        "color": 15,
+        "x": 7,
+        "y": 12,
+        "scale": 2,
+        "sequence": "Z.S.D.D.D.D.D..."
+    },
+    {
+        "shape": 0,
+        "color": 0,
+        "x": 7,
+        "y": 11,
+        "scale": 2,
+        "sequence": "Z...S...D.D.D.D."
+    },
+    {
+        "shape": 2,
+        "color": 15,
+        "x": 7,
+        "y": 9,
+        "scale": 1,
+        "sequence": "C...D.D.D.U.S.A."
+    }
+]
