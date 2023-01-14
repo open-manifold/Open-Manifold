@@ -6,7 +6,7 @@ EXECNAME = OpenManifold
 ICON = 
 
 ifeq ($(OS),Windows_NT)
-	LDFLAGS := -lmingw32 -lSDL2main $(LDFLAGS)
+	LDFLAGS := -static-libgcc -static-libstdc++ -lmingw32 -lSDL2main $(LDFLAGS)
     EXECNAME := $(addsuffix .exe,$(EXECNAME))
 	ICON := res/icon.res
 endif

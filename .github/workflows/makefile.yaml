@@ -93,7 +93,7 @@ jobs:
 
       - name: Build package
         run: |
-          make pkg LDFLAGS:="-Llib -lSDL2main -lSDL2 -lSDL2_image -lSDL2_mixer -lstdc++fs"
+          make pkg LDFLAGS:="-Llib -static-libgcc -static-libstdc++ -lSDL2main -lSDL2 -lSDL2_image -lSDL2_mixer -lstdc++fs"
 
       - name: Upload package
         uses: actions/upload-artifact@v3.1.2
