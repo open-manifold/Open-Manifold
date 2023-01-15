@@ -19,6 +19,8 @@ void parse_character_file(nlohmann::json);
 void set_character_frame_data(character_frames);
 void set_character_status(char);
 void reset_character_status();
+void set_character_timer(int);
+void tick_character(int);
 SDL_Rect get_character_rect(int);
 
 #endif

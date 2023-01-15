@@ -29,6 +29,8 @@
 
 using nlohmann::json;
 
+int character_hold_timer = 0;
+
 struct character_frames {
     std::vector<SDL_Rect> idle;
     SDL_Rect up;
@@ -93,7 +95,28 @@ void set_character_status(char opcode) {
 }
 
 void reset_character_status() {
+    character_hold_timer = 0;
     current_state = IDLE;
+    return;
+}
+
+void set_character_timer(int time_ms) {
+    character_hold_timer = time_ms;
+    return;
+}
+
+void tick_character(int frame_time) {
+    // handles the character timer
+    // as long as "character_hold_timer" is >0, it will hold on
+    // whatever status is currently present
+    
+    character_hold_timer -= frame_time;
+    
+    if (character_hold_timer <= 0) {
+        character_hold_timer = 0;
+        reset_character_status();
+    }
+    
     return;
 }
 

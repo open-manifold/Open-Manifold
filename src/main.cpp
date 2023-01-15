@@ -1495,6 +1495,8 @@ bool loop(json json_file, int start_offset, int time_signature_top, int time_sig
             beat_count++;
             beat_start_time += length;
         }
+        
+        tick_character(frame_time);
 
         // this basically just says "give us 0 if it's negative, otherwise give us how many shapes have passed"
         // this gets offset by 1 since element 0 in level.json is a header
@@ -1812,6 +1814,7 @@ int main(int argc, char *argv[]) {
                                     break;
                             }
                             
+                            set_character_timer(400); // TODO: get the length of 1 beat and pass it to this
                             active_shape    = modify_current_shape(op, active_shape, true);
                             player_sequence = modify_sequence(op, beat_side);
                         }
