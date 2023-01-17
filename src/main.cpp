@@ -110,10 +110,6 @@ Mix_Music *music;
 extern float fade_in;
 extern float fade_out;
 
-// used to keep track of what options are selected in menus
-int menu_selected = 0;
-int option_selected = 0;
-
 // stores file paths
 std::vector<string> level_paths;   // e.g. "assets/levels/Foo Bar"
 int level_index = 0;
@@ -1533,6 +1529,10 @@ int main(int argc, char *argv[]) {
     game_states current_state = WARNING;
     game_states transition_state;
     SDL_Event evt;
+    
+    // used to keep track of what's currently selected in various menus
+    int menu_selected = 0;
+    int option_selected = 0;
 
     load_levels();
     load_motd();
