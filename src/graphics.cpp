@@ -62,6 +62,7 @@ float fade_out = 0;
 SDL_Surface* font;
 SDL_Texture* font_texture;
 SDL_Texture* logo_texture;
+SDL_Texture* sandbox_icon_texture;
 
 // for other character data (rects), see character.cpp
 SDL_Texture* char_texture;
@@ -142,6 +143,11 @@ void unload_logo() {
     return;
 }
 
+void unload_sandbox_icons() {
+    SDL_DestroyTexture(sandbox_icon_texture);
+    return;
+}
+
 void unload_character_tileset() {
     SDL_DestroyTexture(char_texture);
     return;
@@ -199,6 +205,29 @@ void load_logo() {
 
     SDL_FreeSurface(temp);
     SDL_SetTextureScaleMode(logo_texture, SDL_ScaleModeLinear);
+    return;
+}
+
+void load_sandbox_icons() {
+    SDL_Surface* temp = IMG_Load("assets/sandbox_icons.png");
+
+    if (temp == NULL) {
+        printf("[!] %s\n"
+        "Sandbox icons will be blank!\n", SDL_GetError());
+        sandbox_icon_texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, 6, 1);
+
+        // fill texture with pure-black pixels
+        SDL_SetRenderTarget(renderer, sandbox_icon_texture);
+        SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+        SDL_RenderClear(renderer);
+        SDL_SetRenderTarget(renderer, NULL);
+    } else {
+        printf("Loaded sandbox icons.\n");
+        sandbox_icon_texture = SDL_CreateTextureFromSurface(renderer, temp);
+    }
+
+    SDL_FreeSurface(temp);
+    SDL_SetTextureScaleMode(sandbox_icon_texture, SDL_ScaleModeLinear);
     return;
 }
 
@@ -1723,14 +1752,19 @@ bool draw_game(int beat_count, int start_offset, int measure_length, int song_st
     return true;
 }
 
-bool draw_sandbox(background_effect background_id, shape active_shape, std::vector<shape> previous_shapes, int frame_time) {
+bool draw_sandbox(background_effect background_id, shape active_shape, std::vector<shape> previous_shapes, bool menu_open, int menu_item, int frame_time) {
     int scale_mul = fmax(floor(fmin(height, width)/360), 1);
+    int time = SDL_GetTicks();
+    const char* sandbox_items[] = {
+        "Change Color"
+    };
+    const int sandbox_item_count = std::size(sandbox_items);
 
     SDL_RenderClear(renderer);
     
     // sets up a dummy bgdata
     bg_data bg_data = {
-        (int)SDL_GetTicks(), 
+        time, 
         0, 
         false,
         false,
@@ -1780,6 +1814,51 @@ bool draw_sandbox(background_effect background_id, shape active_shape, std::vect
     SDL_SetRenderTarget(renderer, NULL);
     SDL_RenderCopy(renderer, shape_texture, NULL, &grid_area);
     SDL_DestroyTexture(shape_texture);
+    
+    // draws the sandbox menu (if it's open)
+    if (menu_open) {
+        SDL_Rect icon_area;
+        SDL_Rect icon_coords;
+        int icon_tex_size;
+        int icon_size = height/8;
+        int icon_padding = icon_size / 10;
+        
+        SDL_QueryTexture(sandbox_icon_texture, NULL, NULL, NULL, &icon_tex_size);
+        int total_width_of_icons = sandbox_item_count * (icon_size + icon_padding) - icon_padding;
+        
+        // draws the sandbox icons and boxes
+        for (int i = 0; i < sandbox_item_count; i++) {
+            Uint8 shade = 127;
+            if (i == menu_item) {shade = (abs(sin(time*0.4/90)) * 30) + 220;}
+            
+            icon_area.x = (i * (icon_size + icon_padding)) + (width/2 - total_width_of_icons/2);
+            icon_area.y = height - icon_size - (icon_padding/2);
+            icon_area.w = icon_size;
+            icon_area.h = icon_size;
+            
+            icon_coords.x = i * icon_tex_size;
+            icon_coords.y = 0;
+            icon_coords.w = icon_coords.h = icon_tex_size;
+            
+            SDL_SetRenderDrawColor(renderer, shade, shade, shade, 255);
+            SDL_RenderFillRect(renderer, &icon_area);
+            
+            icon_area.x += icon_padding;
+            icon_area.y += icon_padding;
+            icon_area.w = icon_area.h = icon_area.w - icon_padding * 2;
+            
+            SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+            SDL_RenderFillRect(renderer, &icon_area);
+            
+            icon_area.x += icon_padding;
+            icon_area.y += icon_padding;
+            icon_area.w = icon_area.h = icon_area.w - icon_padding * 2;
+            
+            SDL_RenderCopy(renderer, sandbox_icon_texture, &icon_coords, &icon_area);
+        }
+        
+        draw_text(sandbox_items[menu_item], width/2, height - icon_size - icon_padding - font->h, 1, 0);
+    }
 
     draw_fade(16, 16, frame_time);
     return true;

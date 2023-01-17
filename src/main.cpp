@@ -1533,6 +1533,8 @@ int main(int argc, char *argv[]) {
     // used to keep track of what's currently selected in various menus
     int menu_selected = 0;
     int option_selected = 0;
+    int sandbox_option_selected = 0;
+    bool sandbox_menu_active = false;
 
     load_levels();
     load_motd();
@@ -1823,12 +1825,10 @@ int main(int argc, char *argv[]) {
                     case SANDBOX:
                         if (check_fade_activity()) {break;}
 
+                        // inputs that are true regardless of the sandbox menu
                         switch(input_value) {
                             case START:
-                                Mix_PlayChannel(-1, snd_success, 0);
-                                previous_shapes.push_back(active_shape);
-                                reset_shapes();
-                                active_shape.type = 0;
+                                sandbox_menu_active = !sandbox_menu_active;
                                 break;
 
                             case SELECT:
@@ -1836,47 +1836,93 @@ int main(int argc, char *argv[]) {
                                 transition_state = TITLE;
                                 fade_out++;
                                 break;
+                        }
+                        
+                        if (sandbox_menu_active) {
+                            // inputs for when the sandbox menu is up
+                            switch (input_value) {
+                                case LEFT:
+                                    Mix_PlayChannel(0, snd_menu_move, 0);
+                                    sandbox_option_selected--;
+                                    if (sandbox_option_selected < 0) {sandbox_option_selected = 0;}
+                                    break;
 
-                            case UP:
-                                active_shape = modify_current_shape('U', active_shape);
-                                break;
-
-                            case DOWN:
-                                active_shape = modify_current_shape('D', active_shape);
-                                break;
-
-                            case LEFT:
-                                active_shape = modify_current_shape('L', active_shape);
-                                break;
-
-                            case RIGHT:
-                                active_shape = modify_current_shape('R', active_shape);
-                                break;
-
-                            case CIRCLE:
-                                active_shape = modify_current_shape('Z', active_shape);
-                                break;
-
-                            case SQUARE:
-                                active_shape = modify_current_shape('X', active_shape);
-                                break;
-
-                            case TRIANGLE:
-                                active_shape = modify_current_shape('C', active_shape);
-                                break;
-
-                            case CROSS:
-                                active_shape = modify_current_shape('V', active_shape);
-                                active_shape.color = (active_shape.color + 1)%17;
-                                break;
-
-                            case LB:
-                                active_shape = modify_current_shape('A', active_shape);
-                                break;
-
-                            case RB:
-                                active_shape = modify_current_shape('S', active_shape);
-                                break;
+                                case RIGHT:
+                                    Mix_PlayChannel(0, snd_menu_move, 0);
+                                    sandbox_option_selected++;
+                                    if (sandbox_option_selected > 0) {sandbox_option_selected = 0;}
+                                    break;
+                                    
+                                case UP:
+                                    switch (sandbox_option_selected) {
+                                        case 0:
+                                            Mix_PlayChannel(0, snd_xplode, 0);
+                                            active_shape.color++;
+                                            if (active_shape.color > 16) {active_shape.color = 0;}
+                                            break;
+                                        
+                                        default: break;
+                                    }
+                                    break;
+                                    
+                                case DOWN:
+                                    switch (sandbox_option_selected) {
+                                        case 0:
+                                            Mix_PlayChannel(0, snd_xplode, 0);
+                                            active_shape.color--;
+                                            if (active_shape.color < 0) {active_shape.color = 16;}
+                                            break;
+                                        
+                                        default: break;
+                                    }
+                                    break;
+                            }
+                        } else {
+                            // inputs for "normal" sandbox play
+                            switch (input_value) {
+                                case UP:
+                                    active_shape = modify_current_shape('U', active_shape);
+                                    break;
+    
+                                case DOWN:
+                                    active_shape = modify_current_shape('D', active_shape);
+                                    break;
+    
+                                case LEFT:
+                                    active_shape = modify_current_shape('L', active_shape);
+                                    break;
+    
+                                case RIGHT:
+                                    active_shape = modify_current_shape('R', active_shape);
+                                    break;
+    
+                                case CIRCLE:
+                                    active_shape = modify_current_shape('Z', active_shape);
+                                    break;
+    
+                                case SQUARE:
+                                    active_shape = modify_current_shape('X', active_shape);
+                                    break;
+    
+                                case TRIANGLE:
+                                    active_shape = modify_current_shape('C', active_shape);
+                                    break;
+    
+                                case CROSS:
+                                    Mix_PlayChannel(-1, snd_success, 0);
+                                    previous_shapes.push_back(active_shape);
+                                    reset_shapes();
+                                    active_shape.type = 0;
+                                    break;
+    
+                                case LB:
+                                    active_shape = modify_current_shape('A', active_shape);
+                                    break;
+    
+                                case RB:
+                                    active_shape = modify_current_shape('S', active_shape);
+                                    break;
+                            }
                         }
                         break;
 
@@ -2029,6 +2075,8 @@ int main(int argc, char *argv[]) {
             // Runs functions at the end of a state
             switch (current_state) {
                 case SANDBOX:
+                    unload_sandbox_icons();
+                    // the lack of break here is deliberate
                 case GAME:
                     previous_shapes.clear();
                     load_menu_music();
@@ -2068,12 +2116,15 @@ int main(int argc, char *argv[]) {
                     printf("Loading sandbox mode...\n");
                     draw_loading(false);
                     load_sandbox_music();
+                    load_sandbox_icons();
                     load_default_sound_collection();
                     reset_color_table();
                     reset_shapes();
                     active_shape.type = 0;
                     background_id = wave;
                     init_background_effect(background_id);
+                    sandbox_menu_active = false;
+                    sandbox_option_selected = 0;
                     break;
 
                 case GAME:
@@ -2126,7 +2177,7 @@ int main(int argc, char *argv[]) {
                 break;
 
             case SANDBOX:
-                draw_sandbox(background_id, active_shape, previous_shapes, frame_time);
+                draw_sandbox(background_id, active_shape, previous_shapes, sandbox_menu_active, sandbox_option_selected, frame_time);
                 break;
 
             case OPTIONS:

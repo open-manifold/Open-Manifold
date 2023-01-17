@@ -27,6 +27,8 @@ void draw_fade(int, int, int);
 void draw_level_intro_fade(int, int, int);
 void load_logo();
 void unload_logo();
+void load_sandbox_icons();
+void unload_sandbox_icons();
 void load_font();
 
 void init_background_effect(background_effect);
@@ -44,6 +46,6 @@ bool draw_credits(int);
 bool draw_level_select(nlohmann::json, int);
 bool draw_game(int, int, int, int, float, int, int, bool, bool, background_effect, shape, shape, std::vector<shape>, bool, bool, bool, int);
 bool draw_options(int, int, int, bool, int, bool, bool, bool, bool, int, int);
-bool draw_sandbox(background_effect, shape, std::vector<shape>, int);
+bool draw_sandbox(background_effect, shape, std::vector<shape>, bool, int, int);
 
 #endif

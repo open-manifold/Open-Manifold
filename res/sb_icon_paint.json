@@ -1,0 +1,40 @@
+[
+	{
+		"bgColor": 15
+	},
+	{
+		"shape": 1,
+		"color": 0,
+		"x": 7,
+		"y": 11,
+		"scale": 4
+	},
+	{
+		"shape": 2,
+		"color": 0,
+		"x": 7,
+		"y": 3,
+		"scale": 4
+	},
+	{
+		"shape": 1,
+		"color": 0,
+		"x": 7,
+		"y": 10,
+		"scale": 4
+	},
+	{
+		"shape": 2,
+		"color": 15,
+		"x": 7,
+		"y": 2,
+		"scale": 3
+	},
+	{
+		"shape": 2,
+		"color": 0,
+		"x": 7,
+		"y": 1,
+		"scale": 2
+	}
+]
