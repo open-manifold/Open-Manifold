@@ -141,7 +141,9 @@ int option_count = std::size(option_items);
 // similar data for the sandbox menu
 // TODO: split off this (and other sandbox functions) into their own file
 const char* sandbox_items[] = {
-    "Change Color"
+    "Change Color",
+    "Shape Morph",
+    "Color Morph"
 };
 
 int sandbox_item_count = std::size(sandbox_items);

@@ -1317,6 +1317,25 @@ shape modify_current_shape(char opcode, shape current_shape, bool is_player = fa
     return modified_shape;
 }
 
+void morph_shapes() {
+    for (int i = 0; i < previous_shapes.size(); i++) {
+        int new_type = (previous_shapes[i].type + 1) % 3;
+        previous_shapes[i].type = new_type;
+    }
+    return;
+}
+
+void morph_colors() {
+    for (int i = 0; i < previous_shapes.size(); i++) {
+        // skip any shapes with the erase color
+        if (previous_shapes[i].color == 16) {continue;}
+        
+        int new_color = (previous_shapes[i].color + 1) % 16;
+        previous_shapes[i].color = new_color;
+    }
+    return;
+}
+
 bool check_available_sequence(int beat_side) {
     // returns true if the current sequence op is blank, false if it isn't
     // this ensures that both a sequence can't be overwritten and that only
@@ -1874,6 +1893,22 @@ int main(int argc, char *argv[]) {
                                             if (active_shape.color < 0) {active_shape.color = 16;}
                                             break;
                                         
+                                        default: break;
+                                    }
+                                    break;
+                                
+                                case CROSS:
+                                    switch (sandbox_option_selected) {
+                                        case 1:
+                                            Mix_PlayChannel(0, snd_xplode, 0);
+                                            morph_shapes();
+                                            break;
+                                            
+                                        case 2:
+                                            Mix_PlayChannel(0, snd_xplode, 0);
+                                            morph_colors();
+                                            break;
+                                            
                                         default: break;
                                     }
                                     break;
