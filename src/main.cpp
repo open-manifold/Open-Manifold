@@ -50,6 +50,7 @@ extern int height;
 
 // various options
 extern int option_count;
+extern int sandbox_item_count;
 int music_volume = 75;
 int sfx_volume = 75;
 bool mono_toggle = false;
@@ -1844,13 +1845,13 @@ int main(int argc, char *argv[]) {
                                 case LEFT:
                                     Mix_PlayChannel(0, snd_menu_move, 0);
                                     sandbox_option_selected--;
-                                    if (sandbox_option_selected < 0) {sandbox_option_selected = 0;}
+                                    if (sandbox_option_selected < 0) {sandbox_option_selected = sandbox_item_count - 1;}
                                     break;
 
                                 case RIGHT:
                                     Mix_PlayChannel(0, snd_menu_move, 0);
                                     sandbox_option_selected++;
-                                    if (sandbox_option_selected > 0) {sandbox_option_selected = 0;}
+                                    if (sandbox_option_selected > sandbox_item_count - 1) {sandbox_option_selected = 0;}
                                     break;
                                     
                                 case UP:

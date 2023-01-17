@@ -138,6 +138,14 @@ const char *option_items[][2] = {
 
 int option_count = std::size(option_items);
 
+// similar data for the sandbox menu
+// TODO: split off this (and other sandbox functions) into their own file
+const char* sandbox_items[] = {
+    "Change Color"
+};
+
+int sandbox_item_count = std::size(sandbox_items);
+
 void unload_logo() {
     SDL_DestroyTexture(logo_texture);
     return;
@@ -1755,10 +1763,6 @@ bool draw_game(int beat_count, int start_offset, int measure_length, int song_st
 bool draw_sandbox(background_effect background_id, shape active_shape, std::vector<shape> previous_shapes, bool menu_open, int menu_item, int frame_time) {
     int scale_mul = fmax(floor(fmin(height, width)/360), 1);
     int time = SDL_GetTicks();
-    const char* sandbox_items[] = {
-        "Change Color"
-    };
-    const int sandbox_item_count = std::size(sandbox_items);
 
     SDL_RenderClear(renderer);
     
