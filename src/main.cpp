@@ -103,6 +103,7 @@ Mix_Chunk *snd_xplode;
 Mix_Chunk *snd_scale_up;
 Mix_Chunk *snd_scale_down;
 Mix_Chunk *snd_success;
+Mix_Chunk *snd_combo;
 
 // the music track that's playing
 Mix_Music *music;
@@ -669,6 +670,10 @@ int get_score() {
     return score;
 }
 
+int get_combo() {
+    return combo;
+}
+
 void modify_life(int mod) {
     // adds or subtracts life value; wrapped up to ensure it's capped consistently
     life += mod;
@@ -1069,11 +1074,9 @@ Mix_Chunk* load_stage_sound(string file_name) {
     return sound;
 }
 
-void load_stage_sound_collection() {
-    // wrapper that loads every sound a level can use aside from music
-    // uses the load_stage_sound function below
-
-    // frees everything, this prevents a memleak from loading tons of levels in one session
+void unload_sounds() {
+    // frees every sound file used in levels
+    
     Mix_FreeChunk(snd_up);
     Mix_FreeChunk(snd_down);
     Mix_FreeChunk(snd_left);
@@ -1085,6 +1088,16 @@ void load_stage_sound_collection() {
     Mix_FreeChunk(snd_scale_up);
     Mix_FreeChunk(snd_scale_down);
     Mix_FreeChunk(snd_success);
+    Mix_FreeChunk(snd_combo);
+    
+    return;
+}
+
+void load_stage_sound_collection() {
+    // wrapper that loads every sound a level can use aside from music
+    // uses the load_stage_sound function below
+
+    unload_sounds();
 
     snd_up          = load_stage_sound("up");
     snd_down        = load_stage_sound("down");
@@ -1097,6 +1110,7 @@ void load_stage_sound_collection() {
     snd_scale_up    = load_stage_sound("scale_up");
     snd_scale_down  = load_stage_sound("scale_down");
     snd_success     = load_stage_sound("success");
+    snd_combo       = load_stage_sound("combo");
 
     return;
 }
@@ -1105,17 +1119,7 @@ void load_default_sound_collection() {
     // similar to above but specifically for default sounds
     // this is used by the sandbox mode
 
-    Mix_FreeChunk(snd_up);
-    Mix_FreeChunk(snd_down);
-    Mix_FreeChunk(snd_left);
-    Mix_FreeChunk(snd_right);
-    Mix_FreeChunk(snd_circle);
-    Mix_FreeChunk(snd_square);
-    Mix_FreeChunk(snd_triangle);
-    Mix_FreeChunk(snd_xplode);
-    Mix_FreeChunk(snd_scale_up);
-    Mix_FreeChunk(snd_scale_down);
-    Mix_FreeChunk(snd_success);
+    unload_sounds();
 
     snd_up          = load_default_sound("up");
     snd_down        = load_default_sound("down");
@@ -1128,6 +1132,7 @@ void load_default_sound_collection() {
     snd_scale_up    = load_default_sound("scale_up");
     snd_scale_down  = load_default_sound("scale_down");
     snd_success     = load_default_sound("success");
+    // we don't load combo.ogg since sandbox doesn't use it
 
     return;
 }
@@ -1425,6 +1430,12 @@ bool loop(json json_file, int start_offset, int time_signature_top, int time_sig
                             modify_life(5);
                             combo++;
                             score += (calculate_score() * combo);
+                            
+                            // triggers the combo effect when reaching multiples of 5
+                            if (combo%5 == 0) {
+                                Mix_PlayChannel(-1, snd_combo, 0);
+                                set_combo_timer(3000);
+                            }
                             
                             // advances the song
                             float timer = (song_beat_position + song_step_amount) * ((60.f/bpm * 2.f) / time_signature_bottom);

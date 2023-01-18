@@ -16,6 +16,7 @@ struct shape {
 SDL_Color get_color(int);
 void reset_color_table();
 void set_color_table(int, std::string);
+void set_combo_timer(int);
 
 void draw_gradient(int, int, int, int, SDL_Color);
 void draw_text(std::string, int, int, int, int, int, SDL_Color = {255, 255, 255});

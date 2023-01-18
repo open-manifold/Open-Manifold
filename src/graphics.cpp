@@ -58,6 +58,7 @@ int width  = 1280;
 int height = 720;
 float fade_in  = 255;
 float fade_out = 0;
+int combo_display_timer = 0;
 
 SDL_Surface* font;
 SDL_Texture* font_texture;
@@ -340,6 +341,10 @@ void set_color_table(int id, string hex_color) {
     if (id > 15 | id < 0) {return;}
     color_table[id] = hex_string_to_color(hex_color);
     return;
+}
+
+void set_combo_timer(int ms) {
+    combo_display_timer = ms;
 }
 
 void draw_gradient(int x = 0, int y = 0, int w = width, int h = height, SDL_Color rgb_bottom = {255, 255, 255, 255}, SDL_Color rgb_top = {0, 0, 0, 255}) {
@@ -1112,7 +1117,7 @@ void draw_grid(int x = width/2, int y = height/2, int scale = height/22, SDL_Col
     return;
 }
 
-void draw_hud(int life, int score) {
+void draw_hud(int life, int score, int time, int frame_time) {
     // Draws the HUD during the main game
     
     int scale_mul = fmax(floor(height/360), 1);
@@ -1145,6 +1150,16 @@ void draw_hud(int life, int score) {
     // draws text versions of life bar, and score
     draw_text(std::to_string(life) + "%", life_bar.x, life_bar.y, scale_mul, 1, hud_bar.w);
     draw_text(score_string, width - life_bar.x, life_bar.y, scale_mul, -1, hud_bar.w);
+    
+    if (combo_display_timer > 0) {
+        int combo = get_combo();
+        string combo_str = std::to_string(combo) + "x combo!";
+        
+        Uint8 color_pulse = abs(sin(time*4.f/180)) * 200;
+        draw_text(combo_str, width/2, life_bar.y, scale_mul, 0, life_bar.w, {255, color_pulse, 255, 255});
+        
+        combo_display_timer -= frame_time;
+    }
     
     return;
 }
@@ -1756,7 +1771,7 @@ bool draw_game(int beat_count, int start_offset, int measure_length, int song_st
     SDL_DestroyTexture(shape_texture);
     
     if (game_over) {draw_game_over(current_ticks);}
-    draw_hud(get_life(), get_score());
+    draw_hud(get_life(), get_score(), current_ticks, frame_time);
     draw_level_intro_fade(song_start_time, current_ticks, intro_beat_length);
     draw_fade(255, 8, frame_time);
     return true;

@@ -15,3 +15,4 @@ bool get_debug();
 
 int get_life();
 int get_score();
+int get_combo();
