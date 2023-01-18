@@ -1899,6 +1899,12 @@ int main(int argc, char *argv[]) {
                                 
                                 case CROSS:
                                     switch (sandbox_option_selected) {
+                                        case 0:
+                                            Mix_PlayChannel(0, snd_xplode, 0);
+                                            active_shape.color++;
+                                            if (active_shape.color > 16) {active_shape.color = 0;}
+                                            break;
+                                            
                                         case 1:
                                             Mix_PlayChannel(0, snd_xplode, 0);
                                             morph_shapes();
