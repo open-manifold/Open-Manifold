@@ -144,7 +144,8 @@ int option_count = std::size(option_items);
 const char* sandbox_items[] = {
     "Change Color",
     "Shape Morph",
-    "Color Morph"
+    "Color Morph",
+    "Export to JSON"
 };
 
 int sandbox_item_count = std::size(sandbox_items);

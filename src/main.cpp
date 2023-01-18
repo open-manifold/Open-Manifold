@@ -500,6 +500,40 @@ void take_screenshot() {
     return;
 }
 
+void export_shapes() {
+    // get current time for filename
+    time_t rawtime;
+    struct tm *timeinfo;
+    char filename[80];
+
+    time(&rawtime);
+    timeinfo = localtime(&rawtime);
+
+    // construct filename
+    strftime(filename, sizeof(filename), "%Y-%m-%d_%H-%M-%S.json", timeinfo);
+
+    printf("Exporting JSON as: %s\n", filename);
+
+    // converts previous_shapes into JSON data
+    nlohmann::ordered_json exported_data;
+    
+    // adds a header, so this data can be used directly as level data!
+    exported_data[0]["name"] = filename;
+    exported_data[0]["bg_color"] = 15;
+    
+    for (int i = 1; i < previous_shapes.size() + 1; i++) {
+        exported_data[i]["shape"] = previous_shapes[i].type;
+        exported_data[i]["x"] = previous_shapes[i].x;
+        exported_data[i]["y"] = previous_shapes[i].y;
+        exported_data[i]["scale"] = previous_shapes[i].scale;
+        exported_data[i]["color"] = previous_shapes[i].color;
+    }
+    
+    std::ofstream file(filename);
+    file << exported_data.dump(4);
+    return;
+}
+
 controller_buttons keyboard_to_abstract_button(SDL_Keycode input, bool in_game) {
     // converts keyboard keys to the abstract controller
 
@@ -1931,6 +1965,11 @@ int main(int argc, char *argv[]) {
                                         case 2:
                                             Mix_PlayChannel(0, snd_xplode, 0);
                                             morph_colors();
+                                            break;
+                                            
+                                        case 3:
+                                            Mix_PlayChannel(0, snd_xplode, 0);
+                                            export_shapes();
                                             break;
                                             
                                         default: break;
