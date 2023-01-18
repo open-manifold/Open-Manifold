@@ -1055,10 +1055,11 @@ void init_background_effect(background_effect effect_id) {
     return;
 }
 
-void draw_background_effect(background_effect effect_id, bg_data bg_data, int frame_time) {
+void draw_background_effect(background_effect effect_id, bg_data bg_data, bool draw_debug_bg, int frame_time) {
     // Master function that calls various background FX drawing functions
     // ----------------------------------------------------------
     // bg_data: struct containing various values (see background.h; draw_game())
+    // draw_debug_bg: toggles whether to draw the debug background; -d switch must be on for this to work
 
     switch (effect_id) {
         case solid:         draw_background_solid       (bg_data, frame_time);  break;
@@ -1075,7 +1076,7 @@ void draw_background_effect(background_effect effect_id, bg_data bg_data, int fr
         default: break;
     }
 
-    if (get_debug()) {
+    if (get_debug() && draw_debug_bg) {
         draw_background_test(bg_data, frame_time);
     }
 
@@ -1706,7 +1707,7 @@ bool draw_game(int beat_count, int start_offset, int measure_length, int song_st
         bg_color
     };
 
-    draw_background_effect(background_id, bg_data, frame_time);
+    draw_background_effect(background_id, bg_data, true, frame_time);
     draw_character(character_beat_count);
     draw_grid(width/2, height/2, height/22, bg_color, !grid_toggle);
 
@@ -1796,7 +1797,7 @@ bool draw_sandbox(background_effect background_id, shape active_shape, std::vect
         get_color(15)
     };
 
-    draw_background_effect(background_id, bg_data, frame_time);
+    draw_background_effect(background_id, bg_data, false, frame_time);
     draw_grid(width/2, height/2, height/22, get_color(15));
 
     SDL_Rect grid_area;
