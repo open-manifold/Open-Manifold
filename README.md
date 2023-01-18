@@ -2,9 +2,16 @@
 
 **Open Manifold** is a free and open-source rhythm game with the goal of cloning the gameplay of the PS1 game *Rhythm 'N' Face* while offering several additional features, such as high resolutions, custom level support, and enhanced visual effects.
 
-Currently (as of December 2022), it is not yet considered ready for general use, in the sense that it is missing several key features such as input rebinding and delay calibration.
+Currently (as of January 2023), it is not yet considered ready for general use, in the sense that it is missing several key features such as delay calibration.
 
 Open Manifold's engine is licensed under MIT, and the included content is licensed under CC-BY-NC 4.0 (see `LICENSE` for details).
+
+## Getting Started
+For those just looking to play the game, visit [the releases page](https://github.com/open-manifold/Open-Manifold/releases) and download the latest stable release.
+
+For those who want to create levels or contribute to the source code, check out [the wiki](https://github.com/open-manifold/Open-Manifold/wiki) for both documentation and contribution guidelines.
+
+If you run into any bugs or have feature suggestions, you can [file an issue ticket on Github](https://github.com/open-manifold/Open-Manifold/issues); just be sure to check [this page](https://github.com/open-manifold/Open-Manifold/wiki/Troubleshooting) first.
 
 ## Background
 
@@ -13,11 +20,6 @@ Open Manifold's engine is licensed under MIT, and the included content is licens
 The object of the game was to create "faces" by moving and resizing a series of circles, squares, and triangles - corresponding to the respective buttons on a PlayStation controller - to the beat of a song. (The remaining button, X, is used for a "stall" function, referred to by this game as an "X-plode").
 
 Unlike many other rhythm games, the exact timing and buttons the player must press aren't directly enforced by the chart; the player can use any sequence of movements on any beat of the song so long as the shape ends up in the right place.  Performance was scored not by timing accuracy, but rather shape placement and how frequently the player performed actions.
-
-## Getting Started
-For those just looking to play the game, visit [the releases page](https://github.com/open-manifold/Open-Manifold/releases) and download the latest stable release.
-
-For those who want to create levels or contribute to the source code, check out [the wiki](https://github.com/open-manifold/Open-Manifold/wiki) for both documentation and contribution guidelines.
 
 ## Credits 'n' Thanks
  - **Outside Directors/Asmik Ace/Sony**: Creating and publishing *Rhythm 'n' Face*, the direct inspiration of this game.
