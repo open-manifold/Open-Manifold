@@ -193,6 +193,7 @@ void print_help() {
     printf("\nAccepted parameters are:\n\n"
     "-h  / -help            - Print this message\n"
     "-l  / -log             - Writes a log to file\n"
+    "-sb / -sandbox         - Start in sandbox mode\n"
     "-f  / -fullscreen      - Enable fullscreen\n"
     "-tf / -true-fullscreen - Enable 'real' fullscreen\n"
     "-v  / -vsync           - Enable V-Sync\n"
@@ -1560,6 +1561,12 @@ int main(int argc, char *argv[]) {
     game_states current_state = WARNING;
     game_states transition_state;
     SDL_Event evt;
+    
+    // parses arguments related to skipping directly to a given game state
+    if (parse_option(argv, argv+argc, "-sandbox")  || parse_option(argv, argv+argc, "-sb")) {
+        transition_state = SANDBOX;
+        fade_out = 255;
+    }
     
     // used to keep track of what's currently selected in various menus
     int menu_selected = 0;
