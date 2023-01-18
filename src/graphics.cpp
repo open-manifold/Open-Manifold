@@ -1156,7 +1156,7 @@ void draw_hud(int life, int score, int time, int frame_time) {
         string combo_str = std::to_string(combo) + "x combo!";
         
         Uint8 color_pulse = abs(sin(time*4.f/180)) * 200;
-        draw_text(combo_str, width/2, life_bar.y, scale_mul, 0, life_bar.w, {255, color_pulse, 255, 255});
+        draw_text(combo_str, width/2, life_bar.y, scale_mul, 0, hud_bar.w/2, {255, color_pulse, 255, 255});
         
         combo_display_timer -= frame_time;
     }
