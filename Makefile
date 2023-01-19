@@ -59,7 +59,7 @@ install:
 	cp -r ./res/assets ./bin/assets
 	cp -r ./release/. ./bin/assets
 ifeq ($(OS),Windows_NT)
-	cp -r ./res/dll/. ./abin/
+	cp -r ./res/dll/. ./bin/
 endif
 
 build:
