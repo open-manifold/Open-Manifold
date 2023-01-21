@@ -1167,7 +1167,7 @@ void load_default_sound_collection() {
     snd_scale_up    = load_default_sound("scale_up");
     snd_scale_down  = load_default_sound("scale_down");
     snd_success     = load_default_sound("success");
-    // we don't load combo.ogg since sandbox doesn't use it
+    snd_combo       = load_default_sound("combo");
 
     return;
 }
