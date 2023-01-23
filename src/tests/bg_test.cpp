@@ -42,6 +42,8 @@ bool init(int argc, char *argv[]) {
     printf("Build date: %s at %s\n========================================\n"
     "There's no docs for this, so if something breaks you're on your own!\n", __DATE__, __TIME__);
     
+    SDL_SetHint(SDL_HINT_RENDER_DRIVER, "opengl");
+    
     if(SDL_Init(SDL_INIT_EVERYTHING) < 0) {
         printf("[!] SDL could not initialize! %s\n", SDL_GetError());
         return false;

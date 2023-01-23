@@ -599,6 +599,11 @@ bool init(int argc, char *argv[]) {
     
     // sets VSYNC render hint
     SDL_SetHint(SDL_HINT_RENDER_VSYNC, std::to_string(vsync_toggle).c_str());
+    
+    // sets preferred backend to openGL
+    // this fixes, among other things (likely), the starfield BGFX
+    // see https://github.com/open-manifold/Open-Manifold/issues/22
+    SDL_SetHint(SDL_HINT_RENDER_DRIVER, "opengl");
 
     // initialize SDL stuff (video, audio, inputs, events, etc.)
     if(SDL_Init(SDL_INIT_EVERYTHING) < 0) {
