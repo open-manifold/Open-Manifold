@@ -401,6 +401,34 @@ void load_motd() {
     return;
 }
 
+void load_common_sounds() {
+    // loads sounds used pretty much everywhere
+    // these only get loaded once on startup
+    
+    printf("Loading common sound effects...\n");
+    snd_menu_move = Mix_LoadWAV("assets/sound/move.ogg");
+    if(snd_menu_move == NULL) {
+        printf("[!] move.ogg: %s\n", Mix_GetError());
+    }
+
+    snd_menu_confirm = Mix_LoadWAV("assets/sound/confirm.ogg");
+    if(snd_menu_confirm == NULL) {
+        printf("[!] confirm.ogg: %s\n", Mix_GetError());
+    }
+
+    snd_metronome_small = Mix_LoadWAV("assets/sound/metronome_small.ogg");
+    if(snd_metronome_small == NULL) {
+        printf("[!] metronome_small.ogg: %s\n", Mix_GetError());
+    }
+
+    snd_metronome_big = Mix_LoadWAV("assets/sound/metronome_big.ogg");
+    if(snd_metronome_big == NULL) {
+        printf("[!] metronome_big.ogg: %s\n", Mix_GetError());
+    }
+    
+    return;
+}
+
 void init_controller() {
     // checks for and initializes gamecontrollerdb.txt
     // see SDL2's documentation for more info
@@ -654,28 +682,7 @@ bool init(int argc, char *argv[]) {
     set_music_volume();
     set_sfx_volume();
     set_channel_mix();
-
-    // loads some sound effects
-    printf("Loading common sound effects...\n");
-    snd_menu_move = Mix_LoadWAV("assets/sound/move.ogg");
-    if(snd_menu_move == NULL) {
-        printf("[!] %s\n", Mix_GetError());
-    }
-
-    snd_menu_confirm = Mix_LoadWAV("assets/sound/confirm.ogg");
-    if(snd_menu_confirm == NULL) {
-        printf("[!] %s\n", Mix_GetError());
-    }
-
-    snd_metronome_small = Mix_LoadWAV("assets/sound/metronome_small.ogg");
-    if(snd_metronome_small == NULL) {
-        printf("[!] %s\n", Mix_GetError());
-    }
-
-    snd_metronome_big = Mix_LoadWAV("assets/sound/metronome_big.ogg");
-    if(snd_metronome_big == NULL) {
-        printf("[!] %s\n", Mix_GetError());
-    }
+    load_common_sounds();
 
     // initializes controller, if one is detected
     printf("Checking for controllers...\n");
