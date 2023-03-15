@@ -512,8 +512,8 @@ void draw_background_test(bg_data bg_data, int frame_time) {
     draw_text(std::to_string(bg_data.beat_count), shape.x + (shape.w*0.5), shape.y + (shape.h*0.5), 2, 0);
     
     // shows sequence strings on-screen for debugging
-    draw_text(get_cpu_sequence(), width/2, height - font->h, 1, 0);
-    draw_text(get_player_sequence(), width/2, height - (font->h*2), 1, 0);
+    draw_text(get_cpu_sequence(), width/2, height - font->h, 1, 0, width, {128, 64, 64, 255});
+    draw_text(get_player_sequence(), width/2, height - (font->h*2), 1, 0, width, {64, 64, 128, 255});
 
     return;
 }
