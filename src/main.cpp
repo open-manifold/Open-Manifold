@@ -997,7 +997,7 @@ json parse_level_file(string file) {
 
         // checks to see if the generated_sequence can fit within the allotted number of beats
         if (generated_sequence.length() > max_sequence_length) {
-            printf("[!] Generated sequence is longer than max number of beats! Level is not winnable.\n");
+            printf("[!] Generated sequence #%i is longer than max number of beats! Level is not winnable.\n", i);
         }
 
         // pads the sequence with NOPs
@@ -1010,7 +1010,23 @@ json parse_level_file(string file) {
         // check if a sequence is defined for this shape, if not, use the generated one
         // checking this AFTER making a sequence is inefficient, but also makes it much
         // more likely to catch impossible levels and is negligible on performance
-        if (sequence_exists) {continue;} else {
+        if (sequence_exists) {
+            string current_sequence = parsed_json[i].value("sequence", ".");
+            if (get_debug()) {printf("c_seq: %s\n", current_sequence.c_str());}
+            
+            // similar to the above checks for generated sequences
+            if (current_sequence.length() > max_sequence_length) {
+                printf("Level sequence #%i is too long (must be %i)! Truncating...\n", i, max_sequence_length);
+                parsed_json[i]["sequence"] = current_sequence.substr(0, max_sequence_length);
+            }
+    
+            if (current_sequence.length() < max_sequence_length) {
+                printf("Level sequence #%i is too short (must be %i)! Padding...\n", i, max_sequence_length);
+                parsed_json[i]["sequence"] = current_sequence.insert(current_sequence.end(), max_sequence_length - current_sequence.length(), '.');
+            }
+            
+            continue;
+        } else {
             parsed_json[i]["sequence"] = generated_sequence;
         }
     }
