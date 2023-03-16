@@ -2001,6 +2001,11 @@ int main(int argc, char *argv[]) {
                                             
                                         case 3:
                                             Mix_PlayChannel(0, snd_xplode, 0);
+                                            if (previous_shapes.size() > 0) {previous_shapes.pop_back();}
+                                            break;
+                                            
+                                        case 4:
+                                            Mix_PlayChannel(0, snd_xplode, 0);
                                             export_shapes();
                                             break;
                                             

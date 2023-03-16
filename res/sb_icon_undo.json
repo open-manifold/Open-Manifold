@@ -1,0 +1,26 @@
+[
+	{
+		"bgColor": 15
+	},
+	{
+		"shape": 2,
+		"color": 0,
+		"x": 7,
+		"y": 3,
+		"scale": 4
+	},
+	{
+		"shape": 1,
+		"color": 0,
+		"x": 7,
+		"y": 9,
+		"scale": 2
+	},
+	{
+		"shape": 1,
+		"color": 0,
+		"x": 7,
+		"y": 13,
+		"scale": 2
+	}
+]

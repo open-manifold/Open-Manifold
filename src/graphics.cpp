@@ -145,6 +145,7 @@ const char* sandbox_items[] = {
     "Change Color",
     "Shape Morph",
     "Color Morph",
+    "Undo Last Shape",
     "Export to JSON"
 };
 
