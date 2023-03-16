@@ -962,72 +962,72 @@ json parse_level_file(string file) {
         int scale = parsed_json[i].value("scale", 1);
 
         bool sequence_exists = parsed_json[i].contains("sequence");
-        string generated_sequence;
+        string gen_sequence;
 
         // sets the first action to changing shape
         switch (shape) {
-            case 0: generated_sequence += "Z"; break;
-            case 1: generated_sequence += "X"; break;
-            case 2: generated_sequence += "C"; break;
-            default: generated_sequence += "Z"; break;
+            case 0: gen_sequence += "Z"; break;
+            case 1: gen_sequence += "X"; break;
+            case 2: gen_sequence += "C"; break;
+            default: gen_sequence += "Z"; break;
         }
 
         // scales up the shape to the needed size
         if (scale > 1) {
-            for (int j = 1; j < scale; j++) {generated_sequence += "S";}
+            for (int j = 1; j < scale; j++) {gen_sequence += "S";}
         }
 
         // moves across the X axis
         if (x > 7) {
-            for (int j = 7; j < x; j++) {generated_sequence += "R";}
+            for (int j = 7; j < x; j++) {gen_sequence += "R";}
         }
 
         if (x < 7) {
-            for (int j = 7; j > x; j--) {generated_sequence += "L";}
+            for (int j = 7; j > x; j--) {gen_sequence += "L";}
         }
 
         // moves across the Y axis
         if (y > 7) {
-            for (int j = 7; j < y; j++) {generated_sequence += "D";}
+            for (int j = 7; j < y; j++) {gen_sequence += "D";}
         }
 
         if (y < 7) {
-            for (int j = 7; j > y; j--) {generated_sequence += "U";}
+            for (int j = 7; j > y; j--) {gen_sequence += "U";}
         }
 
-        // checks to see if the generated_sequence can fit within the allotted number of beats
-        if (generated_sequence.length() > max_sequence_length) {
+        // checks to see if the gen_sequence can fit within the allotted number of beats
+        if (gen_sequence.length() > max_sequence_length) {
             printf("[!] Generated sequence #%i is longer than max number of beats! Level is not winnable.\n", i);
         }
 
         // pads the sequence with NOPs
-        if (generated_sequence.length() < max_sequence_length) {
-            generated_sequence.insert(generated_sequence.end(), max_sequence_length - generated_sequence.length(), '.');
+        if (gen_sequence.length() < max_sequence_length) {
+            gen_sequence.insert(gen_sequence.end(), max_sequence_length - gen_sequence.length(), '.');
         }
 
-        if (get_debug()) {printf("g_seq: %s\n", generated_sequence.c_str());}
+        if (get_debug()) {printf("gen_seq: %s\n", gen_sequence.c_str());}
 
         // check if a sequence is defined for this shape, if not, use the generated one
         // checking this AFTER making a sequence is inefficient, but also makes it much
         // more likely to catch impossible levels and is negligible on performance
         if (sequence_exists) {
-            string current_sequence = parsed_json[i].value("sequence", ".");
-            if (get_debug()) {printf("c_seq: %s\n", current_sequence.c_str());}
+            string cur_sequence = parsed_json[i].value("sequence", ".");
+            if (get_debug()) {printf("cur_seq: %s\n", cur_sequence.c_str());}
             
             // similar to the above checks for generated sequences
-            if (current_sequence.length() > max_sequence_length) {
+            if (cur_sequence.length() > max_sequence_length) {
                 printf("Level sequence #%i is too long (must be %i)! Truncating...\n", i, max_sequence_length);
-                parsed_json[i]["sequence"] = current_sequence.substr(0, max_sequence_length);
+                parsed_json[i]["sequence"] = cur_sequence.substr(0, max_sequence_length);
             }
     
-            if (current_sequence.length() < max_sequence_length) {
+            if (cur_sequence.length() < max_sequence_length) {
                 printf("Level sequence #%i is too short (must be %i)! Padding...\n", i, max_sequence_length);
-                parsed_json[i]["sequence"] = current_sequence.insert(current_sequence.end(), max_sequence_length - current_sequence.length(), '.');
+                parsed_json[i]["sequence"] = cur_sequence.insert(cur_sequence.end(), max_sequence_length - cur_sequence.length(), '.');
             }
             
             continue;
         } else {
-            parsed_json[i]["sequence"] = generated_sequence;
+            parsed_json[i]["sequence"] = gen_sequence;
         }
     }
 
