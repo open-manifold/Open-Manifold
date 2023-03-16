@@ -1519,8 +1519,11 @@ bool draw_title(int menu_selection, int frame_time) {
         draw_text(menu_items[i], width/2, height/1.5 + ((i * char_height) * scale_mul), scale_mul, 0, width, text_highlight);
     }
     
+    // draws version number
+    draw_text(get_version_string(), 0, height - font->h, 1, 1, width, {0, 0, 32});
+    
     if (get_debug()) {
-        draw_text("debug mode is enabled! goofy things may happen", 0, height - font->h, 1, 1, width, {0, 0, 32});
+        draw_text("debug mode is enabled! goofy things may happen", width, height - font->h, 1, -1, width, {0, 0, 32});
     }
 
     draw_fade(8, 16, frame_time);

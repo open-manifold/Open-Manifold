@@ -183,8 +183,12 @@ bool parse_option(char** argc, char** argv, const string& opt) {
     return std::find(argc, argv, opt) != argv;
 }
 
+string get_version_string() {
+    return "v" + std::to_string(VERSION_MAJOR) + "." + std::to_string(VERSION_MINOR) + "." + std::to_string(VERSION_PATCH);
+}
+
 void print_header() {
-    printf("OPEN MANIFOLD v%i.%i.%i\nBuild Date: %s at %s\n========================================\n", VERSION_MAJOR, VERSION_MINOR, VERSION_PATCH, __DATE__, __TIME__);
+    printf("OPEN MANIFOLD %s\nBuild Date: %s at %s\n========================================\n", get_version_string().c_str(), __DATE__, __TIME__);
     return;
 }
 

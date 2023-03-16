@@ -7,6 +7,7 @@ std::string get_song_author();
 std::string get_motd();
 std::string get_cpu_sequence();
 std::string get_player_sequence();
+std::string get_version_string();
 
 int get_level_bpm();
 int get_bg_color();
