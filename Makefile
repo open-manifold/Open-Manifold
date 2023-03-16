@@ -17,13 +17,13 @@ all: build $(OBJS)
 $(OBJS): build/%.o: src/%.cpp
 	$(CXX) -c $< $(CXXFLAGS) $(LDFLAGS) -o $@
 	
-bg-test:
+bg_test:
 	$(CXX) src/tests/bg_test.cpp -o bin/background_test.exe $(CXXFLAGS) $(LDFLAGS)
 
-char-test:
+char_test:
 	$(CXX) src/tests/character_test.cpp -o bin/character_test.exe $(CXXFLAGS) $(LDFLAGS)
 
-font-test:
+font_test:
 	$(CXX) src/tests/font_test.cpp -o bin/font_test.exe $(CXXFLAGS) $(LDFLAGS)
 
 icon: 
@@ -73,9 +73,9 @@ help:
 	@echo -----------------------------------------------------------------
 	@echo Targets:
 	@echo [none]    - Builds the game executable.
-	@echo bg-test   - Builds a background test program.
-	@echo char-test - Builds a character file test program.
-	@echo font-test - Builds a font-fallback test program.
+	@echo bg_test   - Builds a background test program.
+	@echo char_test - Builds a character file test program.
+	@echo font_test - Builds a font-fallback test program.
 	@echo install   - Copies game assets into bin folder.
 	@echo build     - Creates build and bin folders.
 	@echo pkg       - Cleans, builds the game, and makes a release folder. Requires Bash!
