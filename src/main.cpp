@@ -1916,7 +1916,7 @@ int main(int argc, char *argv[]) {
                                     break;
                             }
                             
-                            set_character_timer(400); // TODO: get the length of 1 beat and pass it to this
+                            set_character_timer(60000/bpm);
                             active_shape    = modify_current_shape(op, active_shape, true);
                             player_sequence = modify_sequence(op, beat_side);
                         }
