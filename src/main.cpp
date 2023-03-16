@@ -553,12 +553,12 @@ void export_shapes() {
     exported_data[0]["name"] = filename;
     exported_data[0]["bg_color"] = 15;
     
-    for (int i = 1; i < previous_shapes.size() + 1; i++) {
-        exported_data[i]["shape"] = previous_shapes[i].type;
-        exported_data[i]["x"] = previous_shapes[i].x;
-        exported_data[i]["y"] = previous_shapes[i].y;
-        exported_data[i]["scale"] = previous_shapes[i].scale;
-        exported_data[i]["color"] = previous_shapes[i].color;
+    for (int i = 0; i < previous_shapes.size(); i++) {
+        exported_data[i+1]["shape"] = previous_shapes[i].type;
+        exported_data[i+1]["x"] = previous_shapes[i].x;
+        exported_data[i+1]["y"] = previous_shapes[i].y;
+        exported_data[i+1]["scale"] = previous_shapes[i].scale;
+        exported_data[i+1]["color"] = previous_shapes[i].color;
     }
     
     std::ofstream file(filename);
