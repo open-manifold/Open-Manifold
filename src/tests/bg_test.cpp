@@ -4,6 +4,7 @@
 #include <cstdlib>
 #include <cmath>
 #include <string>
+#include <cstring>
 
 #include <SDL2/SDL.h>
 
@@ -100,6 +101,43 @@ SDL_Color get_color(int col = 0) {
 int main(int argc, char *argv[]) {
     
     if (!init(argc, argv)) return 1;
+    
+    // benchmark mode, invoke with -b argument
+    // this is useful for benchmarking without requiring lower-end hardware to do direct profiling on
+    if (argc == 2 && strncmp(argv[1], "-b", 2) == 0) {
+        printf("Benchmark mode invoked. Re-creating renderer to remove V-sync...\n");
+        
+        // recreate renderer with no vsync of any kind
+        SDL_DestroyRenderer(renderer);
+        renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_TARGETTEXTURE);
+        
+        int b_start_time = SDL_GetTicks();
+        printf("Initializing BGFX...\n");
+        test_background_effect_init();
+        printf("Running 6,000 frames...\n");
+        for (int i = 0; i < 6000; i++) {
+            bg_data bg_data = {
+                (int)SDL_GetTicks(),
+                (int)SDL_GetTicks(),
+                false,
+                false,
+                0,
+                8,
+                16,
+                get_color(0)
+            };
+            
+            test_background_effect(bg_data, 0);
+            SDL_RenderPresent(renderer);
+        }
+        
+        int b_end_time = SDL_GetTicks();
+        
+        printf("Benchmark time: %i milliseconds\n", b_end_time - b_start_time);
+        printf("%fx real-time (assuming 60fps for 100s = realtime)\n", 100000.f / (float)(b_end_time - b_start_time));
+        kill();
+        return 0;
+    }
     
     SDL_Event evt;
     
