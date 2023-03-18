@@ -124,17 +124,18 @@ SDL_Color color_table[16] = {
 // some data for the options menu
 // TODO: split options menu stuff into its own file
 const char *option_items[][2] = {
-    {"Music Volume",    "Controls the volume of music."},
-    {"SFX Volume",      "Controls the volume of sound effects."},
-    {"Speaker Output",  "Controls whether to output audio in mono or stereo."},
-    {"Display FPS",     "Shows the framerate in the top-left corner."},
-    {"V-Sync",          "Syncs the game's framerate to your monitor's refresh rate."},
-    {"Frame Cap",       "The maximum framerate the game runs at, if V-Sync is disabled."},
-    {"Fullscreen",      "Sets the game's resolution to your monitor's resolution; known as 'borderless' fullscreen."},
-    {"Display Grid",    "Controls whether to display the grid overlay during gameplay."},
-    {"Controller Index","Sets which game controller to use."},
-    {"Save Settings",   "Saves your settings and returns to the main menu."},
-    {"Exit",            "Returns to the main menu. No changes will be saved."}
+    {"Music Volume",     "Controls the volume of music."},
+    {"SFX Volume",       "Controls the volume of sound effects."},
+    {"Speaker Output",   "Controls whether to output audio in mono or stereo."},
+    {"Display FPS",      "Shows the framerate in the top-left corner."},
+    {"V-Sync",           "Syncs the game's framerate to your monitor's refresh rate."},
+    {"Frame Cap",        "The maximum framerate the game runs at, if V-Sync is disabled."},
+    {"Fullscreen",       "Sets the game's resolution to your monitor's resolution; known as 'borderless' fullscreen."},
+    {"Display Grid",     "Controls whether to display the grid overlay during gameplay."},
+    {"Controller Rumble","Controls whether to rumble the controller on every beat."},
+    {"Controller Index", "Sets which game controller to use."},
+    {"Save Settings",    "Saves your settings and returns to the main menu."},
+    {"Exit",             "Returns to the main menu. No changes will be saved."}
 };
 
 int option_count = std::size(option_items);
@@ -1531,7 +1532,7 @@ bool draw_title(int menu_selection, int frame_time) {
     return true;
 }
 
-bool draw_options(int option_selection, int music_volume, int sfx_volume, bool mono, int frame_cap, bool fps, bool vsync, bool fullscreen, bool grid, int controller_index, int frame_time) {
+bool draw_options(int option_selection, int music_volume, int sfx_volume, bool mono, int frame_cap, bool fps, bool vsync, bool fullscreen, bool grid, bool rumble, int controller_index, int frame_time) {
     int scale_mul = fmax(floor(fmin(height, width)/360), 1);
     int char_height = font->h + 2;
     int left_edge = width/8;
@@ -1570,7 +1571,8 @@ bool draw_options(int option_selection, int music_volume, int sfx_volume, bool m
             case 5: option_value = std::to_string(frame_cap); break;
             case 6: option_value = fullscreen ? "Enabled" : "Disabled"; break;
             case 7: option_value = grid ? "Enabled" : "Disabled"; break;
-            case 8: option_value = std::to_string(controller_index); break;
+            case 8: option_value = rumble ? "Enabled" : "Disabled"; break;
+            case 9: option_value = std::to_string(controller_index); break;
             default: break;
         }
         

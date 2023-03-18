@@ -61,6 +61,7 @@ bool true_fullscreen_toggle = false;    // note: not used in the options menu!
 bool vsync_toggle = false;
 bool grid_toggle = true;
 bool debug_toggle = false;
+bool rumble_toggle = true;
 int controller_index = 0;
 
 // main-game variables
@@ -239,6 +240,7 @@ void save_settings() {
     new_config["vsync"] = vsync_toggle;
     new_config["frame_cap"] = frame_cap;
     new_config["display_grid"] = grid_toggle;
+    new_config["controller_rumble"] = rumble_toggle;
     new_config["controller_index"] = controller_index;
     new_config["key_map"] = keymap_strings;
 
@@ -270,15 +272,16 @@ void load_settings(int argc, char* argv[]) {
     }
 
     // if we're at this point, that means the JSON was parsed correctly
-    if (json_data.contains("display_fps"))      {fps_toggle = json_data["display_fps"];}
-    if (json_data.contains("fullscreen"))       {fullscreen_toggle = json_data["fullscreen"];}
-    if (json_data.contains("vsync"))            {vsync_toggle = json_data["vsync"];}
-    if (json_data.contains("frame_cap"))        {frame_cap = json_data["frame_cap"];}
-    if (json_data.contains("display_grid"))     {grid_toggle = json_data["display_grid"];}
-    if (json_data.contains("music_volume"))     {music_volume = json_data["music_volume"];}
-    if (json_data.contains("sfx_volume"))       {sfx_volume = json_data["sfx_volume"];}
-    if (json_data.contains("mono_toggle"))      {mono_toggle = json_data["mono_toggle"];}
-    if (json_data.contains("controller_index")) {controller_index = json_data["controller_index"];}
+    if (json_data.contains("display_fps"))       {fps_toggle = json_data["display_fps"];}
+    if (json_data.contains("fullscreen"))        {fullscreen_toggle = json_data["fullscreen"];}
+    if (json_data.contains("vsync"))             {vsync_toggle = json_data["vsync"];}
+    if (json_data.contains("frame_cap"))         {frame_cap = json_data["frame_cap"];}
+    if (json_data.contains("display_grid"))      {grid_toggle = json_data["display_grid"];}
+    if (json_data.contains("music_volume"))      {music_volume = json_data["music_volume"];}
+    if (json_data.contains("sfx_volume"))        {sfx_volume = json_data["sfx_volume"];}
+    if (json_data.contains("mono_toggle"))       {mono_toggle = json_data["mono_toggle"];}
+    if (json_data.contains("controller_rumble")) {rumble_toggle = json_data["controller_rumble"];}
+    if (json_data.contains("controller_index"))  {controller_index = json_data["controller_index"];}
     
     // populates the keymap
     if (json_data.contains("key_map")) {
@@ -453,6 +456,12 @@ void init_controller() {
         printf("Controller initialized: %s\n", SDL_GameControllerName(controller));
     }
 
+    return;
+}
+
+void rumble_controller() {
+    // wrapper that rumbles the controller
+    if (rumble_toggle) {SDL_GameControllerRumble(controller, 0xFFFF, 0xFFFF, 120);}
     return;
 }
 
@@ -1564,7 +1573,7 @@ bool loop(json json_file, int start_offset, int time_signature_top, int time_sig
     
                 // triggers for every beat where the player has control
                 if ((beat_count - start_offset) % (measure_length*2) >= measure_length) {
-                    if (beat_count%2 == 0) {SDL_GameControllerRumble(controller, 0xFFFF, 0xFFFF, 120);}
+                    if (beat_count%2 == 0) {rumble_controller();}
                 }
     
                 // triggers for every beat where the CPU has control
@@ -2086,11 +2095,14 @@ int main(int argc, char *argv[]) {
                                             break;
 
                                     case 7: grid_toggle = !grid_toggle; break;
+                                    case 8: rumble_toggle = !rumble_toggle; 
+                                            rumble_controller();
+                                            break;
 
-                                    case 9: save_settings();
+                                    case 10: save_settings();
                                             // the lack of break here is deliberate
 
-                                    case 10: transition_state = TITLE;
+                                    case 11: transition_state = TITLE;
                                             fade_out++;
                                             break;
 
@@ -2136,7 +2148,7 @@ int main(int argc, char *argv[]) {
                                         case 0: music_volume = fmax(0, music_volume - 1); set_music_volume(); break;
                                         case 1: sfx_volume = fmax(0, sfx_volume - 1); set_sfx_volume(); break;
                                         case 5: frame_cap = fmax(30, frame_cap - 1); frame_cap_ms = (1000 / frame_cap); break;
-                                        case 8: {
+                                        case 9: {
                                             int max_gamepad_index = SDL_NumJoysticks() - 1;
                                             controller_index--;
             
@@ -2158,7 +2170,7 @@ int main(int argc, char *argv[]) {
                                         case 0: music_volume = fmin(100, music_volume + 1); set_music_volume(); break;
                                         case 1: sfx_volume = fmin(100, sfx_volume + 1); set_sfx_volume(); break;
                                         case 5: frame_cap = fmin(1000, frame_cap + 1); frame_cap_ms = (1000 / frame_cap); break;
-                                        case 8: {
+                                        case 9: {
                                             int max_gamepad_index = SDL_NumJoysticks() - 1;
                                             controller_index++;
             
@@ -2317,7 +2329,7 @@ int main(int argc, char *argv[]) {
                 break;
 
             case OPTIONS:
-                draw_options(option_selected, music_volume, sfx_volume, mono_toggle, frame_cap, fps_toggle, vsync_toggle, fullscreen_toggle, grid_toggle, controller_index, frame_time);
+                draw_options(option_selected, music_volume, sfx_volume, mono_toggle, frame_cap, fps_toggle, vsync_toggle, fullscreen_toggle, grid_toggle, rumble_toggle, controller_index, frame_time);
                 break;
 
             case EXIT:
