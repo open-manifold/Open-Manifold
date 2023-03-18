@@ -1857,7 +1857,7 @@ bool draw_sandbox(background_effect background_id, shape active_shape, std::vect
         
         // draws the sandbox icons and boxes
         for (int i = 0; i < sandbox_item_count; i++) {
-            Uint8 shade = 127;
+            Uint8 shade = 96;
             if (i == menu_item) {shade = (abs(sin(time*0.4/90)) * 30) + 220;}
             
             icon_area.x = (i * (icon_size + icon_padding)) + (width/2 - total_width_of_icons/2);
