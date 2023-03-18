@@ -1,17 +1,18 @@
-﻿# OPEN MANIFOLD
+﻿![](https://raw.githubusercontent.com/open-manifold/Open-Manifold/main/res/logo.svg)
+---
 
 **Open Manifold** is a free and open-source rhythm game with the goal of cloning the gameplay of the PS1 game *Rhythm 'N' Face* while offering several additional features, such as high resolutions, custom level support, and enhanced visual effects.
 
-Currently (as of January 2023), it is not yet considered ready for general use, in the sense that it is missing several key features such as delay calibration.
+Currently (as of March 2023), it is not yet considered ready for general use, in the sense that it is missing several key features such as delay calibration and doesn't have much included content yet.
 
 Open Manifold's engine is licensed under MIT, and the included content is licensed under CC-BY-NC 4.0 (see `LICENSE` for details).
 
 ## Getting Started
-For those just looking to play the game, visit [the releases page](https://github.com/open-manifold/Open-Manifold/releases) and download the latest stable release.
+For those who want to start playing, visit [the releases page](https://github.com/open-manifold/Open-Manifold/releases) and download the latest stable release. As there is no in-game tutorial or manual of any kind at the moment, it is recommended to visit [this page](https://github.com/open-manifold/Open-Manifold/wiki/Gameplay#how-to-play) to understand how the game works.
 
-For those who want to create levels or contribute to the source code, check out [the wiki](https://github.com/open-manifold/Open-Manifold/wiki) for both documentation and contribution guidelines.
+For those who want to create your own levels or contribute to the source code, check out [the wiki](https://github.com/open-manifold/Open-Manifold/wiki) for both documentation and contribution guidelines.
 
-If you run into any bugs or have feature suggestions, you can [file an issue ticket on Github](https://github.com/open-manifold/Open-Manifold/issues); just be sure to check [this page](https://github.com/open-manifold/Open-Manifold/wiki/Troubleshooting) first.
+If you run into any bugs or have feature suggestions, you can [file an issue ticket on Github](https://github.com/open-manifold/Open-Manifold/issues); just be sure to check [this page](https://github.com/open-manifold/Open-Manifold/wiki/Troubleshooting) first to see if your problem's covered there!
 
 ## Background
 
