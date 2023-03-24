@@ -3,8 +3,7 @@
 #ifndef graphics
 #define graphics
 
-// dedicated struct for a shape, saves some time over using a JSON array
-// doesn't contain sequence data
+// dedicated struct for a shape, cleaner and faster than using JSON arrays
 struct shape {
     int type;
     int x;
@@ -25,16 +24,16 @@ void draw_shape(int, int, int, int, SDL_Color, int, int, float);
 void draw_fps(bool, int, int);
 void draw_fade(int, int, int);
 void draw_level_intro_fade(int, int, int);
-void load_logo();
-void unload_logo();
-void load_sandbox_icons();
-void unload_sandbox_icons();
-void load_font();
 
 void init_background_effect(background_effect);
 void draw_background_effect(background_effect, bg_data, bool, int);
 void draw_menu_background(int);
 
+void load_font();
+void load_logo();
+void unload_logo();
+void load_sandbox_icons();
+void unload_sandbox_icons();
 void load_character_tileset();
 void unload_character_tileset();
 void draw_character(int);

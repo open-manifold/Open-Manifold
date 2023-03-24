@@ -77,10 +77,10 @@ bool aux_bool_array[32][32];
 int aux_int;
 float aux_float;
 
-// default color table; used as a failsafe if color_table entries aren't valid/nonexistent
-// palette is slightly modified from the CGA 16-color palette
-// dark yellow is orange, light yellow is regular yellow
+// default color table; used as a failsafe if color_table entries are invalid/nonexistent
+// palette is slightly modified from the CGA 16-color palette (dark yellow is orange, light yellow is regular yellow)
 // see https://en.wikipedia.org/wiki/Color_Graphics_Adapter#Color_palette
+// (also, note the lack of color #17 here and in color_table, that's used for erase and SHOULDN'T be overwritten)
 const SDL_Color default_color_table[16] = {
     {255, 255, 255, 255},
     {0, 0, 255, 255},
@@ -101,7 +101,6 @@ const SDL_Color default_color_table[16] = {
 };
 
 // "live" color table, this is the one thats used by get_color() below
-// (note the lack of color #17, that's used for erase and SHOULDN'T be overwritten)
 SDL_Color color_table[16] = {
     {255, 255, 255, 255},
     {0, 0, 255, 255},

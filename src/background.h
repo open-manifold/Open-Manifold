@@ -17,7 +17,7 @@ enum background_effect {
     munching
 };
 
-// stores data that can be used by the background
+// stores data that can be used by background effects
 // song_tick: how long the song has been playing, in milliseconds
 // beat_tick: how long the current beat has lasted (this resets to 0 after every beat)
 // beat_advanced: bool flag, true for 1 frame when advancing to the next beat
