@@ -1981,6 +1981,9 @@ int main(int argc, char *argv[]) {
                                     break;
                                 
                                 case CROSS:
+                                case CIRCLE:
+                                case SQUARE:
+                                case TRIANGLE:
                                     switch (sandbox_option_selected) {
                                         case 0:
                                             Mix_PlayChannel(0, snd_xplode, 0);
