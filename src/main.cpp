@@ -1073,23 +1073,13 @@ void load_character_file() {
     return;
 }
 
-void load_menu_music() {
+void load_default_music(string name) {
     Mix_HaltMusic();
     Mix_FreeMusic(music);
-    music = Mix_LoadMUS("assets/music/menu.ogg");
-
-    if(music == NULL) {
-        printf("%s\n", Mix_GetError());
-    } else {
-        Mix_PlayMusic(music, -1);
-    }
-    return;
-}
-
-void load_sandbox_music() {
-    Mix_HaltMusic();
-    Mix_FreeMusic(music);
-    music = Mix_LoadMUS("assets/music/sandbox.ogg");
+    
+    string filename = "assets/music/" + name + ".ogg";
+    printf("Loading music: %s\n", filename.c_str());
+    music = Mix_LoadMUS(filename.c_str());
 
     if(music == NULL) {
         printf("%s\n", Mix_GetError());
@@ -1103,10 +1093,10 @@ void load_stage_music() {
     Mix_HaltMusic();
     Mix_FreeMusic(music);
 
-    string mus_temp = level_paths[level_index] + "/song.ogg";
-    const char* mus = mus_temp.c_str();
-
-    music = Mix_LoadMUS(mus);
+    string filename = level_paths[level_index] + "/song.ogg";
+    printf("Loading music: %s\n", filename.c_str());
+    music = Mix_LoadMUS(filename.c_str());
+    
     if(music == NULL) {
         printf("%s\n", Mix_GetError());
     }
@@ -1805,8 +1795,8 @@ int main(int argc, char *argv[]) {
 
                                     printf("Loading level: %s\n", get_level_json_path().c_str());
                                     draw_loading(false);
-                                    load_stage_sound_collection();
                                     load_stage_music();
+                                    load_stage_sound_collection();
                                     load_character_file();
                                     background_id = get_level_background_effect();
                                     init_background_effect(background_id);
@@ -2227,7 +2217,7 @@ int main(int argc, char *argv[]) {
                     // the lack of break here is deliberate
                 case GAME:
                     previous_shapes.clear();
-                    load_menu_music();
+                    load_default_music("menu");
                     break;
 
                 case TITLE:
@@ -2235,7 +2225,7 @@ int main(int argc, char *argv[]) {
                     break;
 
                 case WARNING:
-                    load_menu_music();
+                    load_default_music("menu");
                     break;
 
                 default:
@@ -2263,9 +2253,9 @@ int main(int argc, char *argv[]) {
                 case SANDBOX:
                     printf("Loading sandbox mode...\n");
                     draw_loading(false);
-                    load_sandbox_music();
-                    load_sandbox_icons();
+                    load_default_music("sandbox");
                     load_default_sound_collection();
+                    load_sandbox_icons();
                     reset_color_table();
                     reset_shapes();
                     active_shape.type = 0;
