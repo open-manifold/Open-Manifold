@@ -120,6 +120,11 @@ SDL_Color color_table[16] = {
     {0, 0, 0, 255}
 };
 
+// used for the tile BGFX
+std::vector<SDL_Rect> tile_frames = {
+    {0, 0, 0, 0}
+};
+
 // some data for the options menu
 // TODO: split options menu stuff into its own file
 const char *option_items[][2] = {
@@ -280,6 +285,63 @@ void load_font() {
     }
 
     font_texture = SDL_CreateTextureFromSurface(renderer, font);
+    return;
+}
+
+void fallback_tile_frames() {
+    // generates a fallback vector if parse_tile_frames fails
+    // or if the provided tile.json doesn't exist or is invalid
+    
+    printf("Using fallback data for tile frames...\n");
+    std::vector<SDL_Rect> data;
+    
+    for (int i = 0; i < aux_texture_w; i += aux_texture_h) {
+        SDL_Rect temp_rect;
+        int width = aux_texture_h;
+        
+        // clamp the width of the last frame to not exceed image bounds
+        if (i + aux_texture_h > aux_texture_w) {
+            width = aux_texture_w - (i-1 * aux_texture_h);
+        }
+        
+        temp_rect.y = 0;
+        temp_rect.x = i;
+        temp_rect.h = aux_texture_h;
+        temp_rect.w = width;
+        
+        data.push_back(temp_rect);
+    }
+    
+    tile_frames = data;
+    return;
+}
+
+void parse_tile_frames(json file) {
+    // converts the JSON data from tile.json into SDL_Rects
+    
+    std::vector<SDL_Rect> data;
+    
+    // TODO: parse header parameters (that dont exist yet)
+    
+    // note the 1; array entry 0 is a header, like with levels
+    for (int i = 1; i < file.size(); i++) {
+        SDL_Rect temp_rect;
+
+        temp_rect.x = file[i].value("x", 0);
+        temp_rect.y = file[i].value("y", 0);
+        temp_rect.w = file[i].value("w", 0);
+        temp_rect.h = file[i].value("h", 0);
+        
+        data.push_back(temp_rect);
+    }
+    
+    if (data.size() == 0) {
+        fallback_tile_frames();
+        return;
+    } else {
+        tile_frames = data;
+    }
+    
     return;
 }
 
@@ -542,9 +604,7 @@ void draw_background_tile(bg_data bg_data, int frame_time) {
     SDL_Rect tile_crop;
 
     tile.w = tile.h = tile_size;
-    tile_crop.x = (slow_song_tick % tile_anim_size) * aux_texture_h;
-    tile_crop.y = 0;
-    tile_crop.w = tile_crop.h = aux_texture_h;
+    tile_crop = tile_frames[slow_song_tick % tile_frames.size()];
 
     for (int i = 0; i < width; i += tile_size) {
         for (int j = 0; j < height; j += tile_size) {
@@ -1014,6 +1074,7 @@ void init_background_effect(background_effect effect_id) {
         case tile:
             load_background_tileset();
             SDL_QueryTexture(aux_texture, NULL, NULL, &aux_texture_w, &aux_texture_h);
+            load_tile_frame_file();
             break;
             
         case fire:

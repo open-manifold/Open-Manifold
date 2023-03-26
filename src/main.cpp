@@ -1047,6 +1047,33 @@ json parse_level_file(string file) {
     return parsed_json;
 }
 
+void load_tile_frame_file() {
+    string file = level_paths[level_index] + "/tile.json";
+    std::ifstream ifs(file);
+    json parsed_json;
+
+    printf("Loading tile frames file: %s\n", file.c_str());
+
+    // checks to make sure the file exists
+    if (std::filesystem::exists(file) == false) {
+        printf("Tile frames file does not exist, skipping...\n");
+        fallback_tile_frames();
+        return;
+    }
+
+    // checks to see if the JSON is valid JSON
+    try {
+        parsed_json = json::parse(ifs);
+    } catch(json::parse_error& err) {
+        printf("[!] Error parsing tile frames file: %s\n", err.what());
+        fallback_tile_frames();
+        return;
+    }
+
+    parse_tile_frames(parsed_json);
+    return;
+}
+
 void load_character_file() {
     string file = level_paths[level_index] + "/character.json";
     std::ifstream ifs(file);

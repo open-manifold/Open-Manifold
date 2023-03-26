@@ -37,6 +37,8 @@ void unload_sandbox_icons();
 void load_character_tileset();
 void unload_character_tileset();
 void draw_character(int);
+void parse_tile_frames(nlohmann::json);
+void fallback_tile_frames();
 
 void draw_loading(bool = false);
 bool draw_warning(int);
