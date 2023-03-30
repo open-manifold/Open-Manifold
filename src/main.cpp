@@ -748,6 +748,7 @@ void modify_life(int mod) {
 void reset_score() {
     score = 0;
     combo = 0;
+    set_combo_timer(0);
     return;
 }
 
