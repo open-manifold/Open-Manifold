@@ -1122,6 +1122,12 @@ void draw_background_effect(background_effect effect_id, bg_data bg_data, bool d
     // ----------------------------------------------------------
     // bg_data: struct containing various values (see background.h; draw_game())
     // draw_debug_bg: toggles whether to draw the debug background; -d switch must be on for this to work
+    
+    // caps frame_time value to prevent weirdness with certain BGFX like fire
+    // those BGFX use the frame_time value to calculate fade-out effects that are consistent
+    // regardless of framerate; however FPS values past a certain point disable this fade
+    // resulting in a glitchy background effect
+    if (frame_time <= 2) {frame_time = 2;}
 
     switch (effect_id) {
         case solid:         draw_background_solid       (bg_data, frame_time);  break;
