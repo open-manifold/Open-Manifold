@@ -2104,17 +2104,17 @@ int main(int argc, char *argv[]) {
                                     case 2: mono_toggle = !mono_toggle; 
                                             set_channel_mix(); 
                                             break;
-                                    
-                                    case 3: fps_toggle = !fps_toggle; break;
+
+                                    case 3: fullscreen_toggle = !fullscreen_toggle;
+                                            if (fullscreen_toggle) {SDL_SetWindowFullscreen(window, SDL_WINDOW_FULLSCREEN_DESKTOP);}
+                                            else {SDL_SetWindowFullscreen(window, 0);}
+                                            break;
 
                                     case 4: vsync_toggle = !vsync_toggle;
                                             set_vsync_renderer();
                                             break;
-
-                                    case 6: fullscreen_toggle = !fullscreen_toggle;
-                                            if (fullscreen_toggle) {SDL_SetWindowFullscreen(window, SDL_WINDOW_FULLSCREEN_DESKTOP);}
-                                            else {SDL_SetWindowFullscreen(window, 0);}
-                                            break;
+                                            
+                                    case 6: fps_toggle = !fps_toggle; break;
 
                                     case 7: grid_toggle = !grid_toggle; break;
                                     case 8: rumble_toggle = !rumble_toggle; 
