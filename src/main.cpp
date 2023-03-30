@@ -459,9 +459,11 @@ void init_controller() {
     return;
 }
 
-void rumble_controller() {
+void rumble_controller(Uint32 ms = 120) {
     // wrapper that rumbles the controller
-    if (rumble_toggle) {SDL_GameControllerRumble(controller, 0xFFFF, 0xFFFF, 120);}
+    // ms: how long in milliseconds to rumble the controller (optional!)
+    
+    if (rumble_toggle) {SDL_GameControllerRumble(controller, 0xFFFF, 0xFFFF, ms);}
     return;
 }
 
@@ -2116,7 +2118,7 @@ int main(int argc, char *argv[]) {
 
                                     case 7: grid_toggle = !grid_toggle; break;
                                     case 8: rumble_toggle = !rumble_toggle; 
-                                            rumble_controller();
+                                            rumble_controller(500);
                                             break;
 
                                     case 10: save_settings();
