@@ -679,7 +679,7 @@ void draw_background_fire(bg_data bg_data, int frame_time) {
     }
     
     // darken previous texture
-    SDL_SetRenderDrawColor(renderer, 0, 0, 0, fmax(frame_time, 1));
+    SDL_SetRenderDrawColor(renderer, 0, 0, 0, frame_time);
     SDL_RenderFillRect(renderer, NULL);
     
     for (int i = -4; i < (fmax(aux_texture_w, aux_texture_h)/square_size) + 4; i++) {
@@ -1057,6 +1057,46 @@ void draw_background_munching(bg_data bg_data, int frame_time) {
     return;
 }
 
+void draw_background_lasers(bg_data bg_data, int frame_time) {
+    int background_mul = 4;
+    int pivot_x1 = cos((bg_data.song_tick + aux_int + 200) * 0.00075) * aux_texture_w;
+    int pivot_x2 = cos((bg_data.song_tick + aux_int + 400) * 0.00075) * aux_texture_w;
+    int pivot_x3 = cos((bg_data.song_tick + aux_int + 600) * 0.00075) * aux_texture_w;
+    int pivot_y1 = sin((bg_data.song_tick + aux_int + 200) * 0.00115) * aux_texture_h;
+    int pivot_y2 = sin((bg_data.song_tick + aux_int + 400) * 0.00115) * aux_texture_h;
+    int pivot_y3 = sin((bg_data.song_tick + aux_int + 600) * 0.00115) * aux_texture_h;
+    
+    if (bg_data.shape_advanced) {
+        aux_float = 1000;
+    }
+    
+    if (aux_float > 0) {
+        background_mul = 2;
+        aux_int += fmin(40, (aux_float/4));
+        aux_float = fmax(aux_float - frame_time, 0);
+    }
+    
+    SDL_SetRenderTarget(renderer, aux_texture);
+    SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
+    
+    SDL_SetRenderDrawColor(renderer, 8, 32, 16, frame_time*background_mul);
+    SDL_RenderFillRect(renderer, NULL);
+    
+    SDL_SetRenderDrawColor(renderer, 16, 255, 64, 255);
+    
+    SDL_RenderDrawLine(renderer, pivot_x1, pivot_y1, aux_texture_w, aux_texture_h);
+    SDL_RenderDrawLine(renderer, pivot_x2, pivot_y2, aux_texture_w, aux_texture_h);
+    SDL_RenderDrawLine(renderer, pivot_x3, pivot_y3, aux_texture_w, aux_texture_h);
+    SDL_RenderDrawLine(renderer, aux_texture_w - pivot_x1, pivot_y1, 0, aux_texture_h);
+    SDL_RenderDrawLine(renderer, aux_texture_w - pivot_x2, pivot_y2, 0, aux_texture_h);
+    SDL_RenderDrawLine(renderer, aux_texture_w - pivot_x3, pivot_y3, 0, aux_texture_h);
+    
+    SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_NONE);
+    SDL_SetRenderTarget(renderer, NULL);
+    SDL_RenderCopy(renderer, aux_texture, NULL, NULL);
+    return;
+}
+
 void init_background_effect(background_effect effect_id) {
     // Initialize function for background effects
     // Used for setting up things like auxillary textures
@@ -1078,6 +1118,7 @@ void init_background_effect(background_effect effect_id) {
             break;
             
         case fire:
+        case lasers:
             aux_texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGB24, SDL_TEXTUREACCESS_TARGET, width, height);
             SDL_QueryTexture(aux_texture, NULL, NULL, &aux_texture_w, &aux_texture_h);
             break;
@@ -1140,6 +1181,7 @@ void draw_background_effect(background_effect effect_id, bg_data bg_data, bool d
         case starfield:     draw_background_starfield   (bg_data, frame_time);  break;
         case hexagon:       draw_background_hexagon     (bg_data, frame_time);  break;
         case munching:      draw_background_munching    (bg_data, frame_time);  break;
+        case lasers:        draw_background_lasers      (bg_data, frame_time);  break;
         case none:
         default: break;
     }

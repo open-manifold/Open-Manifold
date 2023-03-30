@@ -885,6 +885,7 @@ background_effect get_level_background_effect() {
     if (background_name == "starfield")     return starfield;
     if (background_name == "hexagon")       return hexagon;
     if (background_name == "munching")      return munching;
+    if (background_name == "lasers")        return lasers;
 
     return none;
 }
