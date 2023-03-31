@@ -2292,6 +2292,10 @@ int main(int argc, char *argv[]) {
                     unload_logo();
                     break;
 
+                case WARNING:
+                    load_default_music("menu");
+                    break;
+
                 default:
                     break;
             }
@@ -2302,7 +2306,6 @@ int main(int argc, char *argv[]) {
             // Runs functions at the start of a state
             switch (current_state) {
                 case TITLE:
-                    load_default_music("menu");
                     load_logo();
                     break;
 
