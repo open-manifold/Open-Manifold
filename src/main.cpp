@@ -22,6 +22,7 @@
 *
 */
 
+#include <cstdio>
 #include <cstdlib>
 #include <cmath>
 #include <ctime>
@@ -216,7 +217,8 @@ void print_help() {
     "-f  / -fullscreen      - Enable fullscreen\n"
     "-tf / -true-fullscreen - Enable 'real' fullscreen\n"
     "-v  / -vsync           - Enable V-Sync\n"
-    "-d  / -debug           - Enable debug features\n");
+    "-d  / -debug           - Enable debug features\n"
+    "-i [FILEPATH]          - Load a level on start\n");
     return;
 }
 
@@ -1659,6 +1661,26 @@ bool loop(json json_file, int start_offset, int time_signature_top, int time_sig
     return true;
 }
 
+void start_level(game_states *transition_state) {
+    Mix_PlayChannel(0, snd_menu_confirm, 0);
+    Mix_HaltMusic();
+    reset_shapes();
+    reset_sequences();
+    reset_score_and_life();
+    reset_character_status();
+    unload_character_tileset();
+
+    printf("Loading level: %s\n", get_level_json_path().c_str());
+    draw_loading(false);
+    load_stage_music();
+    load_stage_sound_collection();
+    load_character_file();
+    background_id = get_level_background_effect();
+    init_background_effect(background_id);
+
+    printf("Starting level...\n");
+}
+
 int main(int argc, char *argv[]) {
     // evaluates certain command-line options before game initialization
     if (parse_option(argv, argv+argc, "-help") || parse_option(argv, argv+argc, "-h")) {print_help(); return 0;}
@@ -1671,6 +1693,16 @@ int main(int argc, char *argv[]) {
     game_states current_state = WARNING;
     game_states transition_state;
     SDL_Event evt;
+
+    char *startup_level = parse_option_value(argv, argv+argc, "-i");
+    if (startup_level) {
+        printf("Startup level: %s\n", startup_level);
+        level_paths.push_back(startup_level);
+        level_index = 0;
+        json_file = parse_level_file(get_level_json_path());
+        start_level(&transition_state);
+        current_state = GAME;
+    }
     
     // parses arguments related to skipping directly to a given game state
     if (parse_option(argv, argv+argc, "-sandbox")  || parse_option(argv, argv+argc, "-sb")) {
@@ -1830,23 +1862,7 @@ int main(int argc, char *argv[]) {
                             case CROSS:
                                 if (json_file == NULL) {break;}
                                 if (check_fade_in_activity()) {
-                                    Mix_PlayChannel(0, snd_menu_confirm, 0);
-                                    Mix_HaltMusic();
-                                    reset_shapes();
-                                    reset_sequences();
-                                    reset_score_and_life();
-                                    reset_character_status();
-                                    unload_character_tileset();
-
-                                    printf("Loading level: %s\n", get_level_json_path().c_str());
-                                    draw_loading(false);
-                                    load_stage_music();
-                                    load_stage_sound_collection();
-                                    load_character_file();
-                                    background_id = get_level_background_effect();
-                                    init_background_effect(background_id);
-
-                                    printf("Starting level...\n");
+                                    start_level(&transition_state);
                                     transition_state = GAME;
                                     fade_out++;
                                 }
