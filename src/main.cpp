@@ -37,6 +37,7 @@
 #include "graphics.h"
 #include "background.h"
 #include "character.h"
+#include "options.h"
 #include "version.h"
 
 using nlohmann::json;
@@ -51,18 +52,18 @@ extern int height;
 // various options
 extern int option_count;
 extern int sandbox_item_count;
-int music_volume = 75;
-int sfx_volume = 75;
-bool mono_toggle = false;
-int frame_cap = 120;
-bool fps_toggle = false;
-bool fullscreen_toggle = false;
-bool true_fullscreen_toggle = false;    // note: not used in the options menu!
-bool vsync_toggle = false;
-bool grid_toggle = true;
-bool debug_toggle = false;
-bool rumble_toggle = true;
-int controller_index = 0;
+extern int music_volume;
+extern int sfx_volume;
+extern bool mono_toggle;
+extern int frame_cap;
+extern bool fps_toggle;
+extern bool fullscreen_toggle;
+extern bool true_fullscreen_toggle;
+extern bool vsync_toggle;
+extern bool grid_toggle;
+extern bool debug_toggle;
+extern bool rumble_toggle;
+extern int controller_index;
 
 // main-game variables
 int score = 0;
@@ -87,6 +88,9 @@ string player_sequence;
 bool song_over = false;
 bool game_over = false;
 background_effect background_id;
+
+// used only in main(); stored globally so it can be modified by options.cpp
+int frame_cap_ms = (1000 / frame_cap);
 
 // sound effects
 Mix_Chunk *snd_menu_move;
@@ -203,6 +207,16 @@ void print_help() {
     "-tf / -true-fullscreen - Enable 'real' fullscreen\n"
     "-v  / -vsync           - Enable V-Sync\n"
     "-d  / -debug           - Enable debug features\n");
+    return;
+}
+
+void set_fullscreen() {
+    if (fullscreen_toggle) {SDL_SetWindowFullscreen(window, SDL_WINDOW_FULLSCREEN_DESKTOP);} else {SDL_SetWindowFullscreen(window, 0);}
+    return;
+}
+
+void set_frame_cap_ms() {
+    frame_cap_ms = (1000 / frame_cap);
     return;
 }
 
@@ -459,7 +473,11 @@ void init_controller() {
     return;
 }
 
-void rumble_controller(Uint32 ms = 120) {
+int get_controller_count() {
+    return SDL_NumJoysticks() - 1;
+}
+
+void rumble_controller(int ms = 120) {
     // wrapper that rumbles the controller
     // ms: how long in milliseconds to rumble the controller (optional!)
     
@@ -664,9 +682,7 @@ bool init(int argc, char *argv[]) {
     }
 
     // enables fullscreen(s) if applicable
-    if (fullscreen_toggle) {
-        SDL_SetWindowFullscreen(window, SDL_WINDOW_FULLSCREEN_DESKTOP);
-    }
+    set_fullscreen();
 
     if (true_fullscreen_toggle) {
         SDL_SetWindowFullscreen(window, SDL_WINDOW_FULLSCREEN);
@@ -1666,7 +1682,6 @@ int main(int argc, char *argv[]) {
     
     // used to keep track of what's currently selected in various menus
     int menu_selected = 0;
-    int option_selected = 0;
     int sandbox_option_selected = 0;
     bool sandbox_menu_active = false;
 
@@ -1678,7 +1693,6 @@ int main(int argc, char *argv[]) {
     int fps = 0;
     int time_passed = 0;
     int frame_count = 0;
-    int frame_cap_ms = (1000 / frame_cap);
 
     bool program_running = true;
 
@@ -2102,35 +2116,10 @@ int main(int argc, char *argv[]) {
                             if (check_fade_in_activity()) {
                                 Mix_PlayChannel(0, snd_menu_confirm, 0);
 
-                                switch (option_selected) {
-                                    case 2: mono_toggle = !mono_toggle; 
-                                            set_channel_mix(); 
-                                            break;
-
-                                    case 3: fullscreen_toggle = !fullscreen_toggle;
-                                            if (fullscreen_toggle) {SDL_SetWindowFullscreen(window, SDL_WINDOW_FULLSCREEN_DESKTOP);}
-                                            else {SDL_SetWindowFullscreen(window, 0);}
-                                            break;
-
-                                    case 4: vsync_toggle = !vsync_toggle;
-                                            set_vsync_renderer();
-                                            break;
-                                            
-                                    case 6: fps_toggle = !fps_toggle; break;
-
-                                    case 7: grid_toggle = !grid_toggle; break;
-                                    case 8: rumble_toggle = !rumble_toggle; 
-                                            rumble_controller(500);
-                                            break;
-
-                                    case 10: save_settings();
-                                            // the lack of break here is deliberate
-
-                                    case 11: transition_state = TITLE;
-                                            fade_out++;
-                                            break;
-
-                                    default: break;
+                                if (modify_current_option_button() == 1) {
+                                    Mix_PlayChannel(0, snd_menu_confirm, 0);
+                                    transition_state = TITLE;
+                                    fade_out++;
                                 }
                             }
                             break;
@@ -2146,90 +2135,44 @@ int main(int argc, char *argv[]) {
                             case UP:
                                 if (check_fade_in_activity()) {
                                     Mix_PlayChannel(0, snd_menu_move, 0);
-                                    option_selected--;
+                                    move_option_selection(-1);
                                 }
-
-                                if (option_selected > option_count - 1) {option_selected = 0;}
-                                if (option_selected < 0) {option_selected = option_count - 1;}
 
                                 break;
 
                             case DOWN:
                                 if (check_fade_in_activity()) {
                                     Mix_PlayChannel(0, snd_menu_move, 0);
-                                    option_selected++;
+                                    move_option_selection(1);
                                 }
-
-                                if (option_selected > option_count - 1) {option_selected = 0;}
-                                if (option_selected < 0) {option_selected = option_count - 1;}
 
                                 break;
 
                             case LEFT:
                                 if (check_fade_in_activity()) {
                                     Mix_PlayChannel(0, snd_menu_move, 0);
-                                    switch (option_selected){
-                                        case 0: music_volume = fmax(0, music_volume - 1); set_music_volume(); break;
-                                        case 1: sfx_volume = fmax(0, sfx_volume - 1); set_sfx_volume(); break;
-                                        case 5: frame_cap = fmax(30, frame_cap - 1); frame_cap_ms = (1000 / frame_cap); break;
-                                        case 9: {
-                                            int max_gamepad_index = SDL_NumJoysticks() - 1;
-                                            controller_index--;
-            
-                                            if (controller_index > max_gamepad_index) {controller_index = 0;}
-                                            if (controller_index < 0) {controller_index = max_gamepad_index;}
-                                            if (max_gamepad_index <= 0) {controller_index = 0;}
-                                            init_controller();
-                                            break;
-                                        }
-                                        default: break;
-                                    }
+                                    modify_current_option_directions(-1);
                                 }
                                 break;
 
                             case RIGHT:
                                 if (check_fade_in_activity()) {
                                     Mix_PlayChannel(0, snd_menu_move, 0);
-                                    switch (option_selected){
-                                        case 0: music_volume = fmin(100, music_volume + 1); set_music_volume(); break;
-                                        case 1: sfx_volume = fmin(100, sfx_volume + 1); set_sfx_volume(); break;
-                                        case 5: frame_cap = fmin(1000, frame_cap + 1); frame_cap_ms = (1000 / frame_cap); break;
-                                        case 9: {
-                                            int max_gamepad_index = SDL_NumJoysticks() - 1;
-                                            controller_index++;
-            
-                                            if (controller_index > max_gamepad_index) {controller_index = 0;}
-                                            if (controller_index < 0) {controller_index = max_gamepad_index;}
-                                            if (max_gamepad_index <= 0) {controller_index = 0;}
-                                            init_controller();
-                                            break;
-                                        }
-                                        default: break;
-                                    }
+                                    modify_current_option_directions(1);
                                 }
                                 break;
 
                             case LB:
                                 if (check_fade_in_activity()) {
                                     Mix_PlayChannel(0, snd_menu_move, 0);
-                                    switch (option_selected){
-                                        case 0: music_volume = fmax(0, music_volume - 10); set_music_volume(); break;
-                                        case 1: sfx_volume = fmax(0, sfx_volume - 10); set_sfx_volume(); break;
-                                        case 5: frame_cap = fmax(30, frame_cap - 10); frame_cap_ms = (1000 / frame_cap); break;
-                                        default: break;
-                                    }
+                                    modify_current_option_directions(-10);
                                 }
                                 break;
 
                             case RB:
                                 if (check_fade_in_activity()) {
                                     Mix_PlayChannel(0, snd_menu_move, 0);
-                                    switch (option_selected){
-                                        case 0: music_volume = fmin(100, music_volume + 10); set_music_volume(); break;
-                                        case 1: sfx_volume = fmin(100, sfx_volume + 10); set_sfx_volume(); break;
-                                        case 5: frame_cap = fmin(1000, frame_cap + 10); frame_cap_ms = (1000 / frame_cap); break;
-                                        default: break;
-                                    }
+                                    modify_current_option_directions(10);
                                 }
                                 break;
                         }
@@ -2353,7 +2296,7 @@ int main(int argc, char *argv[]) {
                 break;
 
             case OPTIONS:
-                draw_options(option_selected, music_volume, sfx_volume, mono_toggle, frame_cap, fps_toggle, vsync_toggle, fullscreen_toggle, grid_toggle, rumble_toggle, controller_index, frame_time);
+                draw_options(frame_time);
                 break;
 
             case EXIT:

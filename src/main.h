@@ -9,6 +9,17 @@ std::string get_cpu_sequence();
 std::string get_player_sequence();
 std::string get_version_string();
 
+void save_settings();
+void set_music_volume();
+void set_sfx_volume();
+void set_fullscreen();
+void set_channel_mix();
+void set_vsync_renderer();
+void set_frame_cap_ms();
+void init_controller();
+void rumble_controller(int);
+
+int get_controller_count();
 int get_level_bpm();
 int get_bg_color();
 int check_beat_timing_window();

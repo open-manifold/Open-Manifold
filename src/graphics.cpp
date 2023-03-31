@@ -34,6 +34,7 @@
 #include "main.h"
 #include "character.h"
 #include "background.h"
+#include "options.h"
 #include "font.h"
 
 using nlohmann::json;
@@ -125,24 +126,7 @@ std::vector<SDL_Rect> tile_frames = {
     {0, 0, 0, 0}
 };
 
-// some data for the options menu
-// TODO: split options menu stuff into its own file
-const char *option_items[][2] = {
-    {"Music Volume",     "Controls the volume of music."},
-    {"SFX Volume",       "Controls the volume of sound effects."},
-    {"Speaker Output",   "Controls whether to output audio in mono or stereo."},
-    {"Fullscreen",       "Sets the game's resolution to your monitor's resolution; known as 'borderless' fullscreen."},
-    {"V-Sync",           "Syncs the game's framerate to your monitor's refresh rate."},
-    {"Frame Cap",        "The maximum framerate the game runs at, if V-Sync is disabled."},
-    {"Display FPS",      "Shows the framerate in the top-left corner."},
-    {"Display Grid",     "Controls whether to display the grid overlay during gameplay."},
-    {"Controller Rumble","Controls whether to rumble the controller on every beat."},
-    {"Controller Index", "Sets which game controller to use."},
-    {"Save Settings",    "Saves your settings and returns to the main menu."},
-    {"Exit",             "Returns to the main menu. No changes will be saved."}
-};
-
-int option_count = std::size(option_items);
+extern int option_count;
 
 // similar data for the sandbox menu
 // TODO: split off this (and other sandbox functions) into their own file
@@ -1640,7 +1624,8 @@ bool draw_title(int menu_selection, int frame_time) {
     return true;
 }
 
-bool draw_options(int option_selection, int music_volume, int sfx_volume, bool mono, int frame_cap, bool fps, bool vsync, bool fullscreen, bool grid, bool rumble, int controller_index, int frame_time) {
+bool draw_options(int frame_time) {
+    int option_selection = get_option_selection();
     int scale_mul = fmax(floor(fmin(height, width)/360), 1);
     int char_height = font->h + 2;
     int left_edge = width/8;
@@ -1667,22 +1652,10 @@ bool draw_options(int option_selection, int music_volume, int sfx_volume, bool m
 
         // draw the labels
         if (i == option_selection) {text_highlight = {255, 255, 96};}
-        draw_text(option_items[i][0], left_edge, height/8 + ((i * char_height) * scale_mul), scale_mul, 1, width/2, text_highlight);
+        draw_text(get_option_name(i), left_edge, height/8 + ((i * char_height) * scale_mul), scale_mul, 1, width/2, text_highlight);
 
         // get a string for the option value (if there is one)
-        switch (i) {
-            case 0: option_value = std::to_string(music_volume).append("%"); break;
-            case 1: option_value = std::to_string(sfx_volume).append("%"); break;
-            case 2: option_value = mono ? "Mono" : "Stereo"; break;
-            case 3: option_value = fullscreen ? "Enabled" : "Disabled"; break;
-            case 4: option_value = vsync ? "Enabled" : "Disabled"; break;
-            case 5: option_value = std::to_string(frame_cap); break;
-            case 6: option_value = fps ? "Enabled" : "Disabled"; break;
-            case 7: option_value = grid ? "Enabled" : "Disabled"; break;
-            case 8: option_value = rumble ? "Enabled" : "Disabled"; break;
-            case 9: option_value = std::to_string(controller_index); break;
-            default: break;
-        }
+        option_value = get_option_value(i);
         
         // colorize "Enabled" and "Disabled" strings
         if (option_value == "Enabled") {text_highlight = {96, 255, 96};}
@@ -1698,7 +1671,7 @@ bool draw_options(int option_selection, int music_volume, int sfx_volume, bool m
     rect.w = width;
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 128);
     SDL_RenderFillRect(renderer, &rect);
-    draw_text(option_items[option_selection][1], width*0.01, height - (char_height * scale_mul), scale_mul, 1, width);
+    draw_text(get_option_desc(), width*0.01, height - (char_height * scale_mul), scale_mul, 1, width);
 
     draw_fade(16, 16, frame_time);
 
