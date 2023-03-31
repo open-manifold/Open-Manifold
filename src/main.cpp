@@ -1250,15 +1250,18 @@ void load_default_sound_collection() {
     return;
 }
 
+/**
+ * returns true if either fade value is anything other than 0
+ * in other words, this is true as long as any fade is happening
+ */
 bool check_fade_activity() {
-    // returns true if either fade value is anything other than 0
-    // in other words, this is true as long as any fade is happening
-    if (fade_in != 0 || fade_out != 0) {return true;} else return false;
+    return fade_in != 0 || fade_out != 0;
 }
-
+/**
+ * similar to check_fade_activity, but allows fade_in to be active
+ */
 bool check_fade_in_activity() {
-    // similar to check_fade_activity, but allows fade_in to be active
-    if ((fade_in <= 1) && (fade_out == 0)) {return true;} else return false;
+    return (fade_in <= 1) && (fade_out == 0);
 }
 
 void fade_reset() {
