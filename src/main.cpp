@@ -1665,7 +1665,6 @@ bool loop(json json_file, int start_offset, int time_signature_top, int time_sig
 }
 
 void start_level() {
-    Mix_PlayChannel(0, snd_menu_confirm, 0);
     Mix_HaltMusic();
     reset_shapes();
     reset_sequences();
@@ -1866,6 +1865,7 @@ int main(int argc, char *argv[]) {
                             case CROSS:
                                 if (json_file == NULL) {break;}
                                 if (check_fade_in_activity()) {
+                                    Mix_PlayChannel(0, snd_menu_confirm, 0);
                                     start_level();
                                     transition_state = GAME;
                                     fade_out++;
