@@ -1704,7 +1704,8 @@ int main(int argc, char *argv[]) {
         level_index = 0;
         json_file = parse_level_file(get_level_json_path());
         start_level(&transition_state);
-        current_state = GAME;
+        transition_state = GAME;
+        fade_out = 255;
     }
     
     // parses arguments related to skipping directly to a given game state
