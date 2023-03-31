@@ -184,6 +184,20 @@ bool parse_option(char** argc, char** argv, const string& opt) {
     return std::find(argc, argv, opt) != argv;
 }
 
+/**
+ * Returns a pointer to the string of the argument that follows opt. If no argument
+ * follows it (ie if the flag or value is not provided) it returns `nullptr`.
+ */
+char *parse_option_value(char **argc, char **argv, const string& opt) {
+    char **flag = std::find(argc, argv, opt);
+    // Check for `argv - 1` (missing argument) and also `argv` (missing flag) in the same check.
+    if (flag >= argv - 1) {
+        return nullptr;
+    } else {
+        return *(flag + 1);
+    }
+}
+
 string get_version_string() {
     return "v" + std::to_string(VERSION_MAJOR) + "." + std::to_string(VERSION_MINOR) + "." + std::to_string(VERSION_PATCH);
 }
