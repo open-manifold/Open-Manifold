@@ -1664,7 +1664,7 @@ bool loop(json json_file, int start_offset, int time_signature_top, int time_sig
     return true;
 }
 
-void start_level(game_states *transition_state) {
+void start_level() {
     Mix_PlayChannel(0, snd_menu_confirm, 0);
     Mix_HaltMusic();
     reset_shapes();
@@ -1703,7 +1703,7 @@ int main(int argc, char *argv[]) {
         level_paths.push_back(startup_level);
         level_index = 0;
         json_file = parse_level_file(get_level_json_path());
-        start_level(&transition_state);
+        start_level();
         transition_state = GAME;
         fade_out = 255;
     }
@@ -1866,7 +1866,7 @@ int main(int argc, char *argv[]) {
                             case CROSS:
                                 if (json_file == NULL) {break;}
                                 if (check_fade_in_activity()) {
-                                    start_level(&transition_state);
+                                    start_level();
                                     transition_state = GAME;
                                     fade_out++;
                                 }
