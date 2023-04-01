@@ -1043,12 +1043,12 @@ void draw_background_munching(bg_data bg_data, int frame_time) {
 
 void draw_background_lasers(bg_data bg_data, int frame_time) {
     int background_mul = 4;
-    int pivot_x1 = cos((bg_data.song_tick + aux_int + 200) * 0.00075) * aux_texture_w;
+    int pivot_x1 = cos((bg_data.song_tick + aux_int + 200) * 0.00065) * aux_texture_w;
     int pivot_x2 = cos((bg_data.song_tick + aux_int + 400) * 0.00075) * aux_texture_w;
-    int pivot_x3 = cos((bg_data.song_tick + aux_int + 600) * 0.00075) * aux_texture_w;
-    int pivot_y1 = sin((bg_data.song_tick + aux_int + 200) * 0.00115) * aux_texture_h;
+    int pivot_x3 = cos((bg_data.song_tick + aux_int + 600) * 0.00085) * aux_texture_w;
+    int pivot_y1 = sin((bg_data.song_tick + aux_int + 200) * 0.00105) * aux_texture_h;
     int pivot_y2 = sin((bg_data.song_tick + aux_int + 400) * 0.00115) * aux_texture_h;
-    int pivot_y3 = sin((bg_data.song_tick + aux_int + 600) * 0.00115) * aux_texture_h;
+    int pivot_y3 = sin((bg_data.song_tick + aux_int + 600) * 0.00125) * aux_texture_h;
     
     if (bg_data.shape_advanced) {
         aux_float = 1000;
