@@ -935,6 +935,10 @@ int calculate_score() {
     string cpu_sequence = get_cpu_sequence();
     string player_sequence = get_player_sequence();
     
+    if (get_debug()) {
+        printf("CPU: %s\nPLY: %s\n", cpu_sequence.c_str(), player_sequence.c_str());
+    }
+    
     for (int i = 0; i < player_sequence.length(); i++) {
         char cpu_op = cpu_sequence[i];
         char player_op = player_sequence[i];
