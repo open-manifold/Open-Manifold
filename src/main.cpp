@@ -1719,7 +1719,7 @@ int main(int argc, char *argv[]) {
 
         // Strip json file (if any)
         if (startup_level.substr(startup_level.size() - 5, 5) == ".json") {
-            startup_level.erase(startup_level.begin() + startup_level.find_last_of("/"), startup_level.end());
+            startup_level.erase(startup_level.begin() + startup_level.find_last_of(std::filesystem::path::preferred_separator), startup_level.end());
         }
 
         // Load the level
