@@ -1728,6 +1728,8 @@ int main(int argc, char *argv[]) {
         start_level();
         transition_state = GAME;
         fade_out = 255;
+    } else {
+        load_levels();
     }
     
     // parses arguments related to skipping directly to a given game state
@@ -1741,7 +1743,6 @@ int main(int argc, char *argv[]) {
     int sandbox_option_selected = 0;
     bool sandbox_menu_active = false;
 
-    load_levels();
     load_motd();
 
     // stores values for the FPS counter
