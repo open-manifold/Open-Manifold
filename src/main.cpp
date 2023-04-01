@@ -25,6 +25,7 @@
 #include <cstdio>
 #include <cstdlib>
 #include <cmath>
+#include <cstring>
 #include <ctime>
 #include <string>
 #include <iostream>
@@ -1696,11 +1697,17 @@ int main(int argc, char *argv[]) {
     game_states transition_state;
     SDL_Event evt;
 
-    char *startup_level = parse_option_value(argv, argv+argc, "-i");
-    if (startup_level) {
-        printf("Startup level: %s\n", startup_level);
+    char *opt_startup_level = parse_option_value(argv, argv+argc, "-i");
+    if (opt_startup_level) {
+        string startup_level = opt_startup_level;
+
+        // Strip json file (if any)
+        if (startup_level.substr(startup_level.size() - 5, 5) == ".json") {
+            startup_level.erase(startup_level.begin() + startup_level.find_last_of("/"), startup_level.end());
+        }
+
+        // Load the level
         level_paths.push_back(startup_level);
-        level_index = 0;
         json_file = parse_level_file(get_level_json_path());
         start_level();
         transition_state = GAME;
