@@ -22,8 +22,10 @@
 *
 */
 
+#include <cstdio>
 #include <cstdlib>
 #include <cmath>
+#include <cstring>
 #include <ctime>
 #include <string>
 #include <iostream>
@@ -188,6 +190,20 @@ bool parse_option(char** argc, char** argv, const string& opt) {
     return std::find(argc, argv, opt) != argv;
 }
 
+/**
+ * Returns a pointer to the string of the argument that follows opt. If no argument
+ * follows it (ie if the flag or value is not provided) it returns `nullptr`.
+ */
+char *parse_option_value(char **argc, char **argv, const string& opt) {
+    char **flag = std::find(argc, argv, opt);
+    // Check for `argv - 1` (missing argument) and also `argv` (missing flag) in the same check.
+    if (flag >= argv - 1) {
+        return nullptr;
+    } else {
+        return *(flag + 1);
+    }
+}
+
 string get_version_string() {
     return "v" + std::to_string(VERSION_MAJOR) + "." + std::to_string(VERSION_MINOR) + "." + std::to_string(VERSION_PATCH);
 }
@@ -206,7 +222,8 @@ void print_help() {
     "-f  / -fullscreen      - Enable fullscreen\n"
     "-tf / -true-fullscreen - Enable 'real' fullscreen\n"
     "-v  / -vsync           - Enable V-Sync\n"
-    "-d  / -debug           - Enable debug features\n");
+    "-d  / -debug           - Enable debug features\n"
+    "-i [FOLDER PATH]       - Specify a level folder to play on start\n");
     return;
 }
 
@@ -1250,15 +1267,18 @@ void load_default_sound_collection() {
     return;
 }
 
+/**
+ * returns true if either fade value is anything other than 0
+ * in other words, this is true as long as any fade is happening
+ */
 bool check_fade_activity() {
-    // returns true if either fade value is anything other than 0
-    // in other words, this is true as long as any fade is happening
-    if (fade_in != 0 || fade_out != 0) {return true;} else return false;
+    return fade_in != 0 || fade_out != 0;
 }
-
+/**
+ * similar to check_fade_activity, but allows fade_in to be active
+ */
 bool check_fade_in_activity() {
-    // similar to check_fade_activity, but allows fade_in to be active
-    if ((fade_in <= 1) && (fade_out == 0)) {return true;} else return false;
+    return (fade_in <= 1) && (fade_out == 0);
 }
 
 void fade_reset() {
@@ -1661,6 +1681,25 @@ bool loop(json json_file, int start_offset, int time_signature_top, int time_sig
     return true;
 }
 
+void start_level() {
+    Mix_HaltMusic();
+    reset_shapes();
+    reset_sequences();
+    reset_score_and_life();
+    reset_character_status();
+    unload_character_tileset();
+
+    printf("Loading level: %s\n", get_level_json_path().c_str());
+    draw_loading(false);
+    load_stage_music();
+    load_stage_sound_collection();
+    load_character_file();
+    background_id = get_level_background_effect();
+    init_background_effect(background_id);
+
+    printf("Starting level...\n");
+}
+
 int main(int argc, char *argv[]) {
     // evaluates certain command-line options before game initialization
     if (parse_option(argv, argv+argc, "-help") || parse_option(argv, argv+argc, "-h")) {print_help(); return 0;}
@@ -1673,6 +1712,23 @@ int main(int argc, char *argv[]) {
     game_states current_state = WARNING;
     game_states transition_state;
     SDL_Event evt;
+
+    char *opt_startup_level = parse_option_value(argv, argv+argc, "-i");
+    if (opt_startup_level) {
+        string startup_level = opt_startup_level;
+
+        // Strip json file (if any)
+        if (startup_level.substr(startup_level.size() - 5, 5) == ".json") {
+            startup_level.erase(startup_level.begin() + startup_level.find_last_of("/"), startup_level.end());
+        }
+
+        // Load the level
+        level_paths.push_back(startup_level);
+        json_file = parse_level_file(get_level_json_path());
+        start_level();
+        transition_state = GAME;
+        fade_out = 255;
+    }
     
     // parses arguments related to skipping directly to a given game state
     if (parse_option(argv, argv+argc, "-sandbox")  || parse_option(argv, argv+argc, "-sb")) {
@@ -1831,22 +1887,7 @@ int main(int argc, char *argv[]) {
                                 if (json_file == NULL) {break;}
                                 if (check_fade_in_activity()) {
                                     Mix_PlayChannel(0, snd_menu_confirm, 0);
-                                    Mix_HaltMusic();
-                                    reset_shapes();
-                                    reset_sequences();
-                                    reset_score_and_life();
-                                    reset_character_status();
-                                    unload_character_tileset();
-
-                                    printf("Loading level: %s\n", get_level_json_path().c_str());
-                                    draw_loading(false);
-                                    load_stage_music();
-                                    load_stage_sound_collection();
-                                    load_character_file();
-                                    background_id = get_level_background_effect();
-                                    init_background_effect(background_id);
-
-                                    printf("Starting level...\n");
+                                    start_level();
                                     transition_state = GAME;
                                     fade_out++;
                                 }
