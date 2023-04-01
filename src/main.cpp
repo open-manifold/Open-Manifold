@@ -2243,7 +2243,7 @@ int main(int argc, char *argv[]) {
                     break;
 
                 case WARNING:
-                    load_default_music("menu");
+                    if (transition_state == TITLE) {load_default_music("menu");}
                     break;
 
                 default:
