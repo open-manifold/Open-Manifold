@@ -218,7 +218,7 @@ void print_help() {
     "-tf / -true-fullscreen - Enable 'real' fullscreen\n"
     "-v  / -vsync           - Enable V-Sync\n"
     "-d  / -debug           - Enable debug features\n"
-    "-i [FILEPATH]          - Load a level on start\n");
+    "-i [FOLDER PATH]       - Specify a level folder to play on start\n");
     return;
 }
 
