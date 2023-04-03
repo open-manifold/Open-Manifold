@@ -876,7 +876,6 @@ void draw_background_wave(bg_data bg_data, int frame_time) {
 }
 
 void draw_background_starfield(bg_data bg_data, int frame_time) {
-    int offset_y = 0;
     int tick_rate = 16;
     
     // essentially locks the background's updating rate
@@ -884,7 +883,6 @@ void draw_background_starfield(bg_data bg_data, int frame_time) {
     aux_int += frame_time;
     
     if (aux_int >= tick_rate) {
-        offset_y = -1;
         
         SDL_SetRenderTarget(renderer, aux_texture);
         SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
@@ -895,7 +893,7 @@ void draw_background_starfield(bg_data bg_data, int frame_time) {
         
         SDL_Rect offset;
         offset.x = 0;
-        offset.y = offset_y;
+        offset.y = -1;
         offset.w = aux_texture_w;
         offset.h = aux_texture_h;
         
