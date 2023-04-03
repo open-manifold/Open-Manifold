@@ -876,28 +876,41 @@ void draw_background_wave(bg_data bg_data, int frame_time) {
 }
 
 void draw_background_starfield(bg_data bg_data, int frame_time) {
-    SDL_SetRenderTarget(renderer, aux_texture);
-    SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
+    int offset_y = 0;
+    int tick_rate = 16;
     
-    // darken previous texture
-    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 16);
-    SDL_RenderFillRect(renderer, NULL);
+    // essentially locks the background's updating rate
+    // prevents ludicrously fast scrolling/star spawning at higher FPSes
+    aux_int += frame_time;
     
-    SDL_Rect offset;
-    offset.x = 0;
-    offset.y = -1;
-    offset.w = aux_texture_w;
-    offset.h = aux_texture_h;
+    if (aux_int >= tick_rate) {
+        offset_y = -1;
+        
+        SDL_SetRenderTarget(renderer, aux_texture);
+        SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
+        
+        // darken previous texture
+        SDL_SetRenderDrawColor(renderer, 0, 0, 0, 16);
+        SDL_RenderFillRect(renderer, NULL);
+        
+        SDL_Rect offset;
+        offset.x = 0;
+        offset.y = offset_y;
+        offset.w = aux_texture_w;
+        offset.h = aux_texture_h;
+        
+        for (int i = 0; i < 4; i++) {
+            SDL_SetRenderDrawColor(renderer, (rand() % 2 * 255), (rand() % 2 * 255), (rand() % 2 * 255), 255);
+            SDL_RenderDrawPoint(renderer, rand() % aux_texture_w, rand() % aux_texture_h-1);
+        }
+        
+        SDL_RenderCopy(renderer, aux_texture, NULL, &offset);
     
-    for (int i = 0; i < 4; i++) {
-        SDL_SetRenderDrawColor(renderer, (rand() % 2 * 255), (rand() % 2 * 255), (rand() % 2 * 255), 255);
-        SDL_RenderDrawPoint(renderer, rand() % aux_texture_w, rand() % aux_texture_h-1);
+        SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_NONE);
+        SDL_SetRenderTarget(renderer, NULL);
+        aux_int -= tick_rate;
     }
     
-    SDL_RenderCopy(renderer, aux_texture, NULL, &offset);
-
-    SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_NONE);
-    SDL_SetRenderTarget(renderer, NULL);
     SDL_RenderCopy(renderer, aux_texture, NULL, NULL);
     return;
 }
