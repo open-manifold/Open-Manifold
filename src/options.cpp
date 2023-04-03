@@ -39,7 +39,6 @@ bool fullscreen_toggle = false;
 bool true_fullscreen_toggle = false;    // note: not used in the options menu!
 bool vsync_toggle = false;
 bool grid_toggle = true;
-bool debug_toggle = false;
 bool rumble_toggle = true;
 int controller_index = 0;
 

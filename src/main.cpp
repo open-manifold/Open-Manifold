@@ -52,7 +52,6 @@ extern int width;
 extern int height;
 
 // various options
-extern int option_count;
 extern int sandbox_item_count;
 extern int music_volume;
 extern int sfx_volume;
@@ -63,9 +62,9 @@ extern bool fullscreen_toggle;
 extern bool true_fullscreen_toggle;
 extern bool vsync_toggle;
 extern bool grid_toggle;
-extern bool debug_toggle;
 extern bool rumble_toggle;
 extern int controller_index;
+bool debug_toggle;
 
 // main-game variables
 int score = 0;
