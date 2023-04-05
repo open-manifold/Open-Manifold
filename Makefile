@@ -27,12 +27,12 @@ font_test:
 	$(CXX) src/tests/font_test.cpp -o bin/font_test.exe $(CXXFLAGS) $(LDFLAGS)
 
 icon: 
-	rm -rf res/icon.res
+	-rm -rf res/icon.res
 	-windres res/icon.rc -O coff -o res/icon.res
 
 pkg: clean icon all
 	@echo Creating temporary directory...
-	mkdir release-tmp
+	-mkdir release-tmp
 	
 	@echo Copying files...
 	cp bin/$(EXECNAME) ./release-tmp/$(EXECNAME)
