@@ -1069,12 +1069,12 @@ json parse_level_file(string file) {
             
             // similar to the above checks for generated sequences
             if (cur_sequence.length() > max_sequence_length) {
-                printf("Level sequence #%i is too long (must be %i)! Truncating...\n", i, max_sequence_length);
+                printf("Level sequence #%i is too long (must be %i, is %i)! Truncating...\n", i, max_sequence_length, cur_sequence.length());
                 parsed_json[i]["sequence"] = cur_sequence.substr(0, max_sequence_length);
             }
     
             if (cur_sequence.length() < max_sequence_length) {
-                printf("Level sequence #%i is too short (must be %i)! Padding...\n", i, max_sequence_length);
+                printf("Level sequence #%i is too short (must be %i, is %i)! Padding...\n", i, max_sequence_length, cur_sequence.length());
                 parsed_json[i]["sequence"] = cur_sequence.insert(cur_sequence.end(), max_sequence_length - cur_sequence.length(), '.');
             }
             
