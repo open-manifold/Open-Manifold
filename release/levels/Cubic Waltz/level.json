@@ -1,0 +1,273 @@
+[
+    {
+        "name":"Cubic Waltz",
+        "song_author": "SuperFromND",
+        "level_author": "SuperFromND",
+        "genre": "Chiptune",
+        "bpm": 133,
+        "offset": 24,
+        "time_signature_top": 4,
+        "time_signature_bottom": 3,
+        "bg_color": 11,
+        "background_effect": "hexagon",
+        "color_table": [
+            "#FFFFFF",
+            "#012A1F",
+            "#28CCA2",
+            "#45E9BF",
+            "#017155",
+            "#019D75",
+            "#12B68C",
+            "#4BEFC5",
+            "#018362",
+            "#019E76",
+            "#4DF1C7",
+            "#68FFD8",
+            "#1CC096",
+            "#2ED2A8",
+            "#AEFFEB",
+            "#000000"
+        ]
+    },
+    {
+        "shape": 1,
+        "color": 2,
+        "x": 7,
+        "y": 7,
+        "scale": 6,
+        "song_step": 0,
+        "sequence": "XSS.SS.SA.S."
+    },
+    {
+        "shape": 1,
+        "color": 2,
+        "x": 7,
+        "y": 3,
+        "scale": 4,
+        "sequence": "X.S.SU.US.UU"
+    },
+    {
+        "shape": 1,
+        "color": 16,
+        "x": 7,
+        "y": 0,
+        "scale": 3,
+        "song_step": 0,
+        "sequence": "XUUUUUUU.S.S"
+    },
+    {
+        "shape": 1,
+        "color": 5,
+        "x": 7,
+        "y": 4,
+        "scale": 1,
+        "sequence": "X..U..U..U.."
+    },
+    {
+        "shape": 1,
+        "color": 5,
+        "x": 5,
+        "y": 3,
+        "scale": 1,
+        "song_step": 0,
+        "sequence": "XUU.UU.LS.AL",
+        "auto_shapes": [
+            {
+                "shape": 1,
+                "color": 5,
+                "x": 9,
+                "y": 3,
+                "scale": 1
+            },
+            {
+                "shape": 1,
+                "color": 2,
+                "x": 7,
+                "y": 1,
+                "scale": 1
+            }
+        ]
+    },
+    {
+        "shape": 1,
+        "color": 1,
+        "x": 7,
+        "y": 10,
+        "scale": 1,
+        "sequence": "C..DDD.X.DDD"
+    },
+    {
+        "shape": 1,
+        "color": 0,
+        "x": 5,
+        "y": 7,
+        "scale": 2,
+        "song_step": 0,
+        "sequence": "X.S.L.L.XSLL"
+    },
+    {
+        "shape": 1,
+        "color": 1,
+        "x": 6,
+        "y": 7,
+        "scale": 1,
+        "sequence": "X..C..Z..X.L",
+        "auto_shapes": [
+            {
+                "shape": 1,
+                "color": 0,
+                "x": 9,
+                "y": 7,
+                "scale": 2
+            },
+            {
+                "shape": 1,
+                "color": 1,
+                "x": 8,
+                "y": 7,
+                "scale": 1
+            }
+        ]
+    },
+    {
+        "shape": 1,
+        "color": 1,
+        "x": 2,
+        "y": 5,
+        "scale": 2,
+        "song_step": 0,
+        "sequence": "X.S.U.ULLLLL"
+    },
+    {
+        "shape": 1,
+        "color": 3,
+        "x": 3,
+        "y": 6,
+        "scale": 1,
+        "sequence": "X.SAS.XLLLLU"
+    },
+    {
+        "shape": 1,
+        "color": 6,
+        "x": 2,
+        "y": 7,
+        "scale": 1,
+        "song_step": 0,
+        "sequence": "XLL.LL.LL.R."
+    },
+    {
+        "shape": 1,
+        "color": 5,
+        "x": 2,
+        "y": 8,
+        "scale": 1,
+        "sequence": "X..LLL.L.L.D"
+    },
+    {
+        "shape": 1,
+        "color": 4,
+        "x": 2,
+        "y": 9,
+        "scale": 1,
+        "sequence": "XLL.LL.LD.D."
+    },
+    {
+        "shape": 1,
+        "color": 6,
+        "x": 1,
+        "y": 11,
+        "scale": 2,
+        "song_step": 0,
+        "sequence": "XSDLLDLLDLDL"
+    },
+    {
+        "shape": 1,
+        "color": 5,
+        "x": 2,
+        "y": 12,
+        "scale": 2,
+        "sequence": "XSDDLLDDLLLD"
+    },
+    {
+        "shape": 1,
+        "color": 4,
+        "x": 3,
+        "y": 13,
+        "scale": 2,
+        "song_step": 0,
+        "sequence": "XSLDLDDLDLDD"
+    },
+    {
+        "shape": 1,
+        "color": 5,
+        "x": 5,
+        "y": 13,
+        "scale": 2,
+        "sequence": "XS.DDLDDL.DD",
+        "auto_shapes": [
+            {
+                "shape": 1,
+                "color": 1,
+                "x": 12,
+                "y": 5,
+                "scale": 2
+            },
+            {
+                "shape": 1,
+                "color": 3,
+                "x": 11,
+                "y": 6,
+                "scale": 1
+            },
+            {
+                "shape": 1,
+                "color": 6,
+                "x": 13,
+                "y": 11,
+                "scale": 2
+            },
+            {
+                "shape": 1,
+                "color": 5,
+                "x": 12,
+                "y": 12,
+                "scale": 2
+            },
+            {
+                "shape": 1,
+                "color": 4,
+                "x": 11,
+                "y": 13,
+                "scale": 2
+            },
+            {
+                "shape": 1,
+                "color": 5,
+                "x": 9,
+                "y": 13,
+                "scale": 2
+            },
+            {
+                "shape": 1,
+                "color": 6,
+                "x": 12,
+                "y": 7,
+                "scale": 1
+            },
+            {
+                "shape": 1,
+                "color": 5,
+                "x": 12,
+                "y": 8,
+                "scale": 1
+            },
+            {
+                "shape": 1,
+                "color": 4,
+                "x": 12,
+                "y": 9,
+                "scale": 1
+            }
+        ]
+    }
+]
