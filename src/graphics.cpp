@@ -1408,7 +1408,7 @@ void draw_menu_background(int frame_time) {
 
     for (int i = 0; i < 16; i++) {
         int x = (i * shape_size);
-        int y = height/2 + (sin((time + (i*64)) * 3.1415926/180) * shape_size);
+        int y = height/2 + (sin((time + (i*64)) * to_rad) * shape_size);
 
         draw_shape(i%3, 0, 0, 1, {255,255,255,64}, x, y, shape_size);
     }
