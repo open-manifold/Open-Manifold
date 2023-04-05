@@ -50,7 +50,7 @@ endif
 
 zip: pkg
 	@echo Zipping via 7zip...
-	7z a Open-Manifold.zip ./release-tmp/*
+	7z a -t7z Open-Manifold.7z ./release-tmp/*
 	
 	@echo Deleting temporary directory...
 	rm -rf release-tmp
