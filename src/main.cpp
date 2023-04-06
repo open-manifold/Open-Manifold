@@ -1277,6 +1277,7 @@ void load_default_sound_collection() {
 bool check_fade_activity() {
     return fade_in != 0 || fade_out != 0;
 }
+
 /**
  * similar to check_fade_activity, but allows fade_in to be active
  */

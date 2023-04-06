@@ -1299,6 +1299,7 @@ void draw_shape(int type = 0, int x = 7, int y = 7, int scale = 1, SDL_Color rgb
     // rgb: color of shape in RGBA values
     // gx, gy: position of drawgrid (can be used as an offset)
     // gscale: size of 1 grid square in pixels
+    
     SDL_SetRenderDrawColor(renderer, rgb.r, rgb.g, rgb.b, rgb.a);
 
     x = gscale * (x + 0.5) + gx;
@@ -1312,7 +1313,7 @@ void draw_shape(int type = 0, int x = 7, int y = 7, int scale = 1, SDL_Color rgb
             int y1, y2;
             float r = gscale/2 * (1 + 2 * (scale-1));
 
-            for (y1 = -r, y2 = r; y1; ++y1, --y2) {
+            for (y1 = -r, y2 = r; y1; y1++, y2--) {
                 int xr = (int)(sqrt(r*r - y1*y1) + 0.5);
 
                 shape.x = x - xr;
@@ -1502,7 +1503,7 @@ void draw_level_intro_fade(int song_start_time, int current_time, int intro_beat
 void draw_loading(bool fill_black = false) {
     // Draws loading text and banner
     // ----------------------------------------------------------
-    // draw_black: Toggle to fill screen with all-black
+    // fill_black: Toggle to fill screen with all-black
 
     if (fill_black) {
         SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
@@ -1577,6 +1578,10 @@ bool draw_warning(int frame_time) {
 }
 
 bool draw_title(int menu_selection, int frame_time) {
+    // Draws the title screen
+    // ----------------------------------------------------------
+    // menu_selection: What is currently selected (range 0-3)
+    
     const char *menu_items[4] = {"Play", "Sandbox", "Options", "Quit"};
 
     int scale_mul = fmax(floor(fmin(height, width)/360), 1);
@@ -1636,6 +1641,10 @@ bool draw_title(int menu_selection, int frame_time) {
 }
 
 bool draw_options(int frame_time) {
+    // Draws the options menu
+    // ----------------------------------------------------------
+    // See options.cpp for more info!
+    
     int option_selection = get_option_selection();
     int scale_mul = fmax(floor(fmin(height, width)/360), 1);
     int char_height = font->h + 2;
@@ -1690,6 +1699,10 @@ bool draw_options(int frame_time) {
 }
 
 bool draw_level_select(json json_file, int frame_time) {
+    // Draws the level select menu
+    // ----------------------------------------------------------
+    // json_file: The currently-loaded level's JSON object
+    
     int scale_mul = fmax(floor(fmin(height, width)/300), 1);
 
     // calculates the size of the shape grid; this will be used to create a texture that our shapes are drawn on later
@@ -1699,6 +1712,8 @@ bool draw_level_select(json json_file, int frame_time) {
     grid_area.w =  (height/22) * 15;
     grid_area.h =  grid_area.w;
 
+    // json_file is set to NULL if it cannot be parsed properly
+    // if it returns NULL, we draw an error screen instead
     if (json_file == NULL) {
         draw_gradient(0, 0, width, height, {255, 32, 96});
         draw_grid(width/2, height/2, height/22, {0, 0, 0, 255}, true);
@@ -1719,7 +1734,7 @@ bool draw_level_select(json json_file, int frame_time) {
         draw_shape(1, 7, 5,  1, {0, 0, 0, 255},     grid_area.x, grid_area.y, grid_area.w/15);
 
         draw_text("An error has occurred while trying to load a level.", width/2, grid_area.y + grid_area.h + 16, scale_mul, 0, width, {255, 192, 32});
-        draw_text("Check the log for details.", width/2, grid_area.y + grid_area.h + (font->h * scale_mul) + 16, scale_mul, 0);
+        draw_text("Check the console or log file for details.", width/2, grid_area.y + grid_area.h + (font->h * scale_mul) + 16, scale_mul, 0);
     } else {
         draw_gradient(0, 0, width, height, {0, 0, 255});
         draw_grid(width/2, height/2, height/22, get_color(get_bg_color()), true);
@@ -1762,7 +1777,7 @@ bool draw_level_select(json json_file, int frame_time) {
         SDL_DestroyTexture(shape_texture);
 
         draw_text(get_level_name(), width/2, grid_area.y - (font->h*(2+scale_mul)), scale_mul, 0);
-        draw_text(std::to_string(get_level_bpm()) + " BPM", width/6, grid_area.y + grid_area.h + (font->h), 1, 1, width/3); // get_level_bpm returns an INT, not STRING
+        draw_text(std::to_string(get_level_bpm()) + " BPM", width/6, grid_area.y + grid_area.h + (font->h), 1, 1, width/3);
         draw_text("Genre: " + get_genre(), width/6, grid_area.y + grid_area.h + (font->h * 2), 1, 1, width/3);
         draw_text("Song: " + get_song_author(), width - (width/6), grid_area.y + grid_area.h + (font->h), 1, -1, width/3);
         draw_text("Level: " + get_level_author(), width - (width/6), grid_area.y + grid_area.h + (font->h * 2), 1, -1, width/3);
@@ -1787,7 +1802,17 @@ bool draw_level_select(json json_file, int frame_time) {
 }
 
 bool draw_game(int beat_count, int start_offset, int measure_length, int song_start_time, float beat_start_time, int current_ticks, int intro_beat_length, bool beat_advanced, bool shape_advanced, background_effect background_id, shape active_shape, shape result_shape, std::vector<shape> previous_shapes, bool grid_toggle, bool song_over, bool game_over, int frame_time) {
+    // Main function used during gameplay
+    // ----------------------------------------------------------
     // TODO: the # of arguments here could be heavily reduced with "get_foobar"-style functions
+    // See background.h for bg_data parameters
+    // active_shape: The shape the player is controlling
+    // result_shape: The shape the CPU is controlling
+    // previous_shapes: Array of all previously-placed shapes
+    // grid_toggle: Toggles whether to draw the grid pattern
+    // song_over: True when the last shape has been successfully placed
+    // game_over: True when the player hits 0% health
+    
     SDL_RenderClear(renderer);
     SDL_Color bg_color = get_color(get_bg_color());
 
@@ -1805,6 +1830,9 @@ bool draw_game(int beat_count, int start_offset, int measure_length, int song_st
         bg_color
     };
 
+    // the order here is deliberately chosen to give the best clarity
+    // regardless of game resolution; the grid should ALWAYS be visible
+    // even if it's at the cost of everything else
     draw_background_effect(background_id, bg_data, true, frame_time);
     draw_character(character_beat_count);
     draw_grid(width/2, height/2, height/22, bg_color, !grid_toggle);
@@ -1823,6 +1851,7 @@ bool draw_game(int beat_count, int start_offset, int measure_length, int song_st
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0);
     SDL_RenderClear(renderer);
 
+    // draws every previous shape
     for (int i = 0; i < previous_shapes.size(); i++) {
         draw_shape(
             previous_shapes[i].type,
@@ -1865,19 +1894,29 @@ bool draw_game(int beat_count, int start_offset, int measure_length, int song_st
         }
     }
 
+    // draws the shapes onto the screen
     SDL_SetTextureBlendMode(shape_texture, SDL_BLENDMODE_BLEND);
     SDL_SetRenderTarget(renderer, NULL);
     SDL_RenderCopy(renderer, shape_texture, NULL, &grid_area);
     SDL_DestroyTexture(shape_texture);
     
+    // draws the HUD elements
     if (game_over) {draw_game_over(current_ticks);}
     draw_hud(get_life(), get_score(), current_ticks, frame_time);
+    
     draw_level_intro_fade(song_start_time, current_ticks, intro_beat_length);
     draw_fade(255, 8, frame_time);
     return true;
 }
 
 bool draw_sandbox(background_effect background_id, shape active_shape, std::vector<shape> previous_shapes, bool menu_open, int menu_item, int frame_time) {
+    // Draws the screen during Sandbox mode
+    // ----------------------------------------------------------
+    // active_shape: The shape the player is currently controlling
+    // previous_shapes: Array of all previously-placed shapes
+    // menu_open: Toggles whether or not the toolbar is visible
+    // menu_item: The currently-selected toolbar item
+    
     int scale_mul = fmax(floor(fmin(height, width)/360), 1);
     int time = SDL_GetTicks();
 
