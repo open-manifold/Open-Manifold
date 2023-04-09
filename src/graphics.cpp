@@ -305,7 +305,14 @@ void parse_tile_frames(json file) {
     
     std::vector<SDL_Rect> data;
     
-    // TODO: parse header parameters (that dont exist yet)
+    // parse the speed parameter (if available)
+    int tile_speed = file[0].value("speed", 120);
+    
+    if (tile_speed <= 0) {
+        tile_speed = 60000 / get_level_bpm();
+    }
+    
+    aux_int = tile_speed;
     
     // note the 1; array entry 0 is a header, like with levels
     for (int i = 1; i < file.size(); i++) {
@@ -321,7 +328,6 @@ void parse_tile_frames(json file) {
     
     if (data.size() == 0) {
         fallback_tile_frames();
-        return;
     } else {
         tile_frames = data;
     }
@@ -582,7 +588,7 @@ void draw_background_tile(bg_data bg_data, int frame_time) {
     int scale_mul = fmax(floor(greater_axis/(aux_texture_h * max_tile_count)), 1);
     int tile_size = aux_texture_h * scale_mul;
     int tile_anim_size = fmax(floor(aux_texture_w / aux_texture_h), 1);
-    int slow_song_tick = bg_data.song_tick * 0.0075;
+    int slow_song_tick = bg_data.song_tick * (1.f/aux_int);
 
     SDL_Rect tile;
     SDL_Rect tile_crop;
@@ -1107,6 +1113,7 @@ void init_background_effect(background_effect effect_id) {
 
     switch (effect_id) {
         case tile:
+            aux_int = 120; // sets default tile scroll rate
             load_background_tileset();
             SDL_QueryTexture(aux_texture, NULL, NULL, &aux_texture_w, &aux_texture_h);
             load_tile_frame_file();
