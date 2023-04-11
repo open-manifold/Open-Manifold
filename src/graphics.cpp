@@ -122,8 +122,12 @@ SDL_Color color_table[16] = {
 };
 
 // used for the tile BGFX
-std::vector<SDL_Rect> tile_frames = {
-    {0, 0, 0, 0}
+struct {
+    std::vector<SDL_Rect> frames;
+    unsigned int speed;
+} tile_data = {
+    {{0, 0, 0, 0}},
+    120
 };
 
 extern int option_count;
@@ -272,6 +276,12 @@ void load_font() {
     return;
 }
 
+void reset_tile_data() {
+    tile_data.speed = 120;
+    tile_data.frames = {{0, 0, 0, 0}};
+    return;
+}
+
 void fallback_tile_frames() {
     // generates a fallback vector if parse_tile_frames fails
     // or if the provided tile.json doesn't exist or is invalid
@@ -296,7 +306,7 @@ void fallback_tile_frames() {
         data.push_back(temp_rect);
     }
     
-    tile_frames = data;
+    tile_data.frames = data;
     return;
 }
 
@@ -312,7 +322,7 @@ void parse_tile_frames(json file) {
         tile_speed = 60000 / get_level_bpm();
     }
     
-    aux_int = tile_speed;
+    tile_data.speed = tile_speed;
     
     // note the 1; array entry 0 is a header, like with levels
     for (int i = 1; i < file.size(); i++) {
@@ -329,7 +339,7 @@ void parse_tile_frames(json file) {
     if (data.size() == 0) {
         fallback_tile_frames();
     } else {
-        tile_frames = data;
+        tile_data.frames = data;
     }
     
     return;
@@ -588,13 +598,13 @@ void draw_background_tile(bg_data bg_data, int frame_time) {
     int scale_mul = fmax(floor(greater_axis/(aux_texture_h * max_tile_count)), 1);
     int tile_size = aux_texture_h * scale_mul;
     int tile_anim_size = fmax(floor(aux_texture_w / aux_texture_h), 1);
-    int slow_song_tick = bg_data.song_tick * (1.f/aux_int);
+    int slow_song_tick = bg_data.song_tick * (1.f/tile_data.speed);
 
     SDL_Rect tile;
     SDL_Rect tile_crop;
 
     tile.w = tile.h = tile_size;
-    tile_crop = tile_frames[slow_song_tick % tile_frames.size()];
+    tile_crop = tile_data.frames[slow_song_tick % tile_data.frames.size()];
 
     for (int i = 0; i < width; i += tile_size) {
         for (int j = 0; j < height; j += tile_size) {
@@ -1113,7 +1123,7 @@ void init_background_effect(background_effect effect_id) {
 
     switch (effect_id) {
         case tile:
-            aux_int = 120; // sets default tile scroll rate
+            reset_tile_data();
             load_background_tileset();
             SDL_QueryTexture(aux_texture, NULL, NULL, &aux_texture_w, &aux_texture_h);
             load_tile_frame_file();
