@@ -125,9 +125,11 @@ SDL_Color color_table[16] = {
 struct {
     std::vector<SDL_Rect> frames;
     unsigned int speed;
+    bool fill_screen;
 } tile_data = {
     {{0, 0, 0, 0}},
-    120
+    120,
+    false
 };
 
 extern int option_count;
@@ -279,6 +281,7 @@ void load_font() {
 void reset_tile_data() {
     tile_data.speed = 120;
     tile_data.frames = {{0, 0, 0, 0}};
+    tile_data.fill_screen = false;
     return;
 }
 
@@ -315,7 +318,7 @@ void parse_tile_frames(json file) {
     
     std::vector<SDL_Rect> data;
     
-    // parse the speed parameter (if available)
+    // parses parameters (if available)
     int tile_speed = file[0].value("speed", 120);
     
     if (tile_speed <= 0) {
@@ -323,6 +326,7 @@ void parse_tile_frames(json file) {
     }
     
     tile_data.speed = tile_speed;
+    tile_data.fill_screen = file[0].value("fill_screen", false);
     
     // note the 1; array entry 0 is a header, like with levels
     for (int i = 1; i < file.size(); i++) {
@@ -605,12 +609,27 @@ void draw_background_tile(bg_data bg_data, int frame_time) {
 
     tile.w = tile.h = tile_size;
     tile_crop = tile_data.frames[slow_song_tick % tile_data.frames.size()];
-
-    for (int i = 0; i < width; i += tile_size) {
-        for (int j = 0; j < height; j += tile_size) {
-            tile.x = i;
-            tile.y = j;
-            SDL_RenderCopy(renderer, aux_texture, &tile_crop, &tile);
+    
+    if (tile_data.fill_screen) {
+        tile.w = tile.h = greater_axis;
+        
+        if (greater_axis == width) {
+            tile.x = 0;
+            tile.y = height/2 - width/2;
+        } else {
+            tile.x = width/2 - height/2;
+            tile.y = 0;
+        }
+        
+        SDL_RenderCopy(renderer, aux_texture, &tile_crop, &tile);
+        
+    } else {
+        for (int i = 0; i < width; i += tile_size) {
+            for (int j = 0; j < height; j += tile_size) {
+                tile.x = i;
+                tile.y = j;
+                SDL_RenderCopy(renderer, aux_texture, &tile_crop, &tile);
+            }
         }
     }
 
