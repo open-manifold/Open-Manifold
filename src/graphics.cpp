@@ -320,13 +320,17 @@ void parse_tile_frames(json file) {
     
     // parses parameters (if available)
     int tile_speed = file[0].value("speed", 120);
+    tile_data.fill_screen = file[0].value("fill_screen", false);
+    string tile_scale_mode = file[0].value("scale_mode", "nearest");
     
     if (tile_speed <= 0) {
         tile_speed = 60000 / get_level_bpm();
     }
     
     tile_data.speed = tile_speed;
-    tile_data.fill_screen = file[0].value("fill_screen", false);
+    
+    if (tile_scale_mode == "linear") {SDL_SetTextureScaleMode(aux_texture, SDL_ScaleModeLinear);}
+    if (tile_scale_mode == "nearest") {SDL_SetTextureScaleMode(aux_texture, SDL_ScaleModeNearest);};
     
     // note the 1; array entry 0 is a header, like with levels
     for (int i = 1; i < file.size(); i++) {
