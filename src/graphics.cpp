@@ -732,14 +732,13 @@ void draw_background_conway(bg_data bg_data, int frame_time) {
     int greater_axis = fmax(width, height);
 
     SDL_Rect bg;
-    bg.w = greater_axis;
-    bg.h = greater_axis;
+    bg.w = bg.h = greater_axis;
 
     if (greater_axis == width) {
         bg.x = 0;
-        bg.y = (greater_axis - height) * -0.5;
+        bg.y = height/2 - width/2;
     } else {
-        bg.x = (greater_axis - width) * -0.5;
+        bg.x = width/2 - height/2;
         bg.y = 0;
     }
 
