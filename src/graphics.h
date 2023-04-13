@@ -1,7 +1,6 @@
-#include "background.h"
+#pragma once
 
-#ifndef graphics
-#define graphics
+#include "background.h"
 
 // dedicated struct for a shape, cleaner and faster than using JSON arrays
 struct shape {
@@ -48,5 +47,3 @@ bool draw_level_select(nlohmann::json, int);
 bool draw_game(int, int, int, int, float, int, int, bool, bool, background_effect, shape, shape, std::vector<shape>, bool, bool, bool, int);
 bool draw_options(int);
 bool draw_sandbox(background_effect, shape, std::vector<shape>, bool, int, int);
-
-#endif

@@ -1,5 +1,4 @@
-#ifndef options
-#define options
+#pragma once
 
 enum option_id {
     MUSIC,
@@ -23,5 +22,3 @@ std::string get_option_value(int);
 void move_option_selection(int);
 void modify_current_option_directions(int);
 int modify_current_option_button();
-
-#endif

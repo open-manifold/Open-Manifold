@@ -1,5 +1,4 @@
-#ifndef background
-#define background
+#pragma once
 
 // contains all the background effect IDs
 // strings are converted to this and used internally
@@ -37,5 +36,3 @@ struct bg_data {
     int measure_length;
     SDL_Color grid_color;
 };
-
-#endif

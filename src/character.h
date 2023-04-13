@@ -1,5 +1,4 @@
-#ifndef character
-#define character
+#pragma once
 
 struct character_frames {
     std::vector<SDL_Rect> idle;
@@ -22,5 +21,3 @@ void reset_character_status();
 void set_character_timer(int);
 void tick_character(int);
 SDL_Rect get_character_rect(int);
-
-#endif
