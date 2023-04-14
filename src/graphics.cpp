@@ -197,7 +197,7 @@ void load_character_tileset() {
     }
 
     SDL_FreeSurface(temp);
-    SDL_SetTextureScaleMode(char_texture, SDL_ScaleModeLinear);
+    SDL_SetTextureScaleMode(char_texture, get_character_scale_mode());
     return;
 }
 

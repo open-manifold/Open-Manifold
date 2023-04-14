@@ -30,6 +30,7 @@
 using nlohmann::json;
 
 int character_hold_timer = 0;
+SDL_ScaleMode character_scale_mode = SDL_ScaleModeLinear;
 
 struct character_frames {
     std::vector<SDL_Rect> idle;
@@ -100,9 +101,17 @@ void reset_character_status() {
     return;
 }
 
+void reset_character_data() {
+    character_scale_mode = SDL_ScaleModeLinear;
+}
+
 void set_character_timer(int time_ms) {
     character_hold_timer = time_ms;
     return;
+}
+
+SDL_ScaleMode get_character_scale_mode() {
+    return character_scale_mode;
 }
 
 void tick_character(int frame_time) {
@@ -124,6 +133,9 @@ void parse_character_file(json file) {
     // loads a JSON character file and puts its image coordinate data into frames
     // ----------------------------------------------------------
     // file: a JSON character object
+    
+    // resets parameters
+    character_scale_mode = SDL_ScaleModeLinear;
 
     character_frames frame_data = {
         {{0, 0, 0, 0}},
@@ -138,17 +150,29 @@ void parse_character_file(json file) {
         {0, 0, 0, 0},
         {0, 0, 0, 0}
     };
+    
+    // set to 1 if a header is present
+    int header_offset = 0;
+    
+    // checks for a header (specifically its only parameter)
+    if (file[0].contains("scale_mode")) {
+        header_offset++;
+        
+        std::string scale_mode = file[0].value("scale_mode", "linear");
+        if (scale_mode == "linear") {character_scale_mode = SDL_ScaleModeLinear;}
+        if (scale_mode == "nearest") {character_scale_mode = SDL_ScaleModeNearest;}
+    }
 
     // write the idle frame array
     std::vector<SDL_Rect> temp_vector;
 
-    for (int i = 0; i < file[0]["frames"].size(); i++) {
+    for (int i = 0; i < file[header_offset]["frames"].size(); i++) {
         SDL_Rect temp_rect;
 
-        temp_rect.x = file[0]["frames"][i].value("x", 0);
-        temp_rect.y = file[0]["frames"][i].value("y", 0);
-        temp_rect.w = file[0]["frames"][i].value("w", 0);
-        temp_rect.h = file[0]["frames"][i].value("h", 0);
+        temp_rect.x = file[header_offset]["frames"][i].value("x", 0);
+        temp_rect.y = file[header_offset]["frames"][i].value("y", 0);
+        temp_rect.w = file[header_offset]["frames"][i].value("w", 0);
+        temp_rect.h = file[header_offset]["frames"][i].value("h", 0);
 
         temp_vector.push_back(temp_rect);
     }
@@ -156,15 +180,17 @@ void parse_character_file(json file) {
     frame_data.idle = temp_vector;
 
     // write the other SDL_Rects; these are relatively simple as they're always going to have 1 entry total
-    for (int i = 1; i < 11; i++) {
+    for (int i = 1+header_offset; i < 11+header_offset; i++) {
         SDL_Rect temp_rect;
 
         temp_rect.x = file[i].value("x", 0);
         temp_rect.y = file[i].value("y", 0);
         temp_rect.w = file[i].value("w", 0);
         temp_rect.h = file[i].value("h", 0);
+        
+        int j = i - header_offset;
 
-        switch (i) {
+        switch (j) {
             case 1:  frame_data.up          = temp_rect; break;
             case 2:  frame_data.left        = temp_rect; break;
             case 3:  frame_data.down        = temp_rect; break;

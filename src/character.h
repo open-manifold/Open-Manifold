@@ -21,3 +21,4 @@ void reset_character_status();
 void set_character_timer(int);
 void tick_character(int);
 SDL_Rect get_character_rect(int);
+SDL_ScaleMode get_character_scale_mode();
