@@ -101,10 +101,6 @@ void reset_character_status() {
     return;
 }
 
-void reset_character_data() {
-    character_scale_mode = SDL_ScaleModeLinear;
-}
-
 void set_character_timer(int time_ms) {
     character_hold_timer = time_ms;
     return;
