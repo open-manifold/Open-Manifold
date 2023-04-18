@@ -79,7 +79,7 @@ bool shape_advanced = false;
 // timekeeping flags (and some other data)
 float beat_start_time;
 float length;
-int bpm;
+int bpm = 120;
 int beat_count = 0;
 int song_beat_position = 0;
 int song_start_time;
@@ -971,7 +971,6 @@ json parse_level_file(string file) {
     if (std::filesystem::exists(file) == false) {
         printf("[!] Couldn't parse level file: Does not appear to exist, despite being indexed\n");
         printf("Either the file was deleted after scanning, or something has gone VERY wrong.\n");
-        bpm = get_level_bpm();
         return NULL;
     }
 
@@ -980,7 +979,6 @@ json parse_level_file(string file) {
         parsed_json = json::parse(ifs);
     } catch(json::parse_error& err) {
         printf("[!] Error parsing level file: %s\n", err.what());
-        bpm = get_level_bpm();
         return NULL;
     }
 
