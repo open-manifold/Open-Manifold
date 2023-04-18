@@ -1134,7 +1134,7 @@ void init_background_effect(background_effect effect_id) {
     // Initialize function for background effects
     // Used for setting up things like auxillary textures
     // ----------------------------------------------------------
-    // effect_id: numeric ID for function (see switch statement below)
+    // effect_id: enum for function (see switch statement below)
 
     printf("Initializing background (internal ID: %d)...\n", effect_id);
     SDL_DestroyTexture(aux_texture);
