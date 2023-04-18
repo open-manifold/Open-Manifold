@@ -1887,8 +1887,22 @@ int main(int argc, char *argv[]) {
                         switch(input_value) {
                             case START:
                             case CROSS:
-                                if (json_file == NULL) {break;}
                                 if (check_fade_in_activity()) {
+
+                                    if (json_file == NULL) {
+                                        if (level_paths.size() == 0) {
+                                            printf("Attempting to re-scan the levels folder...\n");
+                                            load_levels();
+
+                                            if (level_paths.size() == 0) {break;}
+                                        }
+
+                                        printf("Attempting to reload the current file...\n");
+                                        json_file = parse_level_file(get_level_json_path());
+
+                                        break;
+                                    }
+
                                     Mix_PlayChannel(0, snd_menu_confirm, 0);
                                     start_level();
                                     transition_state = GAME;
