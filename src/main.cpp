@@ -1360,7 +1360,7 @@ bool compare_shapes() {
 }
 
 shape modify_current_shape(char opcode, shape current_shape, bool is_player = false) {
-    // modifies the shape passed into it depending on an internal "opcode"
+    // modifies the shape passed into it using an "opcode"
     // ----------------------------------------------------------
     // opcode: single letter that represents an action (corresponding to keyboard controls)
     // shape: the shape parameters to modify
@@ -1478,8 +1478,8 @@ void morph_colors() {
 
 bool check_available_sequence(int beat_side) {
     // returns true if the current sequence op is blank, false if it isn't
-    // this ensures that both a sequence can't be overwritten and that only
-    // ONE input is registered, preventing "diagonals" for example
+    // this ensures that both a sequence can't be overwritten and that
+    // only ONE input is registered, preventing "diagonals" for example
     // ----------------------------------------------------------
     // beat_side: returned from check_beat_timing_window(); 1 = beat end, 2 = beat start
     

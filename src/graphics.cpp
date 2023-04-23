@@ -1487,6 +1487,7 @@ void draw_fade(int fadein_mul, int fadeout_mul, int frame_time) {
     // Draws both the fade-in and fade-out effects
     // Called every frame whenever transitioning between screens
     
+    // are we fully faded out?
     if (fade_in == 0 && fade_out == 255) {return;}
 
     if (fade_in >= 0) {fade_in -= (fadein_mul * 0.0625) * frame_time;}
@@ -1540,9 +1541,9 @@ void draw_level_intro_fade(int song_start_time, int current_time, int intro_beat
 }
 
 void draw_loading(bool fill_black = false) {
-    // Draws loading text and banner
+    // Draws loading text
     // ----------------------------------------------------------
-    // fill_black: Toggle to fill screen with all-black
+    // fill_black: Toggle to fill screen with all-black or just a bar
 
     if (fill_black) {
         SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
@@ -1571,6 +1572,8 @@ void draw_loading(bool fill_black = false) {
 }
 
 bool draw_warning(int frame_time) {
+    // Draws warning screen
+    
     // Grays out background
     SDL_SetRenderDrawColor(renderer, 64, 64, 72, 255);
     SDL_RenderClear(renderer);
