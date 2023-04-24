@@ -385,11 +385,13 @@ void load_levels() {
 
     if (scanned_level_count == 0) {
         printf("[!] No levels were found!\n");
+    } else if (scanned_level_count == 1) {
+        printf("Found 1 level.\n");
     } else {
         printf("Found %i levels.\n", scanned_level_count);
     }
     
-    // sorts the level lists alphabetically (std::filesystem does not guarantee this)
+    // sorts the level list alphabetically (std::filesystem does not guarantee this)
     std::sort(level_paths.begin(), level_paths.end());
 
     return;
