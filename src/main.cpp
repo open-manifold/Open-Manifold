@@ -140,6 +140,7 @@ enum game_states {
     STAGE_SELECT,
     GAME,
     SANDBOX,
+    TUTORIAL,
     OPTIONS,
     EXIT,
 };
