@@ -357,7 +357,7 @@ void load_levels() {
     printf("Scanning for levels...\n");
 
     if (!std::filesystem::is_directory(levels)) {
-        printf("[!] The levels directory (assets/levels) couldn't be found!\n");
+        printf("[!] The levels directory (%s) couldn't be found!\n", levels.string().c_str());
         return;
     }
 
