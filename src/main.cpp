@@ -180,6 +180,21 @@ SDL_Keycode keymap[12] = {
     SDLK_BACKSPACE
 };
 
+SDL_GameControllerButton buttonmap[12] = {
+    SDL_CONTROLLER_BUTTON_DPAD_UP,
+    SDL_CONTROLLER_BUTTON_DPAD_DOWN,
+    SDL_CONTROLLER_BUTTON_DPAD_LEFT,
+    SDL_CONTROLLER_BUTTON_DPAD_RIGHT,
+    SDL_CONTROLLER_BUTTON_B,
+    SDL_CONTROLLER_BUTTON_X,
+    SDL_CONTROLLER_BUTTON_Y,
+    SDL_CONTROLLER_BUTTON_A,
+    SDL_CONTROLLER_BUTTON_LEFTSHOULDER,
+    SDL_CONTROLLER_BUTTON_RIGHTSHOULDER,
+    SDL_CONTROLLER_BUTTON_START,
+    SDL_CONTROLLER_BUTTON_BACK
+};
+
 // the controller, if one is needed
 SDL_GameController *controller;
 
@@ -256,11 +271,13 @@ void save_settings() {
         ifs.close();
     }
     
-    // convert current keymap into string array
+    // convert current maps into string arrays
     string keymap_strings[12];
+    string buttonmap_strings[12];
     
     for (int i = 0; i < 12; i++) {
         keymap_strings[i] = SDL_GetKeyName(keymap[i]);
+        buttonmap_strings[i] = SDL_GameControllerGetStringForButton(buttonmap[i]);
     }
 
     new_config["music_volume"] = music_volume;
@@ -274,6 +291,7 @@ void save_settings() {
     new_config["controller_rumble"] = rumble_toggle;
     new_config["controller_index"] = controller_index;
     new_config["key_map"] = keymap_strings;
+    new_config["button_map"] = buttonmap_strings;
 
     printf("Saving to config.json...\n");
 
@@ -323,6 +341,18 @@ void load_settings(int argc, char* argv[]) {
             
             if (key_code == SDLK_UNKNOWN) {printf("[!] Unrecognized keycode: %s\n", key_name.c_str()); continue;}
             keymap[i] = key_code;
+        }
+    }
+    
+    // populates the button map
+    if (json_data.contains("button_map")) {
+        printf("Reading button mappings...\n");
+        for (int i = 0; i < 12; i++) {
+            std::string button_name = json_data["button_map"][i];
+            SDL_GameControllerButton button_code = SDL_GameControllerGetButtonFromString(button_name.c_str());
+            
+            if (button_code == SDL_CONTROLLER_BUTTON_INVALID) {printf("[!] Unrecognized button: %s\n", button_name.c_str()); continue;}
+            buttonmap[i] = button_code;
         }
     }
 
@@ -649,20 +679,18 @@ controller_buttons gamepad_to_abstract_button(int input) {
     // similar to above, but for gamepads
     // there's no bool switch here since it isnt necessary
 
-    switch (input) {
-        case SDL_CONTROLLER_BUTTON_DPAD_UP:         return UP;
-        case SDL_CONTROLLER_BUTTON_DPAD_DOWN:       return DOWN;
-        case SDL_CONTROLLER_BUTTON_DPAD_LEFT:       return LEFT;
-        case SDL_CONTROLLER_BUTTON_DPAD_RIGHT:      return RIGHT;
-        case SDL_CONTROLLER_BUTTON_A:               return CROSS;
-        case SDL_CONTROLLER_BUTTON_B:               return CIRCLE;
-        case SDL_CONTROLLER_BUTTON_X:               return SQUARE;
-        case SDL_CONTROLLER_BUTTON_Y:               return TRIANGLE;
-        case SDL_CONTROLLER_BUTTON_LEFTSHOULDER:    return LB;
-        case SDL_CONTROLLER_BUTTON_RIGHTSHOULDER:   return RB;
-        case SDL_CONTROLLER_BUTTON_START:           return START;
-        case SDL_CONTROLLER_BUTTON_BACK:            return SELECT;
-    }
+    if (input == buttonmap[0])     return UP;
+    if (input == buttonmap[1])     return DOWN;
+    if (input == buttonmap[2])     return LEFT;
+    if (input == buttonmap[3])     return RIGHT;
+    if (input == buttonmap[4])     return CIRCLE;
+    if (input == buttonmap[5])     return SQUARE;
+    if (input == buttonmap[6])     return TRIANGLE;
+    if (input == buttonmap[7])     return CROSS;
+    if (input == buttonmap[8])     return LB;
+    if (input == buttonmap[9])     return RB;
+    if (input == buttonmap[10])    return START;
+    if (input == buttonmap[11])    return SELECT;
 
     return NONE;
 }
