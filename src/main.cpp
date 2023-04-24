@@ -2363,6 +2363,15 @@ int main(int argc, char *argv[]) {
             case EXIT:
                 program_running = false;
                 break;
+                
+            default:
+                printf("[!] Invalid or unimplemented game state reached!\n");
+                SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "Unimplemented Game State", 
+                "Open Manifold has entered a game state that doesn't exist or hasn't been implemented yet.\n"
+                "If you got here and believe it to be a bug, please report it on our issues page.\n"
+                "The game will now close.", window);
+                program_running = false;
+                break;
         }
 
         // calculate frame time manually, separate from frame_time
