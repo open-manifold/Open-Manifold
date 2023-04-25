@@ -588,41 +588,33 @@ void set_vsync_renderer() {
     return;
 }
 
-void take_screenshot() {
-    // get current time for filename
+string get_timestamp() {
     time_t rawtime;
     struct tm *timeinfo;
-    char filename[80];
+    char out[80];
 
     time(&rawtime);
     timeinfo = localtime(&rawtime);
 
-    // construct filename
-    strftime(filename, sizeof(filename), "%Y-%m-%d_%H-%M-%S.png", timeinfo);
+    strftime(out, sizeof(out), "%Y-%m-%d_%H-%M-%S", timeinfo);
+    return out;
+}
 
-    printf("Saving screenshot: %s\n", filename);
+void take_screenshot() {
+    string filename = get_timestamp().append(".png");
+    printf("Saving screenshot: %s\n", filename.c_str());
 
     // take the screenshot and save it as PNG
     SDL_Surface *surface = SDL_CreateRGBSurfaceWithFormat(0, width, height, 32, SDL_PIXELFORMAT_ARGB8888);
     SDL_RenderReadPixels(renderer, NULL, SDL_PIXELFORMAT_ARGB8888, surface->pixels, surface->pitch);
-    IMG_SavePNG(surface, filename);
+    IMG_SavePNG(surface, filename.c_str());
     SDL_FreeSurface(surface);
     return;
 }
 
 void export_shapes() {
-    // get current time for filename
-    time_t rawtime;
-    struct tm *timeinfo;
-    char filename[80];
-
-    time(&rawtime);
-    timeinfo = localtime(&rawtime);
-
-    // construct filename
-    strftime(filename, sizeof(filename), "%Y-%m-%d_%H-%M-%S.json", timeinfo);
-
-    printf("Exporting JSON as: %s\n", filename);
+    string filename = get_timestamp().append(".json");
+    printf("Exporting JSON as: %s\n", filename.c_str());
 
     // converts previous_shapes into JSON data
     nlohmann::ordered_json exported_data;
