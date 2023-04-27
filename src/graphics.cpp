@@ -1734,9 +1734,25 @@ bool draw_options(int frame_time) {
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 128);
     SDL_RenderFillRect(renderer, &rect);
     draw_text(get_option_desc(), width*0.01, height - (char_height * scale_mul), scale_mul, 1, width);
-
+    
+    // draws remap overlay if we're remapping something
+    if (check_rebind()) {
+        string rebind_count = "Rebinding input: " + get_input_name();
+        string rebind_info = "Currently mapped to: " + get_current_mapping();
+        
+        rect.x = 0;
+        rect.y = height/2 - char_height;
+        rect.w = width;
+        rect.h = char_height * 3;
+    
+        SDL_SetRenderDrawColor(renderer, 0, 0, 0, 192);
+        SDL_RenderFillRect(renderer, &rect);
+        
+        draw_text(rebind_count, width/2, height/2 - char_height/2, 1, 0);
+        draw_text(rebind_info, width/2, height/2 + char_height/2, 1, 0);
+    }
+    
     draw_fade(16, 16, frame_time);
-
     return true;
 }
 

@@ -8,6 +8,8 @@ std::string get_motd();
 std::string get_cpu_sequence();
 std::string get_player_sequence();
 std::string get_version_string();
+std::string get_current_mapping();
+std::string get_input_name();
 
 void save_settings();
 void set_music_volume();

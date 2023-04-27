@@ -42,6 +42,11 @@ bool grid_toggle = true;
 bool rumble_toggle = true;
 int controller_index = 0;
 
+// flags that control option menu logic for rebinding buttons/keys
+unsigned int current_rebind_index = 0;
+bool rebinding_keys = false;
+bool rebinding_controller = false;
+
 enum option_id {
     MUSIC,
     SFX,
@@ -53,6 +58,8 @@ enum option_id {
     TOGGLE_GRID,
     TOGGLE_RUMBLE,
     CONTROLLER_ID,
+    REBIND_KEYBOARD,
+    REBIND_CONTROLLER,
     SAVE,
     EXIT_OPTIONS,
     NONE,
@@ -65,18 +72,20 @@ struct option_item {
 };
 
 option_item options[] = {
-    {MUSIC,         "Music Volume",     "Controls the volume of music."},
-    {SFX,           "SFX Volume",       "Controls the volume of sound effects."},
-    {TOGGLE_MONO,   "Speaker Output",   "Controls whether to output audio in mono or stereo."},
-    {FULLSCREEN,    "Fullscreen",       "Sets the game's resolution to your monitor's resolution; known as 'borderless' fullscreen."},
-    {VSYNC,         "V-Sync",           "Syncs the game's framerate to your monitor's refresh rate."},
-    {FRAME_CAP,     "Frame Cap",        "The maximum framerate the game runs at, if V-Sync is disabled."},
-    {TOGGLE_FPS,    "Display FPS",      "Shows the framerate in the top-left corner."},
-    {TOGGLE_GRID,   "Display Grid",     "Controls whether to display the grid overlay during gameplay."},
-    {TOGGLE_RUMBLE, "Controller Rumble","Controls whether to rumble the controller on every beat."},
-    {CONTROLLER_ID, "Controller Index", "Sets which game controller to use."},
-    {SAVE,          "Save Settings",    "Saves your settings and returns to the main menu."},
-    {EXIT_OPTIONS,  "Exit",             "Returns to the main menu. No changes will be saved."}
+    {MUSIC,             "Music Volume",      "Controls the volume of music."},
+    {SFX,               "SFX Volume",        "Controls the volume of sound effects."},
+    {TOGGLE_MONO,       "Speaker Output",    "Controls whether to output audio in mono or stereo."},
+    {FULLSCREEN,        "Fullscreen",        "Sets the game's resolution to your monitor's resolution; known as 'borderless' fullscreen."},
+    {VSYNC,             "V-Sync",            "Syncs the game's framerate to your monitor's refresh rate."},
+    {FRAME_CAP,         "Frame Cap",         "The maximum framerate the game runs at, if V-Sync is disabled."},
+    {TOGGLE_FPS,        "Display FPS",       "Shows the framerate in the top-left corner."},
+    {TOGGLE_GRID,       "Display Grid",      "Controls whether to display the grid overlay during gameplay."},
+    {TOGGLE_RUMBLE,     "Controller Rumble", "Controls whether to rumble the controller on every beat."},
+    {CONTROLLER_ID,     "Controller Index",  "Sets which game controller to use."},
+    {REBIND_KEYBOARD,   "Rebind Keyboard",   "Sets all bindings for the keyboard."},
+    {REBIND_CONTROLLER, "Rebind Controller", "Sets all bindings for the controller."},
+    {SAVE,              "Save Settings",     "Saves your settings and returns to the main menu."},
+    {EXIT_OPTIONS,      "Exit",              "Returns to the main menu. No changes will be saved."}
 };
 
 int option_count = std::size(options);
@@ -92,6 +101,34 @@ const char* get_option_desc() {
 
 int get_option_selection() {
     return option_selected;
+}
+
+int get_rebind_index() {
+    return current_rebind_index;
+}
+
+void increment_rebind_index() {
+    current_rebind_index++;
+    return;
+}
+
+void reset_rebind_flags() {
+    current_rebind_index = 0;
+    rebinding_keys = false;
+    rebinding_controller = false;
+    return;
+}
+
+bool check_rebind_keys() {
+    return rebinding_keys;
+}
+
+bool check_rebind_controller() {
+    return rebinding_controller;
+}
+
+bool check_rebind() {
+    return rebinding_keys || rebinding_controller;
 }
 
 string get_option_value(int index) {
@@ -190,6 +227,14 @@ int modify_current_option_button() {
         case TOGGLE_RUMBLE:
             rumble_toggle = !rumble_toggle;
             rumble_controller(500);
+            break;
+            
+        case REBIND_KEYBOARD:
+            rebinding_keys = true;
+            break;
+        
+        case REBIND_CONTROLLER:
+            rebinding_controller = true;
             break;
             
         case SAVE:

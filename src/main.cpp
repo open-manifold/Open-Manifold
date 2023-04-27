@@ -949,6 +949,46 @@ bool get_debug() {
     return debug_toggle;
 }
 
+string get_current_mapping() {
+    // used in the options menu when rebinding
+    // returns a string of the current binding for a given index
+    unsigned int index = get_rebind_index();
+    
+    if (check_rebind_keys()) {
+        return SDL_GetKeyName(keymap[index]);
+    }
+    
+    if (check_rebind_controller()) {
+        return SDL_GameControllerGetStringForButton(buttonmap[index]);
+    }
+    
+    return "?";
+    
+}
+
+string get_input_name() {
+    // used in the options menu when rebinding
+    // returns a string of the abstract controller that everything is mapped onto; named after the PS1 pad
+    // see controller_buttons above
+    unsigned int index = get_rebind_index();
+    
+    switch (index) {
+        case 0: return "Up";
+        case 1: return "Down";
+        case 2: return "Left";
+        case 3: return "Right";
+        case 4: return "Circle";
+        case 5: return "Square";
+        case 6: return "Triangle";
+        case 7: return "Cross";
+        case 8: return "L1";
+        case 9: return "R1";
+        case 10: return "Start";
+        case 11: return "Back";
+        default: return "?";
+    }
+}
+
 int calculate_score() {
     // calculates a score to give the player by comparing sequence strings
     // ----------------------------------------------------------
@@ -2191,7 +2231,25 @@ int main(int argc, char *argv[]) {
                         break;
 
                     case OPTIONS:
-                        switch(input_value) {
+                        if (check_rebind()) {
+                            if (check_rebind_keys() && evt.type == SDL_KEYDOWN) {
+                                keymap[get_rebind_index()] = evt.key.keysym.sym;
+                                printf("Mapped keyboard key #%i (%s) to: %s\n", get_rebind_index(), get_input_name().c_str(), get_current_mapping().c_str());
+                                increment_rebind_index();
+                            }
+                            
+                            if (check_rebind_controller() && evt.type == SDL_CONTROLLERBUTTONDOWN) {
+                                buttonmap[get_rebind_index()] = (SDL_GameControllerButton)evt.cbutton.button;
+                                printf("Mapped controller button #%i (%s) to: %s\n", get_rebind_index(), get_input_name().c_str(), get_current_mapping().c_str());
+                                increment_rebind_index();
+                            }
+                            
+                            if (get_rebind_index() > 11) {
+                                reset_rebind_flags();
+                            }
+                            
+                            break;
+                        } else switch(input_value) {
                             case START:
                             case CROSS:
                             if (check_fade_in_activity()) {
