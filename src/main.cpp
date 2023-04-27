@@ -2232,7 +2232,12 @@ int main(int argc, char *argv[]) {
 
                     case OPTIONS:
                         if (check_rebind()) {
-                            if (check_rebind_keys() && evt.type == SDL_KEYDOWN) {
+                            if (evt.key.keysym.sym == SDLK_ESCAPE) {
+                                printf("Skipping input #%i (%s)\n", get_rebind_index(), get_input_name().c_str());
+                                increment_rebind_index();
+                            }
+                            
+                            if (check_rebind_keys() && evt.type == SDL_KEYDOWN && evt.key.keysym.sym != SDLK_ESCAPE) {
                                 keymap[get_rebind_index()] = evt.key.keysym.sym;
                                 printf("Mapped keyboard key #%i (%s) to: %s\n", get_rebind_index(), get_input_name().c_str(), get_current_mapping().c_str());
                                 increment_rebind_index();
