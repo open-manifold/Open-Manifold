@@ -523,6 +523,7 @@ void init_controller() {
 }
 
 int get_controller_count() {
+    if (SDL_NumJoysticks() <= 0) return 0;
     return SDL_NumJoysticks() - 1;
 }
 
