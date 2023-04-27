@@ -1703,7 +1703,7 @@ bool draw_options(int frame_time) {
     SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 128);
     rect.x = left_edge - 8;
-    rect.y = height/8 + ((option_selection * char_height) * scale_mul);
+    rect.y = height/16 + ((option_selection * char_height) * scale_mul);
     rect.w = right_edge + 8;
     SDL_RenderFillRect(renderer, &rect);
 
@@ -1714,7 +1714,7 @@ bool draw_options(int frame_time) {
 
         // draw the labels
         if (i == option_selection) {text_highlight = {255, 255, 96};}
-        draw_text(get_option_name(i), left_edge, height/8 + ((i * char_height) * scale_mul), scale_mul, 1, width/2, text_highlight);
+        draw_text(get_option_name(i), left_edge, height/16 + ((i * char_height) * scale_mul), scale_mul, 1, width/2, text_highlight);
 
         // get a string for the option value (if there is one)
         option_value = get_option_value(i);
@@ -1724,7 +1724,7 @@ bool draw_options(int frame_time) {
         if (option_value == "Disabled") {text_highlight = {255, 96, 96};}
 
         // draw the value of the option
-        draw_text(option_value, left_edge + right_edge - 8, height/8 + ((char_height*i) * scale_mul), scale_mul, -1, width/4, text_highlight);
+        draw_text(option_value, left_edge + right_edge - 8, height/16 + ((i * char_height) * scale_mul), scale_mul, -1, width/4, text_highlight);
     }
 
     // draws menu descriptions
