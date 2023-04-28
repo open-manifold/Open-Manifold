@@ -396,6 +396,17 @@ SDL_Color get_color(int col = 0) {
     return color_table[col];
 }
 
+SDL_Color get_rainbow_color(int time) {
+    // returns a "smoothly-random" rainbow color
+    // used when displaying the active shape
+    
+    Uint8 color_r = abs(sin(time/160.f) * 255);
+    Uint8 color_g = abs(sin(time/180.f) * 255);
+    Uint8 color_b = abs(sin(time/200.f) * 255);
+    
+    return {color_r, color_g, color_b, 255};
+}
+
 void reset_color_table() {
     for (int i = 0; i < 16; i++) {
         color_table[i] = default_color_table[i];
@@ -1923,31 +1934,23 @@ bool draw_game(int beat_count, int start_offset, int measure_length, int song_st
     if (song_over == false && game_over == false && beat_count > start_offset) {
         // this draws the CPU's shape
         if ((beat_count - 1 - start_offset)%(measure_length*2) < measure_length) {
-            Uint8 color_r = abs(sin(current_ticks/160.f) * 255);
-            Uint8 color_g = abs(sin(current_ticks/180.f) * 255);
-            Uint8 color_b = abs(sin(current_ticks/200.f) * 255);
-
             draw_shape(
                 result_shape.type,
                 result_shape.x,
                 result_shape.y,
                 result_shape.scale,
-                {color_r, color_g, color_b, 255},
+                get_rainbow_color(current_ticks),
                 0, 0, grid_area.w/15);
         }
 
         // this draws the player's shape
         if ((beat_count - 1 - start_offset)%(measure_length*2) >= measure_length) {
-            Uint8 color_r = abs(sin(current_ticks/160.f) * 255);
-            Uint8 color_g = abs(sin(current_ticks/180.f) * 255);
-            Uint8 color_b = abs(sin(current_ticks/200.f) * 255);
-
             draw_shape(
                 active_shape.type,
                 active_shape.x,
                 active_shape.y,
                 active_shape.scale,
-                {color_r, color_g, color_b, 255},
+                get_rainbow_color(current_ticks),
                 0, 0, grid_area.w/15);
         }
     }
