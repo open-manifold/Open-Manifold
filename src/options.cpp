@@ -67,8 +67,8 @@ enum option_id {
 
 struct option_item {
     const option_id id;
-    const char* name;
-    const char* description;
+    const char* name = "";
+    const char* description = "";
 };
 
 option_item options[] = {
@@ -252,6 +252,10 @@ int modify_current_option_button() {
 
 void move_option_selection(int x) {
     option_selected += x;
+    
+    while (options[option_selected].id == NONE) {
+        option_selected += x;
+    }
     
     if (option_selected > option_count-1) {option_selected = 0;}
     if (option_selected < 0) {option_selected = option_count-1;}
