@@ -96,6 +96,7 @@ int frame_cap_ms = (1000 / frame_cap);
 // sound effects
 Mix_Chunk *snd_menu_move;
 Mix_Chunk *snd_menu_confirm;
+Mix_Chunk *snd_mono_test;
 Mix_Chunk *snd_metronome_small;
 Mix_Chunk *snd_metronome_big;
 Mix_Chunk *snd_up;
@@ -485,6 +486,11 @@ void load_common_sounds() {
     if(snd_menu_confirm == NULL) {
         printf("[!] confirm.ogg: %s\n", Mix_GetError());
     }
+    
+    snd_mono_test = Mix_LoadWAV("assets/sound/mono_test.ogg");
+    if(snd_mono_test == NULL) {
+        printf("[!] mono_test.ogg: %s\n", Mix_GetError());
+    }
 
     snd_metronome_small = Mix_LoadWAV("assets/sound/metronome_small.ogg");
     if(snd_metronome_small == NULL) {
@@ -570,6 +576,12 @@ void set_channel_mix() {
         Mix_UnregisterEffect(MIX_CHANNEL_POST, downmix_to_mono);
     }
     
+    return;
+}
+
+void play_channel_test() {
+    // called from options.cpp, plays the mono test sound when toggling channel mix
+    Mix_PlayChannel(-1, snd_mono_test, 0);
     return;
 }
 

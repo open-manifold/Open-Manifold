@@ -204,6 +204,7 @@ int modify_current_option_button() {
         case TOGGLE_MONO:
             mono_toggle = !mono_toggle;
             set_channel_mix();
+            play_channel_test();
             break;
             
         case FULLSCREEN:
