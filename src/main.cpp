@@ -1820,6 +1820,7 @@ int main(int argc, char *argv[]) {
     int menu_selected = 0;
     int sandbox_option_selected = 0;
     bool sandbox_menu_active = false;
+    bool sandbox_lock = false;
 
     load_motd();
 
@@ -2190,6 +2191,11 @@ int main(int argc, char *argv[]) {
                                             export_shapes();
                                             break;
                                             
+                                        case 5:
+                                            Mix_PlayChannel(0, snd_xplode, 0);
+                                            sandbox_lock = !sandbox_lock;
+                                            break;
+                                            
                                         default: break;
                                     }
                                     break;
@@ -2228,8 +2234,12 @@ int main(int argc, char *argv[]) {
                                 case CROSS:
                                     Mix_PlayChannel(-1, snd_success, 0);
                                     previous_shapes.push_back(active_shape);
-                                    reset_shapes();
-                                    active_shape.type = 0;
+                                    
+                                    if (!sandbox_lock) {
+                                        reset_shapes();
+                                        active_shape.type = 0;
+                                    }
+                                    
                                     break;
     
                                 case LB:
@@ -2397,6 +2407,7 @@ int main(int argc, char *argv[]) {
                     init_background_effect(background_id);
                     sandbox_menu_active = false;
                     sandbox_option_selected = 0;
+                    sandbox_lock = false;
                     break;
 
                 case GAME:
@@ -2449,7 +2460,7 @@ int main(int argc, char *argv[]) {
                 break;
 
             case SANDBOX:
-                draw_sandbox(background_id, active_shape, previous_shapes, sandbox_menu_active, sandbox_option_selected, frame_time);
+                draw_sandbox(background_id, active_shape, previous_shapes, sandbox_menu_active, sandbox_lock, sandbox_option_selected, frame_time);
                 break;
 
             case OPTIONS:

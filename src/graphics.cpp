@@ -141,7 +141,8 @@ const char* sandbox_items[] = {
     "Shape Morph",
     "Color Morph",
     "Undo Last Shape",
-    "Export to JSON"
+    "Export to JSON",
+    "Lock Shape"
 };
 
 int sandbox_item_count = std::size(sandbox_items);
@@ -2040,7 +2041,7 @@ bool draw_game(int beat_count, int start_offset, int measure_length, int song_st
     return true;
 }
 
-bool draw_sandbox(background_effect background_id, shape active_shape, std::vector<shape> previous_shapes, bool menu_open, int menu_item, int frame_time) {
+bool draw_sandbox(background_effect background_id, shape active_shape, std::vector<shape> previous_shapes, bool menu_open, bool sandbox_lock, int menu_item, int frame_time) {
     // Draws the screen during Sandbox mode
     // ----------------------------------------------------------
     // active_shape: The shape the player is currently controlling
@@ -2139,6 +2140,7 @@ bool draw_sandbox(background_effect background_id, shape active_shape, std::vect
             icon_area.w = icon_area.h = icon_area.w - icon_padding * 2;
             
             SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+            
             SDL_RenderFillRect(renderer, &icon_area);
             
             icon_area.x += icon_padding;
@@ -2146,6 +2148,13 @@ bool draw_sandbox(background_effect background_id, shape active_shape, std::vect
             icon_area.w = icon_area.h = icon_area.w - icon_padding * 2;
             
             SDL_RenderCopy(renderer, sandbox_icon_texture, &icon_coords, &icon_area);
+            
+            if (i == 5 && sandbox_lock) {
+                SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_MOD);
+                SDL_SetRenderDrawColor(renderer, 64, 64, 255, 255);
+                SDL_RenderFillRect(renderer, &icon_area);
+                SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
+            }
         }
         
         draw_text(sandbox_items[menu_item], width/2, height - icon_size - icon_padding - font->h, 1, 0);
