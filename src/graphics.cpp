@@ -35,6 +35,7 @@
 #include "character.h"
 #include "background.h"
 #include "options.h"
+#include "tutorial.h"
 #include "font.h"
 
 using nlohmann::json;
@@ -2156,6 +2157,7 @@ bool draw_tutorial(int frame_time) {
     
     draw_gradient(0, 0, width, height, {192, 64, 255});
     draw_text("WORK IN PROGRESS", 0, height - (font->h*scale_mul), scale_mul, 1, width, {0, 0, 0});
+    draw_text(get_tutorial_current_message(), width/2, height/2, scale_mul, 0, width);
     
     draw_fade(16, 16, frame_time);
     return true;

@@ -40,6 +40,7 @@
 #include "background.h"
 #include "character.h"
 #include "options.h"
+#include "tutorial.h"
 #include "version.h"
 
 using nlohmann::json;
@@ -2298,6 +2299,10 @@ int main(int argc, char *argv[]) {
                                 transition_state = TITLE;
                                 fade_out++;
                                 break;
+                                
+                            case CROSS:
+                                tutorial_advance_message();
+                                break;
                         }
                         break;
 
@@ -2470,6 +2475,7 @@ int main(int argc, char *argv[]) {
                     
                 case TUTORIAL:
                     printf("Loading tutorial mode...\n");
+                    init_tutorial();
                     load_default_music("tutorial");
                     break;
 
@@ -2527,6 +2533,7 @@ int main(int argc, char *argv[]) {
                 break;
             
             case TUTORIAL:
+                tutorial_message_tick(frame_time);
                 draw_tutorial(frame_time);
                 break;
 

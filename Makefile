@@ -1,7 +1,7 @@
 CXX := g++
 CXXFLAGS := -std=c++17 -Iinclude
 LDFLAGS := -lSDL2 -lSDL2_image -lSDL2_mixer -lstdc++fs
-OBJS = $(addprefix build/, main.o graphics.o character.o options.o)
+OBJS = $(addprefix build/, main.o graphics.o character.o options.o tutorial.o)
 EXECNAME = OpenManifold
 ICON = 
 
