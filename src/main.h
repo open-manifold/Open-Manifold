@@ -26,6 +26,7 @@ int get_controller_count();
 int get_level_bpm();
 int get_bg_color();
 int check_beat_timing_window();
+bool check_json_validity();
 bool get_debug();
 
 int get_life();

@@ -1080,19 +1080,48 @@ json parse_level_file(string file) {
 
     // this entire block generates sequences if they aren't present
     // note that we generate these even if they're already present in order to ensure a level is actually beatable
+    // it also uses this opportunity to populate previous_shapes for the level select menu
+    
     int max_sequence_length = get_level_measure_length();
+    previous_shapes.clear();
 
     for (int i = 1; i < parsed_json.size(); i++) {
-        int shape = parsed_json[i].value("shape", 0);
+        int shape_type = parsed_json[i].value("shape", 0);
         int x = parsed_json[i].value("x", 7);
         int y = parsed_json[i].value("y", 7);
         int scale = parsed_json[i].value("scale", 1);
 
         bool sequence_exists = parsed_json[i].contains("sequence");
         string gen_sequence;
+        
+        // populates the previous_shapes struct
+        
+        shape s = {
+            shape_type,
+            x,
+            y,
+            scale,
+            parsed_json[i].value("color", 0)
+        };
+        
+        previous_shapes.push_back(s);
+        
+        if (parsed_json[i].contains("auto_shapes") && parsed_json[i]["auto_shapes"].is_array()) {
+            for (int j = 0; j < parsed_json[i]["auto_shapes"].size(); j++) {
+                s = {
+                    parsed_json[i]["auto_shapes"][j].value("shape", 0),
+                    parsed_json[i]["auto_shapes"][j].value("x", 7),
+                    parsed_json[i]["auto_shapes"][j].value("y", 7),
+                    parsed_json[i]["auto_shapes"][j].value("scale", 1),
+                    parsed_json[i]["auto_shapes"][j].value("color", 0)
+                };
+                
+                previous_shapes.push_back(s);
+            }
+        }
 
         // sets the first action to changing shape
-        switch (shape) {
+        switch (shape_type) {
             case 0: gen_sequence += "Z"; break;
             case 1: gen_sequence += "X"; break;
             case 2: gen_sequence += "C"; break;
@@ -1159,6 +1188,13 @@ json parse_level_file(string file) {
     }
 
     return parsed_json;
+}
+
+bool check_json_validity() {
+    // returns false if the level json object is NULL
+    // used in the level select in graphics.cpp
+    
+    return json_file != NULL;
 }
 
 void load_tile_frame_file() {
@@ -2358,9 +2394,15 @@ int main(int argc, char *argv[]) {
             switch (current_state) {
                 case SANDBOX:
                     unload_sandbox_icons();
-                    // the lack of break here is deliberate
-                case GAME:
                     previous_shapes.clear();
+                    load_default_music("menu");
+                    break;
+                    
+                case STAGE_SELECT:
+                    previous_shapes.clear();
+                    break;
+                    
+                case GAME:
                     load_default_music("menu");
                     break;
 
@@ -2451,7 +2493,7 @@ int main(int argc, char *argv[]) {
                 break;
 
             case STAGE_SELECT:
-                draw_level_select(json_file, frame_time);
+                draw_level_select(previous_shapes, frame_time);
                 break;
 
             case GAME:

@@ -1838,10 +1838,10 @@ bool draw_options(int frame_time) {
     return true;
 }
 
-bool draw_level_select(json json_file, int frame_time) {
+bool draw_level_select(std::vector<shape> shapes, int frame_time) {
     // Draws the level select menu
     // ----------------------------------------------------------
-    // json_file: The currently-loaded level's JSON object
+    // shapes: list of shapes to draw, created at parse-time in main.cpp
     
     int scale_mul = fmax(floor(fmin(height, width)/300), 1);
 
@@ -1854,7 +1854,7 @@ bool draw_level_select(json json_file, int frame_time) {
 
     // json_file is set to NULL if it cannot be parsed properly
     // if it returns NULL, we draw an error screen instead
-    if (json_file == NULL) {
+    if (!check_json_validity()) {
         draw_gradient(0, 0, width, height, {255, 32, 96});
         draw_grid(width/2, height/2, height/22, {0, 0, 0, 255}, true);
 
@@ -1888,27 +1888,14 @@ bool draw_level_select(json json_file, int frame_time) {
         SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0);
         SDL_RenderClear(renderer);
 
-        for (int i = 1; i < json_file.size(); i++) {
+        for (int i = 0; i < shapes.size(); i++) {
             draw_shape(
-                json_file[i].value("shape", 0),
-                json_file[i].value("x", 7),
-                json_file[i].value("y", 7),
-                json_file[i].value("scale", 1),
-                get_color(json_file[i].value("color", 0)),
+                shapes[i].type,
+                shapes[i].x,
+                shapes[i].y,
+                shapes[i].scale,
+                get_color(shapes[i].color),
                 0, 0, grid_area.w/15);
-
-            // check if auto_shapes are present, and if so, draw them
-            if (json_file[i].contains("auto_shapes") && json_file[i]["auto_shapes"].is_array()) {
-                for (int j = 0; j < json_file[i]["auto_shapes"].size(); j++) {
-                    draw_shape(
-                        json_file[i]["auto_shapes"][j].value("shape", 0),
-                        json_file[i]["auto_shapes"][j].value("x", 7),
-                        json_file[i]["auto_shapes"][j].value("y", 7),
-                        json_file[i]["auto_shapes"][j].value("scale", 1),
-                        get_color(json_file[i]["auto_shapes"][j].value("color", 0)),
-                        0, 0, grid_area.w/15);
-                }
-            }
         }
 
         SDL_SetTextureBlendMode(shape_texture, SDL_BLENDMODE_BLEND);
