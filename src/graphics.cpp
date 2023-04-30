@@ -617,7 +617,6 @@ void draw_background_tile(bg_data bg_data, int frame_time) {
     int greater_axis = fmax(width, height);
     int scale_mul = fmax(floor(greater_axis/(aux_texture_h * max_tile_count)), 1);
     int tile_size = aux_texture_h * scale_mul;
-    int tile_anim_size = fmax(floor(aux_texture_w / aux_texture_h), 1);
     int slow_song_tick = bg_data.song_tick * (1.f/tile_data.speed);
 
     SDL_Rect tile;
@@ -2036,7 +2035,6 @@ bool draw_sandbox(background_effect background_id, shape active_shape, std::vect
     // menu_open: Toggles whether or not the toolbar is visible
     // menu_item: The currently-selected toolbar item
     
-    int scale_mul = fmax(floor(fmin(height, width)/360), 1);
     int time = SDL_GetTicks();
 
     SDL_RenderClear(renderer);
