@@ -1706,7 +1706,7 @@ bool draw_title(int menu_selection, int frame_time) {
     // ----------------------------------------------------------
     // menu_selection: What is currently selected (range 0-3)
     
-    const char *menu_items[4] = {"Play", "Sandbox", "Options", "Quit"};
+    const char *menu_items[5] = {"Play", "Sandbox", "Tutorial", "Options", "Quit"};
 
     int scale_mul = fmax(floor(fmin(height, width)/360), 1);
     int char_height = font->h + 2;
@@ -1745,7 +1745,7 @@ bool draw_title(int menu_selection, int frame_time) {
     SDL_RenderFillRect(renderer, &rect);
 
     // draws menu items
-    for (int i = 0; i < 4; i++) {
+    for (int i = 0; i < 5; i++) {
         SDL_Color text_highlight = {255, 255, 255};
 
         if (i == menu_selection) {text_highlight = {255, 255, 96};}
@@ -2147,6 +2147,16 @@ bool draw_sandbox(background_effect background_id, shape active_shape, std::vect
         draw_text(sandbox_items[menu_item], width/2, height - icon_size - icon_padding - font->h, 1, 0);
     }
 
+    draw_fade(16, 16, frame_time);
+    return true;
+}
+
+bool draw_tutorial(int frame_time) {
+    int scale_mul = fmax(floor(fmin(height, width)/360), 1);
+    
+    draw_gradient(0, 0, width, height, {192, 64, 255});
+    draw_text("WORK IN PROGRESS", 0, height - (font->h*scale_mul), scale_mul, 1, width, {0, 0, 0});
+    
     draw_fade(16, 16, frame_time);
     return true;
 }
