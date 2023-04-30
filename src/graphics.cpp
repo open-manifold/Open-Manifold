@@ -1420,6 +1420,76 @@ void draw_shape(int type = 0, int x = 7, int y = 7, int scale = 1, SDL_Color rgb
     return;
 }
 
+void draw_shape_outline(int type = 0, int x = 7, int y = 7, int scale = 1, SDL_Color rgb = {0, 0, 0, 255}, int gx = 0, int gy = 0, float gscale = height/22.f) {
+    // similar to the above, but it only renders outlines
+    // NOTE: this function is not alpha-safe, at least for circles!
+    // ----------------------------------------------------------
+    // see draw_shape() for parameters
+    
+    SDL_SetRenderDrawColor(renderer, rgb.r, rgb.g, rgb.b, rgb.a);
+
+    x = gscale * (x + 0.5) + gx;
+    y = gscale * (y + 0.5) + gy;
+    int size = gscale * (1 + 2 * (scale-1));
+    SDL_Rect shape;
+
+    switch (type) {
+        // circle
+        case 0: {
+            int q;
+            float r = gscale/2 * (1 + 2 * (scale-1));
+            int sx, sy, sx2, sy2;
+
+            for (q = 0; q < 360; q++) {
+                sx = cos(q*to_rad) * r + x;
+                sy = sin(q*to_rad) * r + y;
+                sx2 = cos((q+1)*to_rad) * r + x;
+                sy2 = sin((q+1)*to_rad) * r + y;
+                
+                SDL_RenderDrawLine(renderer, sx, sy, sx2, sy2);
+            }
+            
+            return;
+        }
+
+        // square
+        case 1: {
+            shape.x = x - (size * 0.5);
+            shape.y = y - (size * 0.5);
+            shape.w = shape.h = size;
+
+            SDL_RenderDrawRect(renderer, &shape);
+            return;
+        }
+
+        // triangle
+        case 2: {
+            int y1 = y - (size * 0.5);
+            int y2 = y1 + size;
+
+            for (int y3 = 0; y1 < y2; y1++, y3++) {
+                shape.x = (x - (size*0.25)) + ((y-y1) * 0.5);
+                shape.y = y1;
+                shape.w = y3;
+                shape.h = 1;
+
+                SDL_RenderDrawPoint(renderer, shape.x, shape.y);
+                SDL_RenderDrawPoint(renderer, shape.x + shape.w, shape.y);
+            }
+            
+            SDL_RenderDrawLine(renderer, shape.x, shape.y, shape.x + shape.w, shape.y);
+            return;
+        }
+
+        // none/null
+        case -1:
+        default:
+            return;
+    }
+
+    return;
+}
+
 void draw_character(int beat_count = 0) {
     // Draws character graphics on both sides of the main grid
     // ----------------------------------------------------------
