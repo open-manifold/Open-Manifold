@@ -2186,7 +2186,7 @@ int main(int argc, char *argv[]) {
                                             break;
                                             
                                         case 4:
-                                            Mix_PlayChannel(0, snd_xplode, 0);
+                                            Mix_PlayChannel(0, snd_combo, 0);
                                             export_shapes();
                                             break;
                                             
