@@ -69,9 +69,7 @@ struct option_item {
     const option_id id;
     const char* name = "";
     const char* description = "";
-};
-
-option_item options[] = {
+} options[] = {
     {MUSIC,             "Music Volume",      "Controls the volume of music."},
     {SFX,               "SFX Volume",        "Controls the volume of sound effects."},
     {TOGGLE_MONO,       "Speaker Output",    "Controls whether to output audio in mono or stereo."},
