@@ -29,6 +29,7 @@ using std::string;
 
 int message_index = 0;
 int message_tick = 0;
+int message_tick_rate = 30;
 bool message_finished = false;
 string current_message;
 
@@ -45,6 +46,7 @@ string messages[] = {
 void init_tutorial() {
     message_index = 0;
     message_tick = 0;
+    message_tick_rate = 30;
     message_finished = false;
     current_message.clear();
     return;
@@ -60,17 +62,20 @@ void tutorial_message_tick(int frame_time) {
     
     if (message_tick <= 0) {
         current_message.append(messages[message_index], current_message.length(), 1);
-        message_tick = 40;
+        message_tick = message_tick_rate;
     }
     
     return;
 }
 
 void tutorial_advance_message() {
+    message_tick_rate = 15;
+    
     if (message_finished && message_index < std::size(messages) - 1) {
         current_message.clear();
         message_index++;
-        message_tick = 40;
+        message_tick_rate = 30;
+        message_tick = message_tick_rate;
         message_finished = false;
     }
     
