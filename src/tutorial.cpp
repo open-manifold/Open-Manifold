@@ -25,6 +25,8 @@
 #include <cstdlib>
 #include <string>
 
+#include "main.h"
+
 using std::string;
 
 int message_index = 0;
@@ -63,15 +65,20 @@ void tutorial_message_tick(int frame_time) {
     if (message_tick <= 0) {
         current_message.append(messages[message_index], current_message.length(), 1);
         message_tick = message_tick_rate;
+        
+        if (current_message.length() % 4 == 0) {
+            play_dialog_blip();
+        }
     }
     
     return;
 }
 
 void tutorial_advance_message() {
-    message_tick_rate = 15;
+    message_tick_rate = 5;
     
     if (message_finished && message_index < std::size(messages) - 1) {
+        play_dialog_advance();
         current_message.clear();
         message_index++;
         message_tick_rate = 30;

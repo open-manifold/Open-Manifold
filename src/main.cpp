@@ -586,6 +586,18 @@ void play_channel_test() {
     return;
 }
 
+void play_dialog_blip() {
+    // called from tutorial.cpp
+    Mix_PlayChannel(-1, snd_metronome_big, 0);
+    return;
+}
+
+void play_dialog_advance() {
+    // called from tutorial.cpp
+    Mix_PlayChannel(-1, snd_menu_confirm, 0);
+    return;
+}
+
 void set_vsync_renderer() {
     // sets VSYNC flag in SDL2 and re-creates the renderer
     SDL_SetHint(SDL_HINT_RENDER_VSYNC, std::to_string(vsync_toggle).c_str());
