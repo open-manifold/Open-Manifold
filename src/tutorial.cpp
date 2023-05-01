@@ -29,6 +29,15 @@
 
 using std::string;
 
+enum tutorial_states {
+    TUT_NONE,
+    TUT_FACE,
+    TUT_SHAPES,
+    TUT_GRID_MOVE,
+    TUT_GRID_SIZE,
+    TUT_LIFEBAR
+};
+
 int message_index = 0;
 int message_tick = 0;
 int message_tick_rate = 30;
@@ -36,13 +45,16 @@ bool message_finished = false;
 string current_message;
 
 string messages[] = {
-    "Message 1",
-    "Massage Two",
-    "Messenger Tres",
-    "Mortgage 4our",
-    "Fifth set of informative combination of words for your reading entertainment or education or hopefully something along those lines anyways because these things take quite a bit of effort to write and definitely isn't just padding for the sake of having a long message to test this function with",
-    "Okay but really these are placeholder lines",
-    "This mode is nowhere near finished so come back later maybe xoxo love you <3"
+    "Welcome to Open Manifold! In this guide, we will walk through the basics of playing the game.",
+    "Open Manifold is a rhythm game where the goal is to create patterns called 'faces'.",
+    "To make faces, you create and manipulate shapes. There are three kinds of shapes: circles, squares, and triangles.",
+    "To create a shape, press one of the three face buttons. Each button corresponds to one shape.",
+    "You can freely move the shape's position along the grid with the directional buttons. ",
+    "You can also resize the shape with the shoulder buttons. The shape can be resized anywhere, even at the edges of the grid.",
+    "Every shape has two 'phases'. In the first phase, the computer will create a shape and move it into position. In the second phase, you must replicate that shape.",
+    "Your actions must be timed to the beat of the song. If your timing isn't on-beat, nothing will happen. You only get so many beats to work with, so make them count!",
+    "You also have a lifebar. Fail to replicate a shape, and you'll lose some life. Complete a shape, and you'll get some of it back. If it hits zero, that's a game over!",
+    "That should cover the basics of play. Have fun, and enjoy Open Manifold!"
 };
 
 void init_tutorial() {
