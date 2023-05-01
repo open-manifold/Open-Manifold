@@ -2156,15 +2156,14 @@ bool draw_tutorial(int frame_time) {
     int scale_mul = fmax(floor(fmin(height, width)/360), 1);
     
     draw_gradient(0, 0, width, height, {192, 64, 255});
-    draw_text("WORK IN PROGRESS", 0, height - (font->h*scale_mul), scale_mul, 1, width, {0, 0, 0});
     
     // splits message into chunks    
     string message = get_tutorial_current_message();
     string temp;
     std::vector<string> message_list;
-    int char_width = font->w/95;
-    int message_pixel_length = message.length() * char_width * scale_mul;
-    int max_line_length = width / (char_width * scale_mul);
+    int char_width = floor(font->w/95) * scale_mul;
+    int message_pixel_length = message.length() * char_width;
+    int max_line_length = width / char_width;
     
     for (int i = 0; i < message.length(); i++) {
         if (i % max_line_length == 0 && i != 0) {
@@ -2184,7 +2183,7 @@ bool draw_tutorial(int frame_time) {
     // draws the split text
     for (int i = 0; i < message_pixel_length; i+=width) {
         int iteration = i/width;
-        draw_text(message_list[iteration], 0, height/2 + (font->h * scale_mul * iteration), scale_mul, 1, width);
+        draw_text(message_list[iteration], 0, (height - (font->h * scale_mul * message_list.size())) + (font->h * scale_mul * iteration) - 16, scale_mul, 1);
     }
     
     draw_fade(16, 16, frame_time);
