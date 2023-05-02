@@ -2257,7 +2257,6 @@ bool draw_tutorial(int frame_time) {
     string temp;
     std::vector<string> message_list;
     int char_width = floor(font->w/95) * scale_mul;
-    int message_pixel_length = message.length() * char_width;
     int max_line_length = width / char_width;
     
     for (int i = 0; i < message.length(); i++) {
@@ -2276,8 +2275,8 @@ bool draw_tutorial(int frame_time) {
     message_list.push_back(temp);
     
     // draws the split text
-    for (int i = 0; i < message_pixel_length; i+=width) {
-        int iteration = i/width;
+    for (int i = 0; i < message.length(); i+=max_line_length) {
+        int iteration = i/max_line_length;
         draw_text(message_list[iteration], 0, (height - (font->h * scale_mul * message_list.size())) + (font->h * scale_mul * iteration) - 16, scale_mul, 1);
     }
     
