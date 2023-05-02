@@ -2222,17 +2222,17 @@ bool draw_tutorial(int frame_time) {
             break;
         
         case TUT_GRID_MOVE:
-            draw_grid(width/2, grid_y);
+            draw_grid(width/2, grid_y, grid_scale);
             draw_shape(0, grid_positions[time/120%16][0], grid_positions[time/120%16][1], 1, {0, 0, 0, 255}, grid_w, grid_h, grid_scale);
             break;
         
         case TUT_GRID_SIZE:
-            draw_grid(width/2, grid_y);
+            draw_grid(width/2, grid_y, grid_scale);
             draw_shape(0, 7, 7, grid_positions[time/120%16][0] - 3, {0, 0, 0, 255}, grid_w, grid_h, grid_scale);
             break;
             
         case TUT_CALL_RESP:
-            draw_grid(width/2, grid_y);
+            draw_grid(width/2, grid_y, grid_scale);
             draw_shape(0, call_response_data[time/240%8][0], call_response_data[time/240%8][1], call_response_data[time/240%8][2], get_rainbow_color(time), grid_w, grid_h, grid_scale);
             
             if (time/240%16 >= 8) {
