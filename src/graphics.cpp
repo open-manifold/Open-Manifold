@@ -35,6 +35,7 @@
 #include "character.h"
 #include "background.h"
 #include "options.h"
+#include "tutorial.h"
 #include "font.h"
 
 using nlohmann::json;
@@ -1705,7 +1706,7 @@ bool draw_title(int menu_selection, int frame_time) {
     // ----------------------------------------------------------
     // menu_selection: What is currently selected (range 0-3)
     
-    const char *menu_items[4] = {"Play", "Sandbox", "Options", "Quit"};
+    const char *menu_items[5] = {"Play", "Sandbox", "Tutorial", "Options", "Quit"};
 
     int scale_mul = fmax(floor(fmin(height, width)/360), 1);
     int char_height = font->h + 2;
@@ -1744,7 +1745,7 @@ bool draw_title(int menu_selection, int frame_time) {
     SDL_RenderFillRect(renderer, &rect);
 
     // draws menu items
-    for (int i = 0; i < 4; i++) {
+    for (int i = 0; i < 5; i++) {
         SDL_Color text_highlight = {255, 255, 255};
 
         if (i == menu_selection) {text_highlight = {255, 255, 96};}
@@ -2145,6 +2146,138 @@ bool draw_sandbox(background_effect background_id, shape active_shape, std::vect
         draw_text(sandbox_items[menu_item], width/2, height - icon_size - icon_padding - font->h, 1, 0);
     }
 
+    draw_fade(16, 16, frame_time);
+    return true;
+}
+
+bool draw_tutorial(int frame_time) {
+    int scale_mul = fmax(floor(fmin(height, width)/360), 1);
+    int time = SDL_GetTicks();
+    
+    draw_gradient(0, 0, width, height, {192, 64, 255});
+    draw_menu_background(frame_time);
+    
+    // draws various things depending on what dialog is displaying
+    int grid_y = height/2 - (font->h*scale_mul);
+    int grid_w = width/2 - (height/22 * 7.5);
+    int grid_h = grid_y - (height/22 * 7.5);
+    int grid_scale = height/22;
+    
+    // used in TUT_GRID_MOVE and TUT_GRID_SIZE
+    const int grid_positions[][2] = {
+        {7, 9},
+        {8, 9},
+        {9, 9},
+        {9, 8},
+        {9, 7},
+        {9, 6},
+        {9, 5},
+        {8, 5},
+        {7, 5},
+        {6, 5},
+        {5, 5},
+        {5, 6},
+        {5, 7},
+        {5, 8},
+        {5, 9},
+        {6, 9}
+    };
+    
+    // used in TUT_CALL_RESP
+    // order is: x, y, scale
+    const int call_response_data[][3] = {
+        {7, 7, 1},
+        {7, 7, 2},
+        {7, 7, 3},
+        {7, 7, 3},
+        {7, 8, 3},
+        {7, 9, 3},
+        {7, 10, 3},
+        {7, 10, 3}
+    };
+    
+    switch (get_tutorial_state()) {
+        case TUT_FACE:
+            draw_shape(0, 7, 7, 7,  {255, 255, 255, 255}, grid_w, grid_h, grid_scale);
+            draw_shape(0, 3, 6, 2,  {0, 0, 0, 255},       grid_w, grid_h, grid_scale);
+            draw_shape(0, 11, 6, 2, {0, 0, 0, 255},       grid_w, grid_h, grid_scale);
+            draw_shape(0, 7, 10, 3, {0, 0, 0, 255},       grid_w, grid_h, grid_scale);
+            draw_shape(0, 7, 9, 3,  {255, 255, 255, 255}, grid_w, grid_h, grid_scale);
+            break;
+        
+        case TUT_SHAPES:
+            draw_shape_outline(0, -3, 7, 6, get_rainbow_color(time), grid_w, grid_h + (sin(time/400.f) * (height/32)), grid_scale);
+            draw_shape_outline(1, 7, 7, 6, get_rainbow_color(time+200), grid_w, grid_h + (sin(time/400.f + 400) * (height/32)), grid_scale);
+            draw_shape_outline(2, 17, 7, 6, get_rainbow_color(time+400), grid_w, grid_h + (sin(time/400.f + 800) * (height/32)), grid_scale);
+            draw_shape(0, -3, 7, 4, {255, 255, 255, 255}, grid_w, grid_h, grid_scale);
+            draw_shape(1, 7, 7, 4, {255, 255, 255, 255}, grid_w, grid_h, grid_scale);
+            draw_shape(2, 17, 7, 4, {255, 255, 255, 255}, grid_w, grid_h, grid_scale);
+            break;
+        
+        case TUT_GRID_TYPE:
+            draw_grid(width/2, grid_y, grid_scale);
+            draw_shape(time/240 % 3, 7, 7, 1, {0, 0, 0, 255}, grid_w, grid_h, grid_scale);
+            break;
+        
+        case TUT_GRID_MOVE:
+            draw_grid(width/2, grid_y, grid_scale);
+            draw_shape(0, grid_positions[time/120%16][0], grid_positions[time/120%16][1], 1, {0, 0, 0, 255}, grid_w, grid_h, grid_scale);
+            break;
+        
+        case TUT_GRID_SIZE:
+            draw_grid(width/2, grid_y, grid_scale);
+            draw_shape(0, 7, 7, grid_positions[time/120%16][0] - 3, {0, 0, 0, 255}, grid_w, grid_h, grid_scale);
+            break;
+            
+        case TUT_CALL_RESP:
+            draw_grid(width/2, grid_y, grid_scale);
+            draw_shape(0, call_response_data[time/240%8][0], call_response_data[time/240%8][1], call_response_data[time/240%8][2], get_rainbow_color(time), grid_w, grid_h, grid_scale);
+            
+            if (time/240%16 >= 8) {
+                draw_text("CPU", width/2, grid_h - (font->h * scale_mul), scale_mul, 0, width, {255, 0, 64, 255});
+            } else {
+                draw_text("PLAYER", width/2, grid_h - (font->h * scale_mul), scale_mul, 0, width, {64, 0, 255, 255});
+            }
+            
+            break;
+        
+        case TUT_LIFE:
+            draw_hud(100 - (time/100 % 100), 0, time, frame_time);
+            break;
+        
+        case TUT_NONE:
+        default:
+            break;
+    }
+    
+    // splits message into chunks    
+    string message = get_tutorial_current_message();
+    string temp;
+    std::vector<string> message_list;
+    int char_width = floor(font->w/95) * scale_mul;
+    int max_line_length = width / char_width;
+    
+    for (int i = 0; i < message.length(); i++) {
+        if (i % max_line_length == 0 && i != 0) {
+            int last_space = temp.find_last_of(" ");
+            string excess_text = temp.substr(last_space + 1, temp.length());
+            temp = temp.substr(0, last_space);
+            
+            message_list.push_back(temp);
+            temp = excess_text;
+        }
+    
+        temp += message[i];
+    }
+    
+    message_list.push_back(temp);
+    
+    // draws the split text
+    for (int i = 0; i < message.length(); i+=max_line_length) {
+        int iteration = i/max_line_length;
+        draw_text(message_list[iteration], 0, (height - (font->h * scale_mul * message_list.size())) + (font->h * scale_mul * iteration) - 16, scale_mul, 1);
+    }
+    
     draw_fade(16, 16, frame_time);
     return true;
 }

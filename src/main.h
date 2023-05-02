@@ -17,6 +17,8 @@ void set_sfx_volume();
 void set_fullscreen();
 void set_channel_mix();
 void play_channel_test();
+void play_dialog_blip();
+void play_dialog_advance();
 void set_vsync_renderer();
 void set_frame_cap_ms();
 void init_controller();

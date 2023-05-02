@@ -46,3 +46,4 @@ bool draw_level_select(std::vector<shape>, int);
 bool draw_game(int, int, int, int, float, int, int, bool, bool, background_effect, shape, shape, std::vector<shape>, bool, bool, bool, int);
 bool draw_options(int);
 bool draw_sandbox(background_effect, shape, std::vector<shape>, bool, bool, int, int);
+bool draw_tutorial(int);

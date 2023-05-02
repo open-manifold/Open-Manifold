@@ -40,6 +40,7 @@
 #include "background.h"
 #include "character.h"
 #include "options.h"
+#include "tutorial.h"
 #include "version.h"
 
 using nlohmann::json;
@@ -582,6 +583,18 @@ void set_channel_mix() {
 void play_channel_test() {
     // called from options.cpp, plays the mono test sound when toggling channel mix
     Mix_PlayChannel(-1, snd_mono_test, 0);
+    return;
+}
+
+void play_dialog_blip() {
+    // called from tutorial.cpp
+    Mix_PlayChannel(-1, snd_metronome_big, 0);
+    return;
+}
+
+void play_dialog_advance() {
+    // called from tutorial.cpp
+    Mix_PlayChannel(-1, snd_menu_confirm, 0);
     return;
 }
 
@@ -1950,8 +1963,9 @@ int main(int argc, char *argv[]) {
                                 switch (menu_selected) {
                                     case 0: transition_state =  STAGE_SELECT;   break;
                                     case 1: transition_state =  SANDBOX;    break;
-                                    case 2: transition_state =  OPTIONS;    break;
-                                    case 3: transition_state =  EXIT;   break;
+                                    case 2: transition_state =  TUTORIAL;   break;
+                                    case 3: transition_state =  OPTIONS;    break;
+                                    case 4: transition_state =  EXIT;   break;
                                 }
 
                                 fade_out++;
@@ -1962,7 +1976,7 @@ int main(int argc, char *argv[]) {
                             case CIRCLE:
                                 if (check_fade_activity()) {break;}
                                 Mix_PlayChannel(0, snd_menu_confirm, 0);
-                                menu_selected = 3;
+                                menu_selected = 4;
                                 transition_state = EXIT;
                                 fade_out++;
                                 break;
@@ -1973,8 +1987,8 @@ int main(int argc, char *argv[]) {
                                     menu_selected--;
                                 }
 
-                            if (menu_selected > 3) {menu_selected = 0;}
-                            if (menu_selected < 0) {menu_selected = 3;}
+                            if (menu_selected > 4) {menu_selected = 0;}
+                            if (menu_selected < 0) {menu_selected = 4;}
 
                             break;
 
@@ -1984,8 +1998,8 @@ int main(int argc, char *argv[]) {
                                     menu_selected++;
                                 }
 
-                            if (menu_selected > 3) {menu_selected = 0;}
-                            if (menu_selected < 0) {menu_selected = 3;}
+                            if (menu_selected > 4) {menu_selected = 0;}
+                            if (menu_selected < 0) {menu_selected = 4;}
 
                             break;
 
@@ -2288,6 +2302,28 @@ int main(int argc, char *argv[]) {
                             }
                         }
                         break;
+                        
+                    case TUTORIAL:
+                        switch(input_value) {
+                            case SELECT:
+                                if (check_fade_activity()) {break;}
+                                Mix_PlayChannel(0, snd_menu_confirm, 0);
+                                transition_state = TITLE;
+                                fade_out++;
+                                break;
+                                
+                            case CROSS:
+                                if (check_fade_activity()) {break;}
+                                
+                                tutorial_advance_message();
+                                
+                                if (check_tutorial_finished()) {
+                                    transition_state = TITLE;
+                                    fade_out++;
+                                }
+                                break;
+                        }
+                        break;
 
                     case OPTIONS:
                         if (check_rebind()) {
@@ -2398,6 +2434,10 @@ int main(int argc, char *argv[]) {
                     load_default_music("menu");
                     break;
                     
+                case TUTORIAL:
+                    load_default_music("menu");
+                    break;
+                    
                 case STAGE_SELECT:
                     previous_shapes.clear();
                     break;
@@ -2435,7 +2475,7 @@ int main(int argc, char *argv[]) {
                     }
 
                     break;
-
+                    
                 case SANDBOX:
                     printf("Loading sandbox mode...\n");
                     draw_loading(false);
@@ -2450,6 +2490,12 @@ int main(int argc, char *argv[]) {
                     sandbox_menu_active = false;
                     sandbox_option_selected = 0;
                     sandbox_lock = false;
+                    break;
+                    
+                case TUTORIAL:
+                    printf("Loading tutorial mode...\n");
+                    init_tutorial();
+                    load_default_music("tutorial");
                     break;
 
                 case GAME:
@@ -2503,6 +2549,11 @@ int main(int argc, char *argv[]) {
 
             case SANDBOX:
                 draw_sandbox(background_id, active_shape, previous_shapes, sandbox_menu_active, sandbox_lock, sandbox_option_selected, frame_time);
+                break;
+            
+            case TUTORIAL:
+                tutorial_message_tick(frame_time);
+                draw_tutorial(frame_time);
                 break;
 
             case OPTIONS:
