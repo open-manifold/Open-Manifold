@@ -36,6 +36,7 @@ enum tutorial_states {
     TUT_GRID_TYPE,
     TUT_GRID_MOVE,
     TUT_GRID_SIZE,
+    TUT_CALL_RESP,
     TUT_LIFE
 };
 
@@ -57,7 +58,7 @@ struct {
     TUT_GRID_MOVE, "You can freely move the shape's position along the grid with the directional buttons. ",
     TUT_GRID_SIZE, "You can also resize the shape with the shoulder buttons. The shape can be resized anywhere, even at the edges of the grid.",
     TUT_NONE, "Your actions must be timed to the beat of the song. If your input timing isn't on-beat, then nothing will happen. You only get so many beats to work with, so make 'em count!",
-    TUT_NONE, "Levels play out in a call-and-response fashion. First the computer will create a shape and move it into position, and then you must replicate that shape.",
+    TUT_CALL_RESP, "Levels play out in a call-and-response fashion. First the computer will create a shape and move it into position, and then you must replicate that shape.",
     TUT_LIFE, "You also have a lifebar. Fail to replicate a shape, and you'll lose some life. Complete a shape, and you'll get some of it back. If it hits zero, that's a game over!",
     TUT_FACE, "That should cover the basics of play. Have fun, and enjoy playing Open Manifold!"
 };

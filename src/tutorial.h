@@ -7,6 +7,7 @@ enum tutorial_states {
     TUT_GRID_TYPE,
     TUT_GRID_MOVE,
     TUT_GRID_SIZE,
+    TUT_CALL_RESP,
     TUT_LIFE
 };
 

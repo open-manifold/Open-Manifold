@@ -2164,7 +2164,9 @@ bool draw_tutorial(int frame_time) {
     int grid_w = width/2 - (height/22 * 7.5);
     int grid_h = grid_y - (height/22 * 7.5);
     int grid_scale = height/22;
-    const int grid_positions[16][2] = {
+    
+    // used in TUT_GRID_MOVE and TUT_GRID_SIZE
+    const int grid_positions[][2] = {
         {7, 9},
         {8, 9},
         {9, 9},
@@ -2181,6 +2183,19 @@ bool draw_tutorial(int frame_time) {
         {5, 8},
         {5, 9},
         {6, 9}
+    };
+    
+    // used in TUT_CALL_RESP
+    // order is: x, y, scale
+    const int call_response_data[][3] = {
+        {7, 7, 1},
+        {7, 7, 2},
+        {7, 7, 3},
+        {7, 7, 3},
+        {7, 8, 3},
+        {7, 9, 3},
+        {7, 10, 3},
+        {7, 10, 3}
     };
     
     switch (get_tutorial_state()) {
@@ -2214,6 +2229,18 @@ bool draw_tutorial(int frame_time) {
         case TUT_GRID_SIZE:
             draw_grid(width/2, grid_y);
             draw_shape(0, 7, 7, grid_positions[time/120%16][0] - 3, {0, 0, 0, 255}, grid_w, grid_h, grid_scale);
+            break;
+            
+        case TUT_CALL_RESP:
+            draw_grid(width/2, grid_y);
+            draw_shape(0, call_response_data[time/240%8][0], call_response_data[time/240%8][1], call_response_data[time/240%8][2], get_rainbow_color(time), grid_w, grid_h, grid_scale);
+            
+            if (time/240%16 >= 8) {
+                draw_text("CPU", width/2, grid_h - (font->h * scale_mul), scale_mul, 0, width, {255, 0, 64, 255});
+            } else {
+                draw_text("PLAYER", width/2, grid_h - (font->h * scale_mul), scale_mul, 0, width, {64, 0, 255, 255});
+            }
+            
             break;
         
         case TUT_LIFE:
