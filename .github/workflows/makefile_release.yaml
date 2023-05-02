@@ -1,12 +1,10 @@
-# Builds Open Manifold, but only the bare executable
-# Release builds are made in a separate yaml
-name: Build Test
+# Builds Open Manifold releases whenever updating version.h
+name: Build Release
 
 on:
   push:
-    branches: ["main"]
-  pull_request:
-    branches: ["main"]
+    paths:
+      - 'src/version.h'
 
 jobs:
   build-linux:
@@ -19,17 +17,15 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install libsdl2-dev libsdl2-image-dev libsdl2-mixer-dev
-
       - name: Build package
-        run: |
-          make
+        run: make pkg
 
       - name: Upload package
         uses: actions/upload-artifact@v3.1.2
         with:
           name: Open-Manifold-git-linux
-          path: bin
-          retention-days: 1
+          path: release-tmp
+          retention-days: 14
 
   build-macos:
     runs-on: macOS-latest
@@ -42,15 +38,14 @@ jobs:
           brew install SDL2 SDL2_image SDL2_mixer
 
       - name: Build package
-        run: |
-          make LDFLAGS:="-lSDL2 -lSDL2_image -lSDL2_mixer"
+        run: make pkg LDFLAGS:="-lSDL2 -lSDL2_image -lSDL2_mixer"
 
       - name: Upload package
         uses: actions/upload-artifact@v3.1.2
         with:
           name: Open-Manifold-git-macOS
-          path: bin
-          retention-days: 1
+          path: release-tmp
+          retention-days: 14
 
   build-windows:
     runs-on: windows-latest
@@ -62,7 +57,6 @@ jobs:
         run: |
           mkdir SDL2-dl
           mkdir lib
-
       - name: Download SDL2
         uses: albin-johansson/download-sdl2@v2
         with:
@@ -97,11 +91,11 @@ jobs:
 
       - name: Build package
         run: |
-          make LDFLAGS:="-Llib -static-libgcc -static-libstdc++ -lSDL2main -lSDL2 -lSDL2_image -lSDL2_mixer -lstdc++fs"
+          make pkg LDFLAGS:="-Llib -static-libgcc -static-libstdc++ -lSDL2main -lSDL2 -lSDL2_image -lSDL2_mixer -lstdc++fs"
 
       - name: Upload package
         uses: actions/upload-artifact@v3.1.2
         with:
           name: Open-Manifold-git-win64
-          path: bin
-          retention-days: 1
+          path: release-tmp
+          retention-days: 14
