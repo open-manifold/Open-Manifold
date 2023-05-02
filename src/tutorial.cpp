@@ -42,6 +42,7 @@ int message_index = 0;
 int message_tick = 0;
 int message_tick_rate = 30;
 bool message_finished = false;
+bool tutorial_finished = false;
 string current_message;
 
 string messages[] = {
@@ -62,6 +63,7 @@ void init_tutorial() {
     message_tick = 0;
     message_tick_rate = 30;
     message_finished = false;
+    tutorial_finished = false;
     current_message.clear();
     return;
 }
@@ -69,13 +71,13 @@ void init_tutorial() {
 void tutorial_message_tick(int frame_time) {
     message_tick -= frame_time;
     
-    if (current_message.length() == messages[message_index].length()) {
+    if (current_message.length() == messages[message_index].msg.length()) {
         message_finished = true;
         return;
     }
     
     if (message_tick <= 0) {
-        current_message.append(messages[message_index], current_message.length(), 1);
+        current_message.append(messages[message_index].msg, current_message.length(), 1);
         message_tick = message_tick_rate;
         
         if (current_message.length() % 4 == 0) {
@@ -89,13 +91,18 @@ void tutorial_message_tick(int frame_time) {
 void tutorial_advance_message() {
     message_tick_rate = 5;
     
-    if (message_finished && message_index < std::size(messages) - 1) {
+    if (message_finished && !tutorial_finished) {
         play_dialog_advance();
-        current_message.clear();
-        message_index++;
-        message_tick_rate = 30;
-        message_tick = message_tick_rate;
-        message_finished = false;
+        
+        if (message_index >= std::size(messages) - 1) {
+            tutorial_finished = true;
+        } else {
+            current_message.clear();
+            message_index++;
+            message_tick_rate = 30;
+            message_tick = message_tick_rate;
+            message_finished = false;
+        }
     }
     
     return;
@@ -103,4 +110,12 @@ void tutorial_advance_message() {
 
 string get_tutorial_current_message() {
     return current_message;
+}
+
+tutorial_states get_tutorial_state() {
+    return messages[message_index].state;
+}
+
+bool check_tutorial_finished() {
+    return tutorial_finished;
 }

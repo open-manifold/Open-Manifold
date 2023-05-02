@@ -2313,7 +2313,14 @@ int main(int argc, char *argv[]) {
                                 break;
                                 
                             case CROSS:
+                                if (check_fade_activity()) {break;}
+                                
                                 tutorial_advance_message();
+                                
+                                if (check_tutorial_finished()) {
+                                    transition_state = TITLE;
+                                    fade_out++;
+                                }
                                 break;
                         }
                         break;
