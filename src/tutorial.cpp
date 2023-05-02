@@ -33,9 +33,10 @@ enum tutorial_states {
     TUT_NONE,
     TUT_FACE,
     TUT_SHAPES,
+    TUT_GRID_TYPE,
     TUT_GRID_MOVE,
     TUT_GRID_SIZE,
-    TUT_LIFEBAR
+    TUT_LIFE
 };
 
 int message_index = 0;
@@ -45,17 +46,20 @@ bool message_finished = false;
 bool tutorial_finished = false;
 string current_message;
 
-string messages[] = {
-    "Welcome to Open Manifold! In this guide, we will walk through the basics of playing the game.",
-    "Open Manifold is a rhythm game where the goal is to create patterns called 'faces'.",
-    "To make faces, you create and manipulate shapes. There are three kinds of shapes: circles, squares, and triangles.",
-    "To create a shape, press one of the three face buttons. Each button corresponds to one shape.",
-    "You can freely move the shape's position along the grid with the directional buttons. ",
-    "You can also resize the shape with the shoulder buttons. The shape can be resized anywhere, even at the edges of the grid.",
-    "Every shape has two 'phases'. In the first phase, the computer will create a shape and move it into position. In the second phase, you must replicate that shape.",
-    "Your actions must be timed to the beat of the song. If your timing isn't on-beat, nothing will happen. You only get so many beats to work with, so make them count!",
-    "You also have a lifebar. Fail to replicate a shape, and you'll lose some life. Complete a shape, and you'll get some of it back. If it hits zero, that's a game over!",
-    "That should cover the basics of play. Have fun, and enjoy Open Manifold!"
+struct {
+    tutorial_states state;
+    string msg;
+} messages[] = {
+    TUT_NONE, "Welcome to Open Manifold! In this guide, we will walk through the basics of playing the game.",
+    TUT_FACE, "Open Manifold is a rhythm game where the goal is to create patterns called 'faces'.",
+    TUT_SHAPES, "To make faces, you create and manipulate shapes. There are three kinds of shapes: circles, squares, and triangles.",
+    TUT_GRID_TYPE, "To create a shape, press one of the three face buttons. Each button corresponds to one shape.",
+    TUT_GRID_MOVE, "You can freely move the shape's position along the grid with the directional buttons. ",
+    TUT_GRID_SIZE, "You can also resize the shape with the shoulder buttons. The shape can be resized anywhere, even at the edges of the grid.",
+    TUT_NONE, "Your actions must be timed to the beat of the song. If your input timing isn't on-beat, then nothing will happen. You only get so many beats to work with, so make 'em count!",
+    TUT_NONE, "Every shape has two 'phases'. In the first phase, the computer will create a shape and move it into position. In the second phase, you must replicate that shape.",
+    TUT_LIFE, "You also have a lifebar. Fail to replicate a shape, and you'll lose some life. Complete a shape, and you'll get some of it back. If it hits zero, that's a game over!",
+    TUT_NONE, "That should cover the basics of play. Have fun, and enjoy playing Open Manifold!"
 };
 
 void init_tutorial() {

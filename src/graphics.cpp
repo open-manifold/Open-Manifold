@@ -2154,8 +2154,75 @@ bool draw_sandbox(background_effect background_id, shape active_shape, std::vect
 
 bool draw_tutorial(int frame_time) {
     int scale_mul = fmax(floor(fmin(height, width)/360), 1);
+    int time = SDL_GetTicks();
     
     draw_gradient(0, 0, width, height, {192, 64, 255});
+    
+    // draws various things depending on what dialog is displaying
+    int grid_y = height/2 - (font->h*scale_mul);
+    int grid_w = width/2 - (height/22 * 7.5);
+    int grid_h = grid_y - (height/22 * 7.5);
+    int grid_scale = height/22;
+    const int grid_positions[16][2] = {
+        {7, 9},
+        {8, 9},
+        {9, 9},
+        {9, 8},
+        {9, 7},
+        {9, 6},
+        {9, 5},
+        {8, 5},
+        {7, 5},
+        {6, 5},
+        {5, 5},
+        {5, 6},
+        {5, 7},
+        {5, 8},
+        {5, 9},
+        {6, 9}
+    };
+    
+    switch (get_tutorial_state()) {
+        case TUT_FACE:
+            draw_shape(0, 7, 7, 7,  {255, 255, 255, 255}, grid_w, grid_h, grid_scale);
+            draw_shape(0, 3, 6, 2,  {0, 0, 0, 255},       grid_w, grid_h, grid_scale);
+            draw_shape(0, 11, 6, 2, {0, 0, 0, 255},       grid_w, grid_h, grid_scale);
+            draw_shape(0, 7, 10, 3, {0, 0, 0, 255},       grid_w, grid_h, grid_scale);
+            draw_shape(0, 7, 9, 3,  {255, 255, 255, 255}, grid_w, grid_h, grid_scale);
+            break;
+        
+        case TUT_SHAPES:
+            draw_shape_outline(0, -3, 7, 6, get_rainbow_color(time), grid_w, grid_h + (sin(time/400.f) * (height/32)), grid_scale);
+            draw_shape_outline(1, 7, 7, 6, get_rainbow_color(time+200), grid_w, grid_h + (sin(time/400.f + 400) * (height/32)), grid_scale);
+            draw_shape_outline(2, 17, 7, 6, get_rainbow_color(time+400), grid_w, grid_h + (sin(time/400.f + 800) * (height/32)), grid_scale);
+            draw_shape(0, -3, 7, 4, {255, 255, 255, 255}, grid_w, grid_h, grid_scale);
+            draw_shape(1, 7, 7, 4, {255, 255, 255, 255}, grid_w, grid_h, grid_scale);
+            draw_shape(2, 17, 7, 4, {255, 255, 255, 255}, grid_w, grid_h, grid_scale);
+            break;
+        
+        case TUT_GRID_TYPE:
+            draw_grid(width/2, grid_y, grid_scale);
+            draw_shape(time/240 % 3, 7, 7, 1, {0, 0, 0, 255}, grid_w, grid_h, grid_scale);
+            break;
+        
+        case TUT_GRID_MOVE:
+            draw_grid(width/2, grid_y);
+            draw_shape(0, grid_positions[time/120%16][0], grid_positions[time/120%16][1], 1, {0, 0, 0, 255}, grid_w, grid_h, grid_scale);
+            break;
+        
+        case TUT_GRID_SIZE:
+            draw_grid(width/2, grid_y);
+            draw_shape(0, 7, 7, grid_positions[time/120%16][0] - 3, {0, 0, 0, 255}, grid_w, grid_h, grid_scale);
+            break;
+        
+        case TUT_LIFE:
+            draw_hud(100 - (time/100 % 100), 0, time, frame_time);
+            break;
+        
+        case TUT_NONE:
+        default:
+            break;
+    }
     
     // splits message into chunks    
     string message = get_tutorial_current_message();

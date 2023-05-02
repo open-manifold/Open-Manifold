@@ -4,9 +4,10 @@ enum tutorial_states {
     TUT_NONE,
     TUT_FACE,
     TUT_SHAPES,
+    TUT_GRID_TYPE,
     TUT_GRID_MOVE,
     TUT_GRID_SIZE,
-    TUT_LIFEBAR
+    TUT_LIFE
 };
 
 void init_tutorial();
