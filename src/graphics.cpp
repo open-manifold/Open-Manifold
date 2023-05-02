@@ -2157,6 +2157,7 @@ bool draw_tutorial(int frame_time) {
     int time = SDL_GetTicks();
     
     draw_gradient(0, 0, width, height, {192, 64, 255});
+    draw_menu_background(frame_time);
     
     // draws various things depending on what dialog is displaying
     int grid_y = height/2 - (font->h*scale_mul);
