@@ -31,9 +31,9 @@
 #include <SDL2/SDL_image.h>
 #include <nlohmann/json.hpp>
 
-#include "background.h"
 #include "main.h"
 #include "character.h"
+#include "background.h"
 #include "options.h"
 #include "tutorial.h"
 #include "font.h"
