@@ -1150,10 +1150,10 @@ void draw_background_bigbang(bg_data bg_data, int frame_time) {
     int sx, sy, sx2, sy2;
 
     for (int a = 0; a < 180; a++) {
-        sx = width/2 + cos((a*2)*to_rad + bg_data.song_tick/2000.f) * greater_axis/1.5;
-        sy = height/2 + sin((a*2)*to_rad + bg_data.song_tick/1800.f) * greater_axis/1.5;
-        sx2 = width/2 + cos((a*2+1)*to_rad + bg_data.song_tick/1800.f) * greater_axis/1.5;
-        sy2 = height/2 + sin((a*2+1)*to_rad + bg_data.song_tick/2000.f) * greater_axis/1.5;
+        sx = width/2 + cos((a*2)*to_rad + bg_data.song_tick/2000.f) * greater_axis/2;
+        sy = height/2 + sin((a*2)*to_rad + bg_data.song_tick/1800.f) * greater_axis/2;
+        sx2 = width/2 + cos((a*2+1)*to_rad + bg_data.song_tick/1800.f) * greater_axis/2;
+        sy2 = height/2 + sin((a*2+1)*to_rad + bg_data.song_tick/2000.f) * greater_axis/2;
         
         SDL_SetRenderDrawColor(renderer, 255-a, 255-a, 255-a, 255);
         
