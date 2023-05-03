@@ -14,7 +14,8 @@ enum background_effect {
     starfield,
     hexagon,
     munching,
-    lasers
+    lasers,
+    bigbang
 };
 
 // stores data that can be used by background effects

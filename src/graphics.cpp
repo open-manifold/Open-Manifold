@@ -1142,6 +1142,27 @@ void draw_background_lasers(bg_data bg_data, int frame_time) {
     return;
 }
 
+void draw_background_bigbang(bg_data bg_data, int frame_time) {
+    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+    SDL_RenderClear(renderer);
+    
+    int greater_axis = fmax(width, height);
+    int sx, sy, sx2, sy2;
+
+    for (int a = 0; a < 180; a++) {
+        sx = width/2 + cos((a*2)*to_rad + bg_data.song_tick/2000.f) * greater_axis/1.5;
+        sy = height/2 + sin((a*2)*to_rad + bg_data.song_tick/1800.f) * greater_axis/1.5;
+        sx2 = width/2 + cos((a*2+1)*to_rad + bg_data.song_tick/1800.f) * greater_axis/1.5;
+        sy2 = height/2 + sin((a*2+1)*to_rad + bg_data.song_tick/2000.f) * greater_axis/1.5;
+        
+        SDL_SetRenderDrawColor(renderer, 255-a, 255-a, 255-a, 255);
+        
+        SDL_RenderDrawLine(renderer, sx, sy, sx2, sy2);
+    }
+    
+    return;
+}
+
 background_effect get_level_background_effect() {
     // converts a background_effect's value to an enum used internally
     // we do this for readability, and because comparing ints are faster than comparing strings
@@ -1159,6 +1180,7 @@ background_effect get_level_background_effect() {
     if (background_name == "hexagon")       return hexagon;
     if (background_name == "munching")      return munching;
     if (background_name == "lasers")        return lasers;
+    if (background_name == "bigbang")       return bigbang;
 
     return none;
 }
@@ -1249,6 +1271,7 @@ void draw_background_effect(bg_data bg_data, bool draw_debug_bg, int frame_time)
         case hexagon:       draw_background_hexagon     (bg_data, frame_time);  break;
         case munching:      draw_background_munching    (bg_data, frame_time);  break;
         case lasers:        draw_background_lasers      (bg_data, frame_time);  break;
+        case bigbang:       draw_background_bigbang     (bg_data, frame_time);  break;
         case none:
         default: break;
     }
