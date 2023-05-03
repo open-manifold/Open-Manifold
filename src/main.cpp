@@ -89,7 +89,6 @@ string cpu_sequence;
 string player_sequence;
 bool song_over = false;
 bool game_over = false;
-background_effect background_id;
 
 // used only in main(); stored globally so it can be modified by options.cpp
 int frame_cap_ms = (1000 / frame_cap);
@@ -950,25 +949,8 @@ int get_song_step(int index, int placeholder) {
     return placeholder;
 }
 
-background_effect get_level_background_effect() {
-    // converts a background_effect's value to an enum used internally
-    // we do this for readability, and because comparing ints are faster than comparing strings
-
-    string background_name = json_file[0].value("background_effect", "none");
-
-    if (background_name == "solid")         return solid;
-    if (background_name == "tile")          return tile;
-    if (background_name == "checkerboard")  return checkerboard;
-    if (background_name == "fire")          return fire;
-    if (background_name == "conway")        return conway;
-    if (background_name == "monitor")       return monitor;
-    if (background_name == "wave")          return wave;
-    if (background_name == "starfield")     return starfield;
-    if (background_name == "hexagon")       return hexagon;
-    if (background_name == "munching")      return munching;
-    if (background_name == "lasers")        return lasers;
-
-    return none;
+string get_level_background_effect_string() {
+    return json_file[0].value("background_effect", "none");
 }
 
 bool get_debug() {
@@ -1821,8 +1803,7 @@ void start_level() {
     load_stage_music();
     load_stage_sound_collection();
     load_character_file();
-    background_id = get_level_background_effect();
-    init_background_effect(background_id);
+    init_background_effect();
 
     printf("Starting level...\n");
 }
@@ -2485,8 +2466,8 @@ int main(int argc, char *argv[]) {
                     reset_color_table();
                     reset_shapes();
                     active_shape.type = 0;
-                    background_id = wave;
-                    init_background_effect(background_id);
+                    json_file[0]["background_effect"] = "wave";
+                    init_background_effect();
                     sandbox_menu_active = false;
                     sandbox_option_selected = 0;
                     sandbox_lock = false;
@@ -2544,11 +2525,11 @@ int main(int argc, char *argv[]) {
 
             case GAME:
                 loop(json_file, get_level_intro_delay(), get_level_time_signature(true), get_level_time_signature(false), song_start_time, frame_time);
-                draw_game(beat_count, get_level_intro_delay(), get_level_measure_length(), song_start_time, beat_start_time, SDL_GetTicks(), intro_beat_length, beat_advanced, shape_advanced, background_id, active_shape, result_shape, previous_shapes, grid_toggle, song_over, game_over, frame_time);
+                draw_game(beat_count, get_level_intro_delay(), get_level_measure_length(), song_start_time, beat_start_time, SDL_GetTicks(), intro_beat_length, beat_advanced, shape_advanced, active_shape, result_shape, previous_shapes, grid_toggle, song_over, game_over, frame_time);
                 break;
 
             case SANDBOX:
-                draw_sandbox(background_id, active_shape, previous_shapes, sandbox_menu_active, sandbox_lock, sandbox_option_selected, frame_time);
+                draw_sandbox(active_shape, previous_shapes, sandbox_menu_active, sandbox_lock, sandbox_option_selected, frame_time);
                 break;
             
             case TUTORIAL:

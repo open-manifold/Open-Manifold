@@ -1,3 +1,6 @@
+#pragma once
+
+std::string get_level_background_effect_string();
 std::string get_background_tile_path();
 std::string get_character_tile_path();
 std::string get_level_name();

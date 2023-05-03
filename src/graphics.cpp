@@ -31,9 +31,9 @@
 #include <SDL2/SDL_image.h>
 #include <nlohmann/json.hpp>
 
+#include "background.h"
 #include "main.h"
 #include "character.h"
-#include "background.h"
 #include "options.h"
 #include "tutorial.h"
 #include "font.h"
@@ -1142,20 +1142,41 @@ void draw_background_lasers(bg_data bg_data, int frame_time) {
     return;
 }
 
-void init_background_effect(background_effect effect_id) {
+background_effect get_level_background_effect() {
+    // converts a background_effect's value to an enum used internally
+    // we do this for readability, and because comparing ints are faster than comparing strings
+
+    string background_name = get_level_background_effect_string();
+
+    if (background_name == "solid")         return solid;
+    if (background_name == "tile")          return tile;
+    if (background_name == "checkerboard")  return checkerboard;
+    if (background_name == "fire")          return fire;
+    if (background_name == "conway")        return conway;
+    if (background_name == "monitor")       return monitor;
+    if (background_name == "wave")          return wave;
+    if (background_name == "starfield")     return starfield;
+    if (background_name == "hexagon")       return hexagon;
+    if (background_name == "munching")      return munching;
+    if (background_name == "lasers")        return lasers;
+
+    return none;
+}
+
+void init_background_effect() {
     // Initialize function for background effects
     // Used for setting up things like auxillary textures
     // ----------------------------------------------------------
     // effect_id: enum for function (see switch statement below)
 
-    printf("Initializing background (internal ID: %d)...\n", effect_id);
+    printf("Initializing background effect: %s\n", get_level_background_effect_string().c_str());
     SDL_DestroyTexture(aux_texture);
     aux_texture_w = 0;
     aux_texture_h = 0;
     aux_int = 0;
     aux_float = 0;
 
-    switch (effect_id) {
+    switch (get_level_background_effect()) {
         case tile:
             reset_tile_data();
             load_background_tileset();
@@ -1204,7 +1225,7 @@ void init_background_effect(background_effect effect_id) {
     return;
 }
 
-void draw_background_effect(background_effect effect_id, bg_data bg_data, bool draw_debug_bg, int frame_time) {
+void draw_background_effect(bg_data bg_data, bool draw_debug_bg, int frame_time) {
     // Master function that calls various background FX drawing functions
     // ----------------------------------------------------------
     // bg_data: struct containing various values (see background.h; draw_game())
@@ -1216,7 +1237,7 @@ void draw_background_effect(background_effect effect_id, bg_data bg_data, bool d
     // resulting in a glitchy background effect
     if (frame_time <= 2) {frame_time = 2;}
 
-    switch (effect_id) {
+    switch (get_level_background_effect()) {
         case solid:         draw_background_solid       (bg_data, frame_time);  break;
         case checkerboard:  draw_background_checkerboard(bg_data, frame_time);  break;
         case tile:          draw_background_tile        (bg_data, frame_time);  break;
@@ -1928,7 +1949,7 @@ bool draw_level_select(std::vector<shape> shapes, int frame_time) {
     return true;
 }
 
-bool draw_game(int beat_count, int start_offset, int measure_length, int song_start_time, float beat_start_time, int current_ticks, int intro_beat_length, bool beat_advanced, bool shape_advanced, background_effect background_id, shape active_shape, shape result_shape, std::vector<shape> previous_shapes, bool grid_toggle, bool song_over, bool game_over, int frame_time) {
+bool draw_game(int beat_count, int start_offset, int measure_length, int song_start_time, float beat_start_time, int current_ticks, int intro_beat_length, bool beat_advanced, bool shape_advanced, shape active_shape, shape result_shape, std::vector<shape> previous_shapes, bool grid_toggle, bool song_over, bool game_over, int frame_time) {
     // Main function used during gameplay
     // ----------------------------------------------------------
     // TODO: the # of arguments here could be heavily reduced with "get_foobar"-style functions
@@ -1960,7 +1981,7 @@ bool draw_game(int beat_count, int start_offset, int measure_length, int song_st
     // the order here is deliberately chosen to give the best clarity
     // regardless of game resolution; the grid should ALWAYS be visible
     // even if it's at the cost of everything else
-    draw_background_effect(background_id, bg_data, true, frame_time);
+    draw_background_effect(bg_data, true, frame_time);
     draw_character(character_beat_count);
     draw_grid(width/2, height/2, height/22, bg_color, !grid_toggle);
 
@@ -2028,7 +2049,7 @@ bool draw_game(int beat_count, int start_offset, int measure_length, int song_st
     return true;
 }
 
-bool draw_sandbox(background_effect background_id, shape active_shape, std::vector<shape> previous_shapes, bool menu_open, bool sandbox_lock, int menu_item, int frame_time) {
+bool draw_sandbox(shape active_shape, std::vector<shape> previous_shapes, bool menu_open, bool sandbox_lock, int menu_item, int frame_time) {
     // Draws the screen during Sandbox mode
     // ----------------------------------------------------------
     // active_shape: The shape the player is currently controlling
@@ -2052,7 +2073,7 @@ bool draw_sandbox(background_effect background_id, shape active_shape, std::vect
         get_color(15)
     };
 
-    draw_background_effect(background_id, bg_data, false, frame_time);
+    draw_background_effect(bg_data, false, frame_time);
     draw_grid(width/2, height/2, height/22, get_color(15));
 
     SDL_Rect grid_area;
