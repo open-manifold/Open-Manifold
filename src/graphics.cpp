@@ -578,7 +578,7 @@ void draw_background_test(bg_data bg_data, int frame_time) {
     shape.w = width/22 + scale;
     shape.h = shape.w;
 
-    switch (check_beat_timing_window()) {
+    switch (check_beat_timing_window(SDL_GetTicks())) {
         case 0:
             SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
             break;

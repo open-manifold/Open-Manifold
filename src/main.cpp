@@ -1425,11 +1425,10 @@ void reset_sequences() {
     return;
 }
 
-int check_beat_timing_window() {
+int check_beat_timing_window(unsigned int current_time) {
     // returns 0 if we're not within the beat, 1 on the "left side" (beat end), 2 on the right side (beat start)
     // the window should be within ~120 ms, or 60ms on each "side" of a beat (roughly equivalent to a "Good" in DDR)
 
-    int current_time = SDL_GetTicks();
     int current_beat_length = (current_time - beat_start_time);
     int time_to_next_beat = length - current_beat_length;
     int measure_length = get_level_measure_length();
@@ -1901,14 +1900,22 @@ int main(int argc, char *argv[]) {
             case SDL_CONTROLLERBUTTONDOWN:
                 controller_buttons input_value;
                 bool in_game = false;
+                unsigned int timestamp;
 
                 // this flag slightly changes the controls for keyboard to make them feel better in-game
                 if (current_state == SANDBOX || current_state == GAME) {in_game = true;}
 
                 // this converts the button presses to an abstract controller which is then used when handling input
                 // this reduces code complexity by quite a bit and lets us support both controllers and keyboards more easily
-                if (evt.type == SDL_KEYDOWN) {input_value = keyboard_to_abstract_button(evt.key.keysym.sym, in_game);}
-                if (evt.type == SDL_CONTROLLERBUTTONDOWN) {input_value = gamepad_to_abstract_button(evt.cbutton.button);}
+                if (evt.type == SDL_KEYDOWN) {
+                    timestamp = evt.key.timestamp;
+                    input_value = keyboard_to_abstract_button(evt.key.keysym.sym, in_game);
+                }
+                
+                if (evt.type == SDL_CONTROLLERBUTTONDOWN) {
+                    timestamp = evt.cbutton.timestamp;
+                    input_value = gamepad_to_abstract_button(evt.cbutton.button);
+                }
 
                 // handles screenshots; not dependent on abstract controller or game state
                 if (evt.key.keysym.sym == SDLK_F12) {
@@ -2072,7 +2079,7 @@ int main(int argc, char *argv[]) {
                             }
                         } else {
                             // level exiting shouldn't be affected by timing windows
-                            int beat_side = check_beat_timing_window();
+                            int beat_side = check_beat_timing_window(timestamp);
                             char op = '.';
                             
                             if (input_value != SELECT) {

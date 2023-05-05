@@ -30,7 +30,7 @@ void rumble_controller(int);
 int get_controller_count();
 int get_level_bpm();
 int get_bg_color();
-int check_beat_timing_window();
+int check_beat_timing_window(unsigned int);
 bool check_json_validity();
 bool get_debug();
 
