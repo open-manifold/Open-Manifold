@@ -2555,8 +2555,7 @@ int main(int argc, char *argv[]) {
                 break;
         }
 
-        // calculate frame time manually, separate from frame_time
-        draw_fps(fps_toggle, fps, SDL_GetTicks() - start_time);
+        draw_fps(fps_toggle, fps, frame_time);
         SDL_RenderPresent(renderer);
 
         // calculates FPS
