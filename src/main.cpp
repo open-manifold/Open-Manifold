@@ -138,7 +138,7 @@ shape result_shape;
 enum game_states {
     WARNING,
     TITLE,
-    STAGE_SELECT,
+    LEVEL_SELECT,
     GAME,
     SANDBOX,
     TUTORIAL,
@@ -1942,7 +1942,7 @@ int main(int argc, char *argv[]) {
                                 Mix_PlayChannel(0, snd_menu_confirm, 0);
 
                                 switch (menu_selected) {
-                                    case 0: transition_state =  STAGE_SELECT;   break;
+                                    case 0: transition_state =  LEVEL_SELECT;   break;
                                     case 1: transition_state =  SANDBOX;    break;
                                     case 2: transition_state =  TUTORIAL;   break;
                                     case 3: transition_state =  OPTIONS;    break;
@@ -1991,7 +1991,7 @@ int main(int argc, char *argv[]) {
                         }
                         break;
 
-                    case STAGE_SELECT:
+                    case LEVEL_SELECT:
                         switch(input_value) {
                             case START:
                             case CROSS:
@@ -2419,7 +2419,7 @@ int main(int argc, char *argv[]) {
                     load_default_music("menu");
                     break;
                     
-                case STAGE_SELECT:
+                case LEVEL_SELECT:
                     previous_shapes.clear();
                     break;
                     
@@ -2448,7 +2448,7 @@ int main(int argc, char *argv[]) {
                     load_logo();
                     break;
 
-                case STAGE_SELECT:
+                case LEVEL_SELECT:
                     if (level_paths.empty()) {
                         json_file = NULL;
                     } else {
@@ -2482,7 +2482,7 @@ int main(int argc, char *argv[]) {
                 case GAME:
                     song_over = false;
                     game_over = false;
-                    transition_state = STAGE_SELECT;
+                    transition_state = LEVEL_SELECT;
 
                     // sets up metronome
                     float one_bar = 60000/bpm;
@@ -2519,7 +2519,7 @@ int main(int argc, char *argv[]) {
                 draw_title(menu_selected, frame_time);
                 break;
 
-            case STAGE_SELECT:
+            case LEVEL_SELECT:
                 draw_level_select(previous_shapes, frame_time);
                 break;
 

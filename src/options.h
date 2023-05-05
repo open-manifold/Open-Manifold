@@ -1,18 +1,18 @@
 #pragma once
 
 enum option_id {
-    MUSIC,
-    SFX,
-    TOGGLE_MONO,
-    FULLSCREEN,
-    VSYNC,
-    FRAME_CAP,
-    TOGGLE_FPS,
-    TOGGLE_GRID,
-    TOGGLE_RUMBLE,
-    CONTROLLER_ID,
-    SAVE,
-    EXIT_OPTIONS
+    OPT_MUSIC,
+    OPT_SFX,
+    OPT_TOGGLE_MONO,
+    OPT_FULLSCREEN,
+    OPT_VSYNC,
+    OPT_FRAME_CAP,
+    OPT_TOGGLE_FPS,
+    OPT_TOGGLE_GRID,
+    OPT_TOGGLE_RUMBLE,
+    OPT_CONTROLLER_ID,
+    OPT_SAVE,
+    OPT_EXIT
 };
 
 int get_option_selection();

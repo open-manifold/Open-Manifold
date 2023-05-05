@@ -48,21 +48,21 @@ bool rebinding_keys = false;
 bool rebinding_controller = false;
 
 enum option_id {
-    MUSIC,
-    SFX,
-    TOGGLE_MONO,
-    FULLSCREEN,
-    VSYNC,
-    FRAME_CAP,
-    TOGGLE_FPS,
-    TOGGLE_GRID,
-    TOGGLE_RUMBLE,
-    CONTROLLER_ID,
-    REBIND_KEYBOARD,
-    REBIND_CONTROLLER,
-    SAVE,
-    EXIT_OPTIONS,
-    NONE,
+    OPT_MUSIC,
+    OPT_SFX,
+    OPT_TOGGLE_MONO,
+    OPT_FULLSCREEN,
+    OPT_VSYNC,
+    OPT_FRAME_CAP,
+    OPT_TOGGLE_FPS,
+    OPT_TOGGLE_GRID,
+    OPT_TOGGLE_RUMBLE,
+    OPT_CONTROLLER_ID,
+    OPT_REBIND_KEYBOARD,
+    OPT_REBIND_CONTROLLER,
+    OPT_SAVE,
+    OPT_EXIT,
+    OPT_NONE,
 };
 
 struct option_item {
@@ -70,20 +70,20 @@ struct option_item {
     const char* name = "";
     const char* description = "";
 } options[] = {
-    {MUSIC,             "Music Volume",      "Controls the volume of music."},
-    {SFX,               "SFX Volume",        "Controls the volume of sound effects."},
-    {TOGGLE_MONO,       "Speaker Output",    "Controls whether to output audio in mono or stereo."},
-    {FULLSCREEN,        "Fullscreen",        "Sets the game's resolution to your monitor's resolution; known as 'borderless' fullscreen."},
-    {VSYNC,             "V-Sync",            "Syncs the game's framerate to your monitor's refresh rate."},
-    {FRAME_CAP,         "Frame Cap",         "The maximum framerate the game runs at, if V-Sync is disabled."},
-    {TOGGLE_FPS,        "Display FPS",       "Shows the framerate in the top-left corner."},
-    {TOGGLE_GRID,       "Display Grid",      "Controls whether to display the grid overlay during gameplay."},
-    {TOGGLE_RUMBLE,     "Controller Rumble", "Controls whether to rumble the controller on every beat."},
-    {CONTROLLER_ID,     "Controller Index",  "Sets which game controller to use."},
-    {REBIND_KEYBOARD,   "Rebind Keyboard",   "Sets all bindings for the keyboard."},
-    {REBIND_CONTROLLER, "Rebind Controller", "Sets all bindings for the controller."},
-    {SAVE,              "Save Settings",     "Saves your settings and returns to the main menu."},
-    {EXIT_OPTIONS,      "Exit",              "Returns to the main menu. No changes will be saved."}
+    {OPT_MUSIC,             "Music Volume",      "Controls the volume of music."},
+    {OPT_SFX,               "SFX Volume",        "Controls the volume of sound effects."},
+    {OPT_TOGGLE_MONO,       "Speaker Output",    "Controls whether to output audio in mono or stereo."},
+    {OPT_FULLSCREEN,        "Fullscreen",        "Sets the game's resolution to your monitor's resolution; known as 'borderless' fullscreen."},
+    {OPT_VSYNC,             "V-Sync",            "Syncs the game's framerate to your monitor's refresh rate."},
+    {OPT_FRAME_CAP,         "Frame Cap",         "The maximum framerate the game runs at, if V-Sync is disabled."},
+    {OPT_TOGGLE_FPS,        "Display FPS",       "Shows the framerate in the top-left corner."},
+    {OPT_TOGGLE_GRID,       "Display Grid",      "Controls whether to display the grid overlay during gameplay."},
+    {OPT_TOGGLE_RUMBLE,     "Controller Rumble", "Controls whether to rumble the controller on every beat."},
+    {OPT_CONTROLLER_ID,     "Controller Index",  "Sets which game controller to use."},
+    {OPT_REBIND_KEYBOARD,   "Rebind Keyboard",   "Sets all bindings for the keyboard."},
+    {OPT_REBIND_CONTROLLER, "Rebind Controller", "Sets all bindings for the controller."},
+    {OPT_SAVE,              "Save Settings",     "Saves your settings and returns to the main menu."},
+    {OPT_EXIT,      "Exit",              "Returns to the main menu. No changes will be saved."}
 };
 
 int option_count = std::size(options);
@@ -133,16 +133,16 @@ string get_option_value(int index) {
     option_id id = options[index].id;
     
     switch (id) {
-        case MUSIC: return std::to_string(music_volume).append("%");
-        case SFX: return std::to_string(sfx_volume).append("%");
-        case TOGGLE_MONO: return mono_toggle ? "Mono" : "Stereo";
-        case FULLSCREEN: return fullscreen_toggle ? "Enabled" : "Disabled";
-        case VSYNC: return vsync_toggle ? "Enabled" : "Disabled";
-        case FRAME_CAP: return std::to_string(frame_cap);
-        case TOGGLE_FPS: return fps_toggle ? "Enabled" : "Disabled";
-        case TOGGLE_GRID: return grid_toggle ? "Enabled" : "Disabled";
-        case TOGGLE_RUMBLE: return rumble_toggle ? "Enabled" : "Disabled";
-        case CONTROLLER_ID: return std::to_string(controller_index);
+        case OPT_MUSIC: return std::to_string(music_volume).append("%");
+        case OPT_SFX: return std::to_string(sfx_volume).append("%");
+        case OPT_TOGGLE_MONO: return mono_toggle ? "Mono" : "Stereo";
+        case OPT_FULLSCREEN: return fullscreen_toggle ? "Enabled" : "Disabled";
+        case OPT_VSYNC: return vsync_toggle ? "Enabled" : "Disabled";
+        case OPT_FRAME_CAP: return std::to_string(frame_cap);
+        case OPT_TOGGLE_FPS: return fps_toggle ? "Enabled" : "Disabled";
+        case OPT_TOGGLE_GRID: return grid_toggle ? "Enabled" : "Disabled";
+        case OPT_TOGGLE_RUMBLE: return rumble_toggle ? "Enabled" : "Disabled";
+        case OPT_CONTROLLER_ID: return std::to_string(controller_index);
         default: return "";
     }
 }
@@ -165,22 +165,22 @@ void modify_current_option_directions(int mod_value = 1) {
     option_id current_selection = options[option_selected].id;
     
     switch(current_selection) {
-        case MUSIC:
+        case OPT_MUSIC:
             music_volume = modify_option_value(music_volume, mod_value, 0, 100);
             set_music_volume();
             break;
             
-        case SFX:
+        case OPT_SFX:
             sfx_volume = modify_option_value(sfx_volume, mod_value, 0, 100);
             set_sfx_volume();
             break;
             
-        case FRAME_CAP:
+        case OPT_FRAME_CAP:
             frame_cap = modify_option_value(frame_cap, mod_value, 30, 1000);
             set_frame_cap_ms();
             break;
             
-        case CONTROLLER_ID:
+        case OPT_CONTROLLER_ID:
             controller_index = modify_option_value(controller_index, mod_value, 0, get_controller_count());
             init_controller();
             break;
@@ -199,48 +199,48 @@ int modify_current_option_button() {
     option_id current_selection = options[option_selected].id;
     
     switch(current_selection) {
-        case TOGGLE_MONO:
+        case OPT_TOGGLE_MONO:
             mono_toggle = !mono_toggle;
             set_channel_mix();
             play_channel_test();
             break;
             
-        case FULLSCREEN:
+        case OPT_FULLSCREEN:
             fullscreen_toggle = !fullscreen_toggle;
             set_fullscreen();
             break;
             
-        case VSYNC:
+        case OPT_VSYNC:
             vsync_toggle = !vsync_toggle;
             set_vsync_renderer();
             break;
             
-        case TOGGLE_FPS:
+        case OPT_TOGGLE_FPS:
             fps_toggle = !fps_toggle;
             break;
             
-        case TOGGLE_GRID:
+        case OPT_TOGGLE_GRID:
             grid_toggle = !grid_toggle;
             break;
             
-        case TOGGLE_RUMBLE:
+        case OPT_TOGGLE_RUMBLE:
             rumble_toggle = !rumble_toggle;
             rumble_controller(500);
             break;
             
-        case REBIND_KEYBOARD:
+        case OPT_REBIND_KEYBOARD:
             rebinding_keys = true;
             break;
         
-        case REBIND_CONTROLLER:
+        case OPT_REBIND_CONTROLLER:
             rebinding_controller = true;
             break;
             
-        case SAVE:
+        case OPT_SAVE:
             save_settings();
             return 1;
             
-        case EXIT_OPTIONS:
+        case OPT_EXIT:
             return 1;
         
         default: return 0;
@@ -252,7 +252,7 @@ int modify_current_option_button() {
 void move_option_selection(int x) {
     option_selected += x;
     
-    while (options[option_selected].id == NONE) {
+    while (options[option_selected].id == OPT_NONE) {
         option_selected += x;
     }
     
