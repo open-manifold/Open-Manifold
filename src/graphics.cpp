@@ -1867,15 +1867,15 @@ bool draw_options(int frame_time) {
         string rebind_info = "Currently mapped to: " + get_current_mapping();
         
         rect.x = 0;
-        rect.y = height/2 - char_height;
+        rect.y = height/2 - (char_height * scale_mul);
         rect.w = width;
-        rect.h = char_height * 3;
+        rect.h = (char_height * 3) * scale_mul;
     
         SDL_SetRenderDrawColor(renderer, 0, 0, 0, 192);
         SDL_RenderFillRect(renderer, &rect);
         
-        draw_text(rebind_count, width/2, height/2 - char_height/2, 1, 0);
-        draw_text(rebind_info, width/2, height/2 + char_height/2, 1, 0);
+        draw_text(rebind_count, width/2, height/2 - (char_height/2 * scale_mul), scale_mul, 0);
+        draw_text(rebind_info, width/2, height/2 + (char_height/2 * scale_mul), scale_mul, 0);
     }
     
     draw_fade(16, 16, frame_time);
