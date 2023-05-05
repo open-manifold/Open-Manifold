@@ -1,20 +1,5 @@
 #pragma once
 
-enum option_id {
-    OPT_MUSIC,
-    OPT_SFX,
-    OPT_TOGGLE_MONO,
-    OPT_FULLSCREEN,
-    OPT_VSYNC,
-    OPT_FRAME_CAP,
-    OPT_TOGGLE_FPS,
-    OPT_TOGGLE_GRID,
-    OPT_TOGGLE_RUMBLE,
-    OPT_CONTROLLER_ID,
-    OPT_SAVE,
-    OPT_EXIT
-};
-
 int get_option_selection();
 const char* get_option_name(int);
 const char* get_option_desc();
