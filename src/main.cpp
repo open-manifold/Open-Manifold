@@ -1832,7 +1832,9 @@ int main(int argc, char *argv[]) {
         // Load the level
         level_paths.push_back(startup_level);
         json_file = parse_level_file(get_level_json_path());
+
         start_level();
+        previous_shapes.clear();
         transition_state = GAME;
         fade_out = 255;
     } else {
