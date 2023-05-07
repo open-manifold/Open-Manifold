@@ -1040,8 +1040,7 @@ json parse_level_file(string file) {
 
     // checks to make sure the file exists
     if (std::filesystem::exists(file) == false) {
-        printf("[!] Couldn't parse level file: Does not appear to exist, despite being indexed\n");
-        printf("Either the file was deleted after scanning, or something has gone VERY wrong.\n");
+        printf("[!] Couldn't parse level file: Does not exist.\n");
         return NULL;
     }
 
