@@ -714,7 +714,7 @@ void draw_background_fire(bg_data bg_data, int frame_time) {
     }
     
     // darken previous texture
-    SDL_SetRenderDrawColor(renderer, 0, 0, 0, frame_time);
+    SDL_SetRenderDrawColor(renderer, 0, 0, 0, fmax(frame_time, 4));
     SDL_RenderFillRect(renderer, NULL);
     
     for (int i = -4; i < (fmax(aux_texture_w, aux_texture_h)/square_size) + 4; i++) {
