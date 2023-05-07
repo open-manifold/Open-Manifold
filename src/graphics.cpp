@@ -245,9 +245,9 @@ void load_fallback_font() {
     // this is called if, for whatever reason, assets/font.png isn't found
     // loads pixel data from font.h directly into the font surface
     // implementation courtesy of https://blog.gibson.sh/2015/04/13/how-to-integrate-your-sdl2-window-icon-or-any-image-into-your-executable/
-    
+
     Uint32 rmask, gmask, bmask, amask;
-    
+
     // set color masks based on SDL endianness
     if (SDL_BYTEORDER == SDL_BIG_ENDIAN) {
         rmask = 0xff000000;
@@ -260,7 +260,7 @@ void load_fallback_font() {
         bmask = 0x00ff0000;
         amask = 0xff000000;
     }
-    
+
     font = SDL_CreateRGBSurfaceFrom((void*)fallback_font.pixel_data, fallback_font.width, fallback_font.height, fallback_font.bytes_per_pixel*8, fallback_font.bytes_per_pixel*fallback_font.width, rmask, gmask, bmask, amask);
     return;
 }
@@ -268,7 +268,7 @@ void load_fallback_font() {
 void load_font() {
     SDL_FreeSurface(font);
     SDL_DestroyTexture(font_texture);
-    
+
     font = IMG_Load("assets/font.png");
 
     if (font == NULL) {
@@ -290,50 +290,50 @@ void reset_tile_data() {
 void fallback_tile_frames() {
     // generates a fallback vector if parse_tile_frames fails
     // or if the provided tile.json doesn't exist or is invalid
-    
+
     printf("Using fallback data for tile frames...\n");
     std::vector<SDL_Rect> data;
-    
+
     for (int i = 0; i < aux_texture_w; i += aux_texture_h) {
         SDL_Rect temp_rect;
         int width = aux_texture_h;
-        
+
         // clamp the width of the last frame to not exceed image bounds
         if (i + aux_texture_h > aux_texture_w) {
             width = aux_texture_w - (i-1 * aux_texture_h);
         }
-        
+
         temp_rect.y = 0;
         temp_rect.x = i;
         temp_rect.h = aux_texture_h;
         temp_rect.w = width;
-        
+
         data.push_back(temp_rect);
     }
-    
+
     tile_data.frames = data;
     return;
 }
 
 void parse_tile_frames(json file) {
     // converts the JSON data from tile.json into SDL_Rects
-    
+
     std::vector<SDL_Rect> data;
-    
+
     // parses parameters (if available)
     int tile_speed = file[0].value("speed", 120);
     tile_data.fill_screen = file[0].value("fill_screen", false);
     string tile_scale_mode = file[0].value("scale_mode", "nearest");
-    
+
     if (tile_speed <= 0) {
         tile_speed = 60000 / get_level_bpm();
     }
-    
+
     tile_data.speed = tile_speed;
-    
+
     if (tile_scale_mode == "linear") {SDL_SetTextureScaleMode(aux_texture, SDL_ScaleModeLinear);}
     if (tile_scale_mode == "nearest") {SDL_SetTextureScaleMode(aux_texture, SDL_ScaleModeNearest);};
-    
+
     // note the 1; array entry 0 is a header, like with levels
     for (int i = 1; i < file.size(); i++) {
         SDL_Rect temp_rect;
@@ -342,16 +342,16 @@ void parse_tile_frames(json file) {
         temp_rect.y = file[i].value("y", 0);
         temp_rect.w = file[i].value("w", 0);
         temp_rect.h = file[i].value("h", 0);
-        
+
         data.push_back(temp_rect);
     }
-    
+
     if (data.size() == 0) {
         fallback_tile_frames();
     } else {
         tile_data.frames = data;
     }
-    
+
     return;
 }
 
@@ -401,11 +401,11 @@ SDL_Color get_color(int col = 0) {
 SDL_Color get_rainbow_color(int time) {
     // returns a "smoothly-random" rainbow color
     // used when displaying the active shape
-    
+
     Uint8 color_r = abs(sin(time/160.f) * 255);
     Uint8 color_g = abs(sin(time/180.f) * 255);
     Uint8 color_b = abs(sin(time/200.f) * 255);
-    
+
     return {color_r, color_g, color_b, 255};
 }
 
@@ -594,7 +594,7 @@ void draw_background_test(bg_data bg_data, int frame_time) {
 
     SDL_RenderFillRect(renderer, &shape);
     draw_text(std::to_string(bg_data.beat_count), shape.x + (shape.w*0.5), shape.y + (shape.h*0.5), 2, 0);
-    
+
     // shows sequence strings on-screen for debugging
     draw_text(get_cpu_sequence(), width/2, height - font->h, 1, 0, width, {128, 64, 64, 255});
     draw_text(get_player_sequence(), width/2, height - (font->h*2), 1, 0, width, {64, 64, 128, 255});
@@ -625,10 +625,10 @@ void draw_background_tile(bg_data bg_data, int frame_time) {
 
     tile.w = tile.h = tile_size;
     tile_crop = tile_data.frames[slow_song_tick % tile_data.frames.size()];
-    
+
     if (tile_data.fill_screen) {
         tile.w = tile.h = greater_axis;
-        
+
         if (greater_axis == width) {
             tile.x = 0;
             tile.y = height/2 - width/2;
@@ -636,9 +636,9 @@ void draw_background_tile(bg_data bg_data, int frame_time) {
             tile.x = width/2 - height/2;
             tile.y = 0;
         }
-        
+
         SDL_RenderCopy(renderer, aux_texture, &tile_crop, &tile);
-        
+
     } else {
         for (int i = 0; i < width; i += tile_size) {
             for (int j = 0; j < height; j += tile_size) {
@@ -704,7 +704,7 @@ void draw_background_fire(bg_data bg_data, int frame_time) {
 
     SDL_SetRenderTarget(renderer, aux_texture);
     SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
-    
+
     // increases the size of each fire square when moving to the next shape
     // gives a cool "burst" effect to the fire
     if (bg_data.shape_advanced == true) aux_int = 1000;
@@ -712,11 +712,11 @@ void draw_background_fire(bg_data bg_data, int frame_time) {
         aux_int = fmax(aux_int - frame_time, 0);
         square_size_pad = aux_int / 5.f;
     }
-    
+
     // darken previous texture
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, fmax(frame_time, 4));
     SDL_RenderFillRect(renderer, NULL);
-    
+
     for (int i = -4; i < (fmax(aux_texture_w, aux_texture_h)/square_size) + 4; i++) {
         // alternates the direction of every other fire particle
         if (i%2 == 0) {
@@ -828,7 +828,7 @@ void draw_background_monitor(bg_data bg_data, int frame_time) {
     int scanline_height = fmax(fmax(width, height) * 0.0025, 1);
     int slow_song_tick = bg_data.song_tick * (scanline_height * 0.0075);
     int scanline_yoffset = slow_song_tick % (scanline_height * 6);
-    
+
     if (bg_data.shape_advanced) aux_int = 750;
 
     shape.x = 0;
@@ -845,27 +845,27 @@ void draw_background_monitor(bg_data bg_data, int frame_time) {
 
     SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
     SDL_SetRenderDrawColor(renderer, 255, 255, 255, 32);
-    
+
     if (aux_int > 0) {
         aux_int = fmax(aux_int - frame_time, 0);
-        
+
         // generate and display noise texture
         void *pixels;
         int pitch;
-        
+
         SDL_LockTexture(aux_texture, NULL, &pixels, &pitch);
-        
+
         for (int y = 0; y < aux_texture_h; y++) {
             Uint32* dest = (Uint32*)((Uint8*)pixels + y * pitch);
             for (int x = 0; x < aux_texture_w; x++) {
                 Uint32 shade = 0;
                 Uint8 r, g, b, a;
-                
+
                 r = (Uint8)rand();
                 g = (Uint8)rand();
                 b = (Uint8)rand();
                 a = (Uint8)rand()/4;
-                
+
                 if (SDL_BYTEORDER == SDL_BIG_ENDIAN) {
                     shade += a;
                     shade += b << 8;
@@ -877,13 +877,13 @@ void draw_background_monitor(bg_data bg_data, int frame_time) {
                     shade += b << 16;
                     shade += a << 24;
                 }
-                
+
                 *dest++ = shade;
             }
         }
-        
+
         SDL_UnlockTexture(aux_texture);
-    
+
         SDL_SetTextureBlendMode(aux_texture, SDL_BLENDMODE_ADD);
         SDL_RenderCopy(renderer, aux_texture, NULL, NULL);
         SDL_SetTextureBlendMode(aux_texture, SDL_BLENDMODE_BLEND);
@@ -927,38 +927,38 @@ void draw_background_wave(bg_data bg_data, int frame_time) {
 
 void draw_background_starfield(bg_data bg_data, int frame_time) {
     int tick_rate = 16;
-    
+
     // essentially locks the background's updating rate
     // prevents ludicrously fast scrolling/star spawning at higher FPSes
     aux_int += frame_time;
-    
+
     if (aux_int >= tick_rate) {
-        
+
         SDL_SetRenderTarget(renderer, aux_texture);
         SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
-        
+
         // darken previous texture
         SDL_SetRenderDrawColor(renderer, 0, 0, 0, 16);
         SDL_RenderFillRect(renderer, NULL);
-        
+
         SDL_Rect offset;
         offset.x = 0;
         offset.y = -1;
         offset.w = aux_texture_w;
         offset.h = aux_texture_h;
-        
+
         for (int i = 0; i < 4; i++) {
             SDL_SetRenderDrawColor(renderer, (rand() % 2 * 255), (rand() % 2 * 255), (rand() % 2 * 255), 255);
             SDL_RenderDrawPoint(renderer, rand() % aux_texture_w, rand() % aux_texture_h-1);
         }
-        
+
         SDL_RenderCopy(renderer, aux_texture, NULL, &offset);
-    
+
         SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_NONE);
         SDL_SetRenderTarget(renderer, NULL);
         aux_int -= tick_rate;
     }
-    
+
     SDL_RenderCopy(renderer, aux_texture, NULL, NULL);
     return;
 }
@@ -974,7 +974,7 @@ void draw_background_hexagon(bg_data bg_data, int frame_time) {
     color_a.r = fmax(bg_data.grid_color.r * 0.6, 0);
     color_a.g = fmax(bg_data.grid_color.g * 0.6, 0);
     color_a.b = fmax(bg_data.grid_color.b * 0.6, 0);
-    
+
     // color_b's subtraction is deliberately allowed to underflow for some funky color combos
     SDL_Color color_b;
     color_b.r = 128 - color_a.r;
@@ -990,7 +990,7 @@ void draw_background_hexagon(bg_data bg_data, int frame_time) {
     if (bg_data.beat_count <= bg_data.start_offset) {
         scroll_speed = 0;
     }
-    
+
     aux_float += scroll_speed;
 
     // swaps colors every few beats
@@ -1006,7 +1006,7 @@ void draw_background_hexagon(bg_data bg_data, int frame_time) {
         int angle_value = 60 * (i + 1);
         angles[i] = aux_float + angle_value * to_rad;
     }
-    
+
     // put the calculated angles into vertexes, the float typecasts are there so MinGW doesn't throw up warnings
     SDL_Vertex vertex_center = {{center_x, center_y}, color_a, {0.f, 0.f}};
     SDL_Vertex vertex_topl = {{center_x + (hex_width * (float)cos(angles[0])), center_y + (hex_width * (float)sin(angles[0]))}, color_a, {0.f, 0.f}};
@@ -1044,34 +1044,34 @@ void draw_background_munching(bg_data bg_data, int frame_time) {
     float munch_rate_g = sin(bg_data.song_tick/200.f);
     float munch_rate_b = sin(bg_data.song_tick/200.f);
     SDL_Rect tile;
-    
+
     tile.x = tile.y = 0;
     tile.h = tile.w = aux_texture_w;
-    
+
     if (bg_data.shape_advanced) aux_int = 2000;
-    
+
     // offsets each RGB channel's "munch" rate
     if (aux_int > 0) {
         aux_int = fmax(aux_int - frame_time, 0);
-        
+
         munch_rate_r = sin(bg_data.song_tick/250.f);
         munch_rate_g = sin(bg_data.song_tick/350.f);
         munch_rate_b = sin(bg_data.song_tick/150.f);
     }
-    
+
     SDL_LockTexture(aux_texture, NULL, &pixels, &pitch);
-    
+
     // generate the munch texture
     for (int y = 0; y < aux_texture_h; y++) {
         Uint32* dest = (Uint32*)((Uint8*)pixels + y * pitch);
         for (int x = 0; x < aux_texture_w; x++) {
             Uint32 shade = 0;
             Uint8 r, g, b;
-            
+
             r = (Uint8)((x ^ y) + munch_rate_r * 128);
             g = (Uint8)((x ^ y) + munch_rate_g * 128);
             b = (Uint8)((x ^ y) + munch_rate_b * 128);
-            
+
             if (SDL_BYTEORDER == SDL_BIG_ENDIAN) {
                 shade += 0xff;
                 shade += b << 8;
@@ -1083,13 +1083,13 @@ void draw_background_munching(bg_data bg_data, int frame_time) {
                 shade += b << 16;
                 shade += 0xff << 24;
             }
-            
+
             *dest++ = shade;
         }
     }
-    
+
     SDL_UnlockTexture(aux_texture);
-    
+
     // tile resulting texture to fill screen
     for (int i = 0; i < width; i += tile.w) {
         for (int j = 0; j < height; j += tile.h) {
@@ -1110,32 +1110,32 @@ void draw_background_lasers(bg_data bg_data, int frame_time) {
     int pivot_y1 = sin((bg_data.song_tick + aux_int + 200) * 0.00105) * aux_texture_h;
     int pivot_y2 = sin((bg_data.song_tick + aux_int + 400) * 0.00115) * aux_texture_h;
     int pivot_y3 = sin((bg_data.song_tick + aux_int + 600) * 0.00125) * aux_texture_h;
-    
+
     if (bg_data.shape_advanced) {
         aux_float = 1000;
     }
-    
+
     if (aux_float > 0) {
         background_mul = 2;
         aux_int += fmin(40, (aux_float/4));
         aux_float = fmax(aux_float - frame_time, 0);
     }
-    
+
     SDL_SetRenderTarget(renderer, aux_texture);
     SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
-    
+
     SDL_SetRenderDrawColor(renderer, 8, 32, 16, frame_time*background_mul);
     SDL_RenderFillRect(renderer, NULL);
-    
+
     SDL_SetRenderDrawColor(renderer, 16, 255, 64, 255);
-    
+
     SDL_RenderDrawLine(renderer, pivot_x1, pivot_y1, aux_texture_w, aux_texture_h);
     SDL_RenderDrawLine(renderer, pivot_x2, pivot_y2, aux_texture_w, aux_texture_h);
     SDL_RenderDrawLine(renderer, pivot_x3, pivot_y3, aux_texture_w, aux_texture_h);
     SDL_RenderDrawLine(renderer, aux_texture_w - pivot_x1, pivot_y1, 0, aux_texture_h);
     SDL_RenderDrawLine(renderer, aux_texture_w - pivot_x2, pivot_y2, 0, aux_texture_h);
     SDL_RenderDrawLine(renderer, aux_texture_w - pivot_x3, pivot_y3, 0, aux_texture_h);
-    
+
     SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_NONE);
     SDL_SetRenderTarget(renderer, NULL);
     SDL_RenderCopy(renderer, aux_texture, NULL, NULL);
@@ -1145,7 +1145,7 @@ void draw_background_lasers(bg_data bg_data, int frame_time) {
 void draw_background_bigbang(bg_data bg_data, int frame_time) {
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
     SDL_RenderClear(renderer);
-    
+
     int greater_axis = fmax(width, height);
     int sx, sy, sx2, sy2;
 
@@ -1154,12 +1154,12 @@ void draw_background_bigbang(bg_data bg_data, int frame_time) {
         sy = height/2 + sin((a*2)*to_rad + bg_data.song_tick/1800.f) * greater_axis/2;
         sx2 = width/2 + cos((a*2+1)*to_rad + bg_data.song_tick/1800.f) * greater_axis/2;
         sy2 = height/2 + sin((a*2+1)*to_rad + bg_data.song_tick/2000.f) * greater_axis/2;
-        
+
         SDL_SetRenderDrawColor(renderer, 255-a, 255-a, 255-a, 255);
-        
+
         SDL_RenderDrawLine(renderer, sx, sy, sx2, sy2);
     }
-    
+
     return;
 }
 
@@ -1205,13 +1205,13 @@ void init_background_effect() {
             SDL_QueryTexture(aux_texture, NULL, NULL, &aux_texture_w, &aux_texture_h);
             load_tile_frame_file();
             break;
-            
+
         case fire:
         case lasers:
             aux_texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGB24, SDL_TEXTUREACCESS_TARGET, width, height);
             SDL_QueryTexture(aux_texture, NULL, NULL, &aux_texture_w, &aux_texture_h);
             break;
-            
+
         case starfield:
             aux_texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGB24, SDL_TEXTUREACCESS_TARGET, width/4, height/4);
             SDL_QueryTexture(aux_texture, NULL, NULL, &aux_texture_w, &aux_texture_h);
@@ -1220,7 +1220,7 @@ void init_background_effect() {
         case conway:
             aux_texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGB24, SDL_TEXTUREACCESS_TARGET, 32, 32);
             SDL_QueryTexture(aux_texture, NULL, NULL, &aux_texture_w, &aux_texture_h);
-            
+
             for (int y = 0; y < 32; y++) {
                 for (int x = 0; x < 32; x++) {
                     bool randomized = rand() & 1;
@@ -1229,12 +1229,12 @@ void init_background_effect() {
             }
 
             break;
-        
+
         case monitor:
             aux_texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGBA32, SDL_TEXTUREACCESS_STREAMING, 320, 240);
             SDL_QueryTexture(aux_texture, NULL, NULL, &aux_texture_w, &aux_texture_h);
             break;
-            
+
         case munching:
             aux_texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGBA32, SDL_TEXTUREACCESS_STREAMING, 256, 256);
             SDL_QueryTexture(aux_texture, NULL, NULL, &aux_texture_w, &aux_texture_h);
@@ -1252,7 +1252,7 @@ void draw_background_effect(bg_data bg_data, bool draw_debug_bg, int frame_time)
     // ----------------------------------------------------------
     // bg_data: struct containing various values (see background.h; draw_game())
     // draw_debug_bg: toggles whether to draw the debug background; -d switch must be on for this to work
-    
+
     // caps frame_time value to prevent weirdness with certain BGFX like fire
     // those BGFX use the frame_time value to calculate fade-out effects that are consistent
     // regardless of framerate; however FPS values past a certain point disable this fade
@@ -1321,48 +1321,48 @@ void draw_grid(int x = width/2, int y = height/2, int scale = height/22, SDL_Col
 
 void draw_hud(int life, int score, int time, int frame_time) {
     // Draws the HUD during the main game
-    
+
     int scale_mul = fmax(floor(height/360), 1);
     string score_string = std::to_string(score);
     score_string.insert(0, 8 - score_string.length(), '0');
-    
+
     // draws the underlay (the black part)
     SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 128);
-    
+
     SDL_Rect hud_bar, life_bar;
     hud_bar.x = hud_bar.y = 0;
     hud_bar.w = width;
     hud_bar.h = (font->h + 8) * scale_mul;
-    
+
     life_bar.h = hud_bar.h * 0.8;
     life_bar.x = life_bar.y = hud_bar.h * 0.1;
     life_bar.w = (width / 4) - (hud_bar.h * 0.1);
-    
+
     SDL_RenderFillRect(renderer, &hud_bar);
-    
+
     // draws the life bar
     SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_NONE);
     SDL_RenderFillRect(renderer, &life_bar);
-    
+
     life_bar.w = life * (life_bar.w/100.f);
     SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
     SDL_RenderFillRect(renderer, &life_bar);
-    
+
     // draws text versions of life bar, and score
     draw_text(std::to_string(life) + "%", life_bar.x, life_bar.y, scale_mul, 1, hud_bar.w);
     draw_text(score_string, width - life_bar.x, life_bar.y, scale_mul, -1, hud_bar.w);
-    
+
     if (combo_display_timer > 0) {
         int combo = get_combo();
         string combo_str = std::to_string(combo) + "x combo!";
-        
+
         Uint8 color_pulse = abs(sin(time*4.f/180)) * 200;
         draw_text(combo_str, width/2, life_bar.y, scale_mul, 0, hud_bar.w/2, {255, color_pulse, 255, 255});
-        
+
         combo_display_timer -= frame_time;
     }
-    
+
     return;
 }
 
@@ -1370,18 +1370,18 @@ void draw_game_over(int time) {
     // Draws the game over screen
     int scale_mul = fmax(floor(height/360), 1);
     int font_height = font->h * scale_mul;
-    
+
     // darken the entire screen
     SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 64);
     SDL_RenderFillRect(renderer, NULL);
-    
+
     // color-cycle for game over text color
     Uint8 color_pulse = abs(sin(time*0.4/180)) * 200;
-    
+
     draw_text("GAME OVER", width/2, height/2 - font_height, scale_mul * 2, 0, width, {255, color_pulse, 0, 255});
     draw_text("Press any button to return to the menu.", width/2, height/2 + font_height, scale_mul, 0, width);
-    
+
     return;
 }
 
@@ -1394,7 +1394,7 @@ void draw_shape(int type = 0, int x = 7, int y = 7, int scale = 1, SDL_Color rgb
     // rgb: color of shape in RGBA values
     // gx, gy: position of drawgrid (can be used as an offset)
     // gscale: size of 1 grid square in pixels
-    
+
     SDL_SetRenderDrawColor(renderer, rgb.r, rgb.g, rgb.b, rgb.a);
 
     x = gscale * (x + 0.5) + gx;
@@ -1470,7 +1470,7 @@ void draw_shape_outline(int type = 0, int x = 7, int y = 7, int scale = 1, SDL_C
     // NOTE: this function is not alpha-safe, at least for circles!
     // ----------------------------------------------------------
     // see draw_shape() for parameters
-    
+
     SDL_SetRenderDrawColor(renderer, rgb.r, rgb.g, rgb.b, rgb.a);
 
     x = gscale * (x + 0.5) + gx;
@@ -1490,10 +1490,10 @@ void draw_shape_outline(int type = 0, int x = 7, int y = 7, int scale = 1, SDL_C
                 sy = sin(q*to_rad) * r + y;
                 sx2 = cos((q+1)*to_rad) * r + x;
                 sy2 = sin((q+1)*to_rad) * r + y;
-                
+
                 SDL_RenderDrawLine(renderer, sx, sy, sx2, sy2);
             }
-            
+
             return;
         }
 
@@ -1521,7 +1521,7 @@ void draw_shape_outline(int type = 0, int x = 7, int y = 7, int scale = 1, SDL_C
                 SDL_RenderDrawPoint(renderer, shape.x, shape.y);
                 SDL_RenderDrawPoint(renderer, shape.x + shape.w, shape.y);
             }
-            
+
             SDL_RenderDrawLine(renderer, shape.x, shape.y, shape.x + shape.w, shape.y);
             return;
         }
@@ -1612,7 +1612,7 @@ void draw_fps(bool toggle, int fps, int frame_time) {
 void draw_fade(int fadein_mul, int fadeout_mul, int frame_time) {
     // Draws both the fade-in and fade-out effects
     // Called every frame whenever transitioning between screens
-    
+
     // are we fully faded out?
     if (fade_in == 0 && fade_out == 255) {return;}
 
@@ -1699,7 +1699,7 @@ void draw_loading(bool fill_black = false) {
 
 bool draw_warning(int frame_time) {
     // Draws warning screen
-    
+
     // Grays out background
     SDL_SetRenderDrawColor(renderer, 64, 64, 72, 255);
     SDL_RenderClear(renderer);
@@ -1749,7 +1749,7 @@ bool draw_title(int menu_selection, int frame_time) {
     // Draws the title screen
     // ----------------------------------------------------------
     // menu_selection: What is currently selected (range 0-3)
-    
+
     const char *menu_items[5] = {"Play", "Sandbox", "Tutorial", "Options", "Quit"};
 
     int scale_mul = fmax(floor(fmin(height, width)/360), 1);
@@ -1796,10 +1796,10 @@ bool draw_title(int menu_selection, int frame_time) {
 
         draw_text(menu_items[i], width/2, height/1.5 + ((i * char_height) * scale_mul), scale_mul, 0, width, text_highlight);
     }
-    
+
     // draws version number
     draw_text(get_version_string(), 0, height - font->h, 1, 1, width, {0, 0, 32});
-    
+
     if (get_debug()) {
         draw_text("debug mode is enabled! goofy things may happen", width, height - font->h, 1, -1, width, {0, 0, 32});
     }
@@ -1812,7 +1812,7 @@ bool draw_options(int frame_time) {
     // Draws the options menu
     // ----------------------------------------------------------
     // See options.cpp for more info!
-    
+
     int option_selection = get_option_selection();
     int scale_mul = fmax(floor(fmin(height, width)/360), 1);
     int char_height = font->h + 2;
@@ -1844,7 +1844,7 @@ bool draw_options(int frame_time) {
 
         // get a string for the option value (if there is one)
         option_value = get_option_value(i);
-        
+
         // colorize "Enabled" and "Disabled" strings
         if (option_value == "Enabled") {text_highlight = {96, 255, 96};}
         if (option_value == "Disabled") {text_highlight = {255, 96, 96};}
@@ -1860,24 +1860,24 @@ bool draw_options(int frame_time) {
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 128);
     SDL_RenderFillRect(renderer, &rect);
     draw_text(get_option_desc(), width*0.01, height - (char_height * scale_mul), scale_mul, 1, width);
-    
+
     // draws remap overlay if we're remapping something
     if (check_rebind()) {
         string rebind_count = "Rebinding input: " + get_input_name();
         string rebind_info = "Currently mapped to: " + get_current_mapping();
-        
+
         rect.x = 0;
         rect.y = height/2 - (char_height * scale_mul);
         rect.w = width;
         rect.h = (char_height * 3) * scale_mul;
-    
+
         SDL_SetRenderDrawColor(renderer, 0, 0, 0, 192);
         SDL_RenderFillRect(renderer, &rect);
-        
+
         draw_text(rebind_count, width/2, height/2 - (char_height/2 * scale_mul), scale_mul, 0);
         draw_text(rebind_info, width/2, height/2 + (char_height/2 * scale_mul), scale_mul, 0);
     }
-    
+
     draw_fade(16, 16, frame_time);
     return true;
 }
@@ -1886,7 +1886,7 @@ bool draw_level_select(std::vector<shape> shapes, int frame_time) {
     // Draws the level select menu
     // ----------------------------------------------------------
     // shapes: list of shapes to draw, created at parse-time in main.cpp
-    
+
     int scale_mul = fmax(floor(fmin(height, width)/300), 1);
 
     // calculates the size of the shape grid; this will be used to create a texture that our shapes are drawn on later
@@ -1952,16 +1952,16 @@ bool draw_level_select(std::vector<shape> shapes, int frame_time) {
         draw_text("Genre: " + get_genre(), width/6, grid_area.y + grid_area.h + (font->h * 2), 1, 1, width/3);
         draw_text("Song: " + get_song_author(), width - (width/6), grid_area.y + grid_area.h + (font->h), 1, -1, width/3);
         draw_text("Level: " + get_level_author(), width - (width/6), grid_area.y + grid_area.h + (font->h * 2), 1, -1, width/3);
-        
+
         if (get_debug()) {
             for (int i = 0; i < 16; i++) {
                 SDL_Rect color_box;
                 color_box.w = color_box.h = 8;
                 color_box.x = 0;
                 color_box.y = i * color_box.h;
-                
+
                 SDL_Color color = get_color(i);
-                
+
                 SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, 255);
                 SDL_RenderFillRect(renderer, &color_box);
             }
@@ -1983,15 +1983,15 @@ bool draw_game(int beat_count, int start_offset, int measure_length, int song_st
     // grid_toggle: Toggles whether to draw the grid pattern
     // song_over: True when the last shape has been successfully placed
     // game_over: True when the player hits 0% health
-    
+
     SDL_RenderClear(renderer);
     SDL_Color bg_color = get_color(get_bg_color());
 
     int character_beat_count = ((beat_count - start_offset) <= 0) ? 0: (beat_count - (start_offset + 1));
-    
+
     // sets up bg_data
     bg_data bg_data = {
-        (current_ticks - song_start_time), 
+        (current_ticks - song_start_time),
         (int)(current_ticks - beat_start_time),
         beat_advanced,
         shape_advanced,
@@ -2062,11 +2062,11 @@ bool draw_game(int beat_count, int start_offset, int measure_length, int song_st
     SDL_SetRenderTarget(renderer, NULL);
     SDL_RenderCopy(renderer, shape_texture, NULL, &grid_area);
     SDL_DestroyTexture(shape_texture);
-    
+
     // draws the HUD elements
     if (game_over) {draw_game_over(current_ticks);}
     draw_hud(get_life(), get_score(), current_ticks, frame_time);
-    
+
     draw_level_intro_fade(song_start_time, current_ticks, intro_beat_length);
     draw_fade(255, 8, frame_time);
     return true;
@@ -2079,20 +2079,20 @@ bool draw_sandbox(shape active_shape, std::vector<shape> previous_shapes, bool m
     // previous_shapes: Array of all previously-placed shapes
     // menu_open: Toggles whether or not the toolbar is visible
     // menu_item: The currently-selected toolbar item
-    
+
     int time = SDL_GetTicks();
 
     SDL_RenderClear(renderer);
-    
+
     // sets up a dummy bgdata
     bg_data bg_data = {
-        time, 
-        0, 
+        time,
+        0,
         false,
         false,
-        0, 
-        0, 
-        0, 
+        0,
+        0,
+        0,
         get_color(15)
     };
 
@@ -2136,7 +2136,7 @@ bool draw_sandbox(shape active_shape, std::vector<shape> previous_shapes, bool m
     SDL_SetRenderTarget(renderer, NULL);
     SDL_RenderCopy(renderer, shape_texture, NULL, &grid_area);
     SDL_DestroyTexture(shape_texture);
-    
+
     // draws the sandbox menu (if it's open)
     if (menu_open) {
         SDL_Rect icon_area;
@@ -2144,41 +2144,41 @@ bool draw_sandbox(shape active_shape, std::vector<shape> previous_shapes, bool m
         int icon_tex_size;
         int icon_size = height/8;
         int icon_padding = icon_size / 10;
-        
+
         SDL_QueryTexture(sandbox_icon_texture, NULL, NULL, NULL, &icon_tex_size);
         int total_width_of_icons = sandbox_item_count * (icon_size + icon_padding) - icon_padding;
-        
+
         // draws the sandbox icons and boxes
         for (int i = 0; i < sandbox_item_count; i++) {
             Uint8 shade = 96;
             if (i == menu_item) {shade = (abs(sin(time*0.4/90)) * 30) + 220;}
-            
+
             icon_area.x = (i * (icon_size + icon_padding)) + (width/2 - total_width_of_icons/2);
             icon_area.y = height - icon_size - (icon_padding/2);
             icon_area.w = icon_size;
             icon_area.h = icon_size;
-            
+
             icon_coords.x = i * icon_tex_size;
             icon_coords.y = 0;
             icon_coords.w = icon_coords.h = icon_tex_size;
-            
+
             SDL_SetRenderDrawColor(renderer, shade, shade, shade, 255);
             SDL_RenderFillRect(renderer, &icon_area);
-            
+
             icon_area.x += icon_padding;
             icon_area.y += icon_padding;
             icon_area.w = icon_area.h = icon_area.w - icon_padding * 2;
-            
+
             SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
-            
+
             SDL_RenderFillRect(renderer, &icon_area);
-            
+
             icon_area.x += icon_padding;
             icon_area.y += icon_padding;
             icon_area.w = icon_area.h = icon_area.w - icon_padding * 2;
-            
+
             SDL_RenderCopy(renderer, sandbox_icon_texture, &icon_coords, &icon_area);
-            
+
             if (i == 5 && sandbox_lock) {
                 SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_MOD);
                 SDL_SetRenderDrawColor(renderer, 64, 64, 255, 255);
@@ -2186,7 +2186,7 @@ bool draw_sandbox(shape active_shape, std::vector<shape> previous_shapes, bool m
                 SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
             }
         }
-        
+
         draw_text(sandbox_items[menu_item], width/2, height - icon_size - icon_padding - font->h, 1, 0);
     }
 
@@ -2197,16 +2197,16 @@ bool draw_sandbox(shape active_shape, std::vector<shape> previous_shapes, bool m
 bool draw_tutorial(int frame_time) {
     int scale_mul = fmax(floor(fmin(height, width)/360), 1);
     int time = SDL_GetTicks();
-    
+
     draw_gradient(0, 0, width, height, {192, 64, 255});
     draw_menu_background(frame_time);
-    
+
     // draws various things depending on what dialog is displaying
     int grid_y = height/2 - (font->h*scale_mul);
     int grid_w = width/2 - (height/22 * 7.5);
     int grid_h = grid_y - (height/22 * 7.5);
     int grid_scale = height/22;
-    
+
     // used in TUT_GRID_MOVE and TUT_GRID_SIZE
     const int grid_positions[][2] = {
         {7, 9},
@@ -2226,7 +2226,7 @@ bool draw_tutorial(int frame_time) {
         {5, 9},
         {6, 9}
     };
-    
+
     // used in TUT_CALL_RESP
     // order is: x, y, scale
     const int call_response_data[][3] = {
@@ -2239,7 +2239,7 @@ bool draw_tutorial(int frame_time) {
         {7, 10, 3},
         {7, 10, 3}
     };
-    
+
     switch (get_tutorial_state()) {
         case TUT_FACE:
             draw_shape(0, 7, 7, 7,  {255, 255, 255, 255}, grid_w, grid_h, grid_scale);
@@ -2248,7 +2248,7 @@ bool draw_tutorial(int frame_time) {
             draw_shape(0, 7, 10, 3, {0, 0, 0, 255},       grid_w, grid_h, grid_scale);
             draw_shape(0, 7, 9, 3,  {255, 255, 255, 255}, grid_w, grid_h, grid_scale);
             break;
-        
+
         case TUT_SHAPES:
             draw_shape_outline(0, -3, 7, 6, get_rainbow_color(time), grid_w, grid_h + (sin(time/400.f) * (height/32)), grid_scale);
             draw_shape_outline(1, 7, 7, 6, get_rainbow_color(time+200), grid_w, grid_h + (sin(time/400.f + 400) * (height/32)), grid_scale);
@@ -2257,71 +2257,71 @@ bool draw_tutorial(int frame_time) {
             draw_shape(1, 7, 7, 4, {255, 255, 255, 255}, grid_w, grid_h, grid_scale);
             draw_shape(2, 17, 7, 4, {255, 255, 255, 255}, grid_w, grid_h, grid_scale);
             break;
-        
+
         case TUT_GRID_TYPE:
             draw_grid(width/2, grid_y, grid_scale);
             draw_shape(time/240 % 3, 7, 7, 1, {0, 0, 0, 255}, grid_w, grid_h, grid_scale);
             break;
-        
+
         case TUT_GRID_MOVE:
             draw_grid(width/2, grid_y, grid_scale);
             draw_shape(0, grid_positions[time/120%16][0], grid_positions[time/120%16][1], 1, {0, 0, 0, 255}, grid_w, grid_h, grid_scale);
             break;
-        
+
         case TUT_GRID_SIZE:
             draw_grid(width/2, grid_y, grid_scale);
             draw_shape(0, 7, 7, grid_positions[time/120%16][0] - 3, {0, 0, 0, 255}, grid_w, grid_h, grid_scale);
             break;
-            
+
         case TUT_CALL_RESP:
             draw_grid(width/2, grid_y, grid_scale);
             draw_shape(0, call_response_data[time/240%8][0], call_response_data[time/240%8][1], call_response_data[time/240%8][2], get_rainbow_color(time), grid_w, grid_h, grid_scale);
-            
+
             if (time/240%16 >= 8) {
                 draw_text("CPU", width/2, grid_h - (font->h * scale_mul), scale_mul, 0, width, {255, 0, 64, 255});
             } else {
                 draw_text("PLAYER", width/2, grid_h - (font->h * scale_mul), scale_mul, 0, width, {64, 0, 255, 255});
             }
-            
+
             break;
-        
+
         case TUT_LIFE:
             draw_hud(100 - (time/100 % 100), 0, time, frame_time);
             break;
-        
+
         case TUT_NONE:
         default:
             break;
     }
-    
-    // splits message into chunks    
+
+    // splits message into chunks
     string message = get_tutorial_current_message();
     string temp;
     std::vector<string> message_list;
     int char_width = floor(font->w/95) * scale_mul;
     int max_line_length = width / char_width;
-    
+
     for (int i = 0; i < message.length(); i++) {
         if (i % max_line_length == 0 && i != 0) {
             int last_space = temp.find_last_of(" ");
             string excess_text = temp.substr(last_space + 1, temp.length());
             temp = temp.substr(0, last_space);
-            
+
             message_list.push_back(temp);
             temp = excess_text;
         }
-    
+
         temp += message[i];
     }
-    
+
     message_list.push_back(temp);
-    
+
     // draws the split text
     for (int i = 0; i < message.length(); i+=max_line_length) {
         int iteration = i/max_line_length;
         draw_text(message_list[iteration], 0, (height - (font->h * scale_mul * message_list.size())) + (font->h * scale_mul * iteration) - 16, scale_mul, 1);
     }
-    
+
     draw_fade(16, 16, frame_time);
     return true;
 }

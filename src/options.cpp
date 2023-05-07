@@ -36,7 +36,7 @@ bool mono_toggle = false;
 int frame_cap = 120;
 bool fps_toggle = false;
 bool fullscreen_toggle = false;
-bool true_fullscreen_toggle = false;    // note: not used in the options menu!
+bool true_fullscreen_toggle = false; // note: not used in the options menu!
 bool vsync_toggle = false;
 bool grid_toggle = true;
 bool rumble_toggle = true;
@@ -83,7 +83,7 @@ struct option_item {
     {OPT_REBIND_KEYBOARD,   "Rebind Keyboard",   "Sets all bindings for the keyboard."},
     {OPT_REBIND_CONTROLLER, "Rebind Controller", "Sets all bindings for the controller."},
     {OPT_SAVE,              "Save Settings",     "Saves your settings and returns to the main menu."},
-    {OPT_EXIT,      "Exit",              "Returns to the main menu. No changes will be saved."}
+    {OPT_EXIT,              "Exit",              "Returns to the main menu. No changes will be saved."}
 };
 
 int option_count = std::size(options);
@@ -131,7 +131,7 @@ bool check_rebind() {
 
 string get_option_value(int index) {
     option_id id = options[index].id;
-    
+
     switch (id) {
         case OPT_MUSIC: return std::to_string(music_volume).append("%");
         case OPT_SFX: return std::to_string(sfx_volume).append("%");
@@ -147,47 +147,47 @@ string get_option_value(int index) {
     }
 }
 
-int modify_option_value(int cur_val = 0, int mod = 1, int lower_bound = 0, int upper_bound = 100) {
-    if (cur_val + mod > upper_bound) {
+int modify_option_value(int cur_val = 0, int mod_value = 1, int lower_bound = 0, int upper_bound = 100) {
+    if (cur_val + mod_value > upper_bound) {
         return upper_bound;
     }
 
-    if (cur_val + mod < lower_bound) {
+    if (cur_val + mod_value < lower_bound) {
         return lower_bound;
     }
-    
-    return cur_val + mod;
+
+    return cur_val + mod_value;
 }
 
 void modify_current_option_directions(int mod_value = 1) {
     // this function is what handles how each option can be interacted with via left/right/L-R buttons
-    
+
     option_id current_selection = options[option_selected].id;
-    
+
     switch(current_selection) {
         case OPT_MUSIC:
             music_volume = modify_option_value(music_volume, mod_value, 0, 100);
             set_music_volume();
             break;
-            
+
         case OPT_SFX:
             sfx_volume = modify_option_value(sfx_volume, mod_value, 0, 100);
             set_sfx_volume();
             break;
-            
+
         case OPT_FRAME_CAP:
             frame_cap = modify_option_value(frame_cap, mod_value, 30, 1000);
             set_frame_cap_ms();
             break;
-            
+
         case OPT_CONTROLLER_ID:
             controller_index = modify_option_value(controller_index, mod_value, 0, get_controller_count());
             init_controller();
             break;
-        
+
         default: return;
     }
-    
+
     return;
 }
 
@@ -195,67 +195,67 @@ int modify_current_option_button() {
     // this function is what handles how each option can be interacted with via the A button
     // returns 0 normally, but if 1 is returned the game will return to the menu
     // this strange coding is because of how transition states are scoped to the main() loop, see main.cpp
-    
+
     option_id current_selection = options[option_selected].id;
-    
+
     switch(current_selection) {
         case OPT_TOGGLE_MONO:
             mono_toggle = !mono_toggle;
             set_channel_mix();
             play_channel_test();
             break;
-            
+
         case OPT_FULLSCREEN:
             fullscreen_toggle = !fullscreen_toggle;
             set_fullscreen();
             break;
-            
+
         case OPT_VSYNC:
             vsync_toggle = !vsync_toggle;
             set_vsync_renderer();
             break;
-            
+
         case OPT_TOGGLE_FPS:
             fps_toggle = !fps_toggle;
             break;
-            
+
         case OPT_TOGGLE_GRID:
             grid_toggle = !grid_toggle;
             break;
-            
+
         case OPT_TOGGLE_RUMBLE:
             rumble_toggle = !rumble_toggle;
             rumble_controller(500);
             break;
-            
+
         case OPT_REBIND_KEYBOARD:
             rebinding_keys = true;
             break;
-        
+
         case OPT_REBIND_CONTROLLER:
             rebinding_controller = true;
             break;
-            
+
         case OPT_SAVE:
             save_settings();
             return 1;
-            
+
         case OPT_EXIT:
             return 1;
-        
+
         default: return 0;
     }
-    
+
     return 0;
 }
 
 void move_option_selection(int x) {
     option_selected += x;
-    
+
     while (options[option_selected].id == OPT_NONE) {
         option_selected += x;
     }
-    
+
     if (option_selected > option_count-1) {option_selected = 0;}
     if (option_selected < 0) {option_selected = option_count-1;}
     return;

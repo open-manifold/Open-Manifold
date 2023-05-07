@@ -271,11 +271,11 @@ void save_settings() {
 
         ifs.close();
     }
-    
+
     // convert current maps into string arrays
     string keymap_strings[12];
     string buttonmap_strings[12];
-    
+
     for (int i = 0; i < 12; i++) {
         keymap_strings[i] = SDL_GetKeyName(keymap[i]);
         buttonmap_strings[i] = SDL_GameControllerGetStringForButton(buttonmap[i]);
@@ -332,26 +332,26 @@ void load_settings(int argc, char* argv[]) {
     if (json_data.contains("mono_toggle"))       {mono_toggle = json_data["mono_toggle"];}
     if (json_data.contains("controller_rumble")) {rumble_toggle = json_data["controller_rumble"];}
     if (json_data.contains("controller_index"))  {controller_index = json_data["controller_index"];}
-    
+
     // populates the keymap
     if (json_data.contains("key_map")) {
         printf("Reading keyboard mappings...\n");
         for (int i = 0; i < 12; i++) {
             std::string key_name = json_data["key_map"][i];
             SDL_Keycode key_code = SDL_GetKeyFromName(key_name.c_str());
-            
+
             if (key_code == SDLK_UNKNOWN) {printf("[!] Unrecognized keycode: %s\n", key_name.c_str()); continue;}
             keymap[i] = key_code;
         }
     }
-    
+
     // populates the button map
     if (json_data.contains("button_map")) {
         printf("Reading button mappings...\n");
         for (int i = 0; i < 12; i++) {
             std::string button_name = json_data["button_map"][i];
             SDL_GameControllerButton button_code = SDL_GameControllerGetButtonFromString(button_name.c_str());
-            
+
             if (button_code == SDL_CONTROLLER_BUTTON_INVALID) {printf("[!] Unrecognized button: %s\n", button_name.c_str()); continue;}
             buttonmap[i] = button_code;
         }
@@ -407,7 +407,7 @@ void load_levels() {
                     string level_path = dir_entry.path().string();
                     level_paths.push_back(level_path);
                     scanned_level_count++;
-                    
+
                     printf("Detected level: %s\n", level_path.c_str());
                     break;
                 }
@@ -422,7 +422,7 @@ void load_levels() {
     } else {
         printf("Found %i levels.\n", scanned_level_count);
     }
-    
+
     // sorts the level list alphabetically (std::filesystem does not guarantee this)
     std::sort(level_paths.begin(), level_paths.end());
 
@@ -475,7 +475,7 @@ void load_motd() {
 void load_common_sounds() {
     // loads sounds used pretty much everywhere
     // these only get loaded once on startup
-    
+
     printf("Loading common sound effects...\n");
     snd_menu_move = Mix_LoadWAV("assets/sound/move.ogg");
     if(snd_menu_move == NULL) {
@@ -486,7 +486,7 @@ void load_common_sounds() {
     if(snd_menu_confirm == NULL) {
         printf("[!] confirm.ogg: %s\n", Mix_GetError());
     }
-    
+
     snd_mono_test = Mix_LoadWAV("assets/sound/mono_test.ogg");
     if(snd_mono_test == NULL) {
         printf("[!] mono_test.ogg: %s\n", Mix_GetError());
@@ -501,7 +501,7 @@ void load_common_sounds() {
     if(snd_metronome_big == NULL) {
         printf("[!] metronome_big.ogg: %s\n", Mix_GetError());
     }
-    
+
     return;
 }
 
@@ -536,7 +536,7 @@ int get_controller_count() {
 void rumble_controller(int ms = 120) {
     // wrapper that rumbles the controller
     // ms: how long in milliseconds to rumble the controller (optional!)
-    
+
     if (rumble_toggle) {SDL_GameControllerRumble(controller, 0xFFFF, 0xFFFF, ms);}
     return;
 }
@@ -558,11 +558,11 @@ void downmix_to_mono(int chan, void *stream, int len, void *udata) {
     // implementation by @icculus of the SDL forums:
     // https://discourse.libsdl.org/t/switch-between-stereo-and-mono-sound/12013/2
     Sint16 *ptr = (Sint16*) stream;
-    
+
     for (int i = 0; i < len; i += sizeof(Sint16) * 2, ptr += 2) {
         ptr[0] = ptr[1] = (ptr[0] + ptr[1]) / 2;
     }
-    
+
     return;
 }
 
@@ -575,7 +575,7 @@ void set_channel_mix() {
         printf("Audio outputting in stereo.\n");
         Mix_UnregisterEffect(MIX_CHANNEL_POST, downmix_to_mono);
     }
-    
+
     return;
 }
 
@@ -643,11 +643,11 @@ void export_shapes() {
 
     // converts previous_shapes into JSON data
     nlohmann::ordered_json exported_data;
-    
+
     // adds a header, so this data can be used directly as level data!
     exported_data[0]["name"] = filename;
     exported_data[0]["bg_color"] = 15;
-    
+
     for (int i = 0; i < previous_shapes.size(); i++) {
         exported_data[i+1]["shape"] = previous_shapes[i].type;
         exported_data[i+1]["x"] = previous_shapes[i].x;
@@ -655,7 +655,7 @@ void export_shapes() {
         exported_data[i+1]["scale"] = previous_shapes[i].scale;
         exported_data[i+1]["color"] = previous_shapes[i].color;
     }
-    
+
     std::ofstream file(filename);
     file << exported_data.dump(4);
     return;
@@ -721,10 +721,10 @@ bool init(int argc, char *argv[]) {
 
     // loads config and sets SDL hints
     load_settings(argc, argv);
-    
+
     // sets VSYNC render hint
     SDL_SetHint(SDL_HINT_RENDER_VSYNC, std::to_string(vsync_toggle).c_str());
-    
+
     // sets preferred backend to openGL
     // this fixes, among other things (likely), the starfield BGFX
     // see https://github.com/open-manifold/Open-Manifold/issues/22
@@ -819,7 +819,7 @@ int get_combo() {
 void modify_life(int mod) {
     // adds or subtracts life value; wrapped up to ensure it's capped consistently
     life += mod;
-    
+
     if (life < 0) {life = 0;}
     if (life > 100) {life = 100;}
     return;
@@ -961,17 +961,17 @@ string get_current_mapping() {
     // used in the options menu when rebinding
     // returns a string of the current binding for a given index
     unsigned int index = get_rebind_index();
-    
+
     if (check_rebind_keys()) {
         return SDL_GetKeyName(keymap[index]);
     }
-    
+
     if (check_rebind_controller()) {
         return SDL_GameControllerGetStringForButton(buttonmap[index]);
     }
-    
+
     return "?";
-    
+
 }
 
 string get_input_name() {
@@ -979,7 +979,7 @@ string get_input_name() {
     // returns a string of the abstract controller that everything is mapped onto; named after the PS1 pad
     // see controller_buttons above
     unsigned int index = get_rebind_index();
-    
+
     switch (index) {
         case 0: return "Up";
         case 1: return "Down";
@@ -1004,27 +1004,27 @@ int calculate_score() {
     int score = 0;
     string cpu_sequence = get_cpu_sequence();
     string player_sequence = get_player_sequence();
-    
+
     if (get_debug()) {
         printf("CPU: %s\nPLY: %s\n", cpu_sequence.c_str(), player_sequence.c_str());
     }
-    
+
     for (int i = 0; i < player_sequence.length(); i++) {
         char cpu_op = cpu_sequence[i];
         char player_op = player_sequence[i];
-        
+
         if (cpu_op == '.') {
             if (player_op == '.') {continue;}
             if (player_op == 'X') {score += 25; continue;}
             score += 50;
         }
-        
+
         // if we're at this point in the loop, then we know that:
         // score is 50, cpu_op isn't blank, player_op also isn't blank or an xplode
-    
+
         if (cpu_op == player_op) {score += 50; continue;}
     }
-    
+
     return score;
 }
 
@@ -1056,7 +1056,6 @@ json parse_level_file(string file) {
     // sets the current JSON to json_file, done to make get_level_bpm etc. function
     // (this is a janky workaround; TODO: rewrite the get_level_ functions so this isn't necessary anymore)
     json_file = parsed_json;
-
     bpm = get_level_bpm();
 
     // checks to see if a color_table exists, and if it does, try to load it
@@ -1076,7 +1075,7 @@ json parse_level_file(string file) {
     // this entire block generates sequences if they aren't present
     // note that we generate these even if they're already present in order to ensure a level is actually beatable
     // it also uses this opportunity to populate previous_shapes for the level select menu
-    
+
     int max_sequence_length = get_level_measure_length();
     previous_shapes.clear();
 
@@ -1088,9 +1087,9 @@ json parse_level_file(string file) {
 
         bool sequence_exists = parsed_json[i].contains("sequence");
         string gen_sequence;
-        
+
         // populates the previous_shapes struct
-        
+        // used for displaying the full face in the level select
         shape s = {
             shape_type,
             x,
@@ -1098,9 +1097,9 @@ json parse_level_file(string file) {
             scale,
             parsed_json[i].value("color", 0)
         };
-        
+
         previous_shapes.push_back(s);
-        
+
         if (parsed_json[i].contains("auto_shapes") && parsed_json[i]["auto_shapes"].is_array()) {
             for (int j = 0; j < parsed_json[i]["auto_shapes"].size(); j++) {
                 s = {
@@ -1110,7 +1109,7 @@ json parse_level_file(string file) {
                     parsed_json[i]["auto_shapes"][j].value("scale", 1),
                     parsed_json[i]["auto_shapes"][j].value("color", 0)
                 };
-                
+
                 previous_shapes.push_back(s);
             }
         }
@@ -1164,18 +1163,18 @@ json parse_level_file(string file) {
         if (sequence_exists) {
             string cur_sequence = parsed_json[i].value("sequence", ".");
             if (get_debug()) {printf("cur_seq: %s\n", cur_sequence.c_str());}
-            
+
             // similar to the above checks for generated sequences
             if (cur_sequence.length() > max_sequence_length) {
                 printf("Level sequence #%i is too long (must be %i, is %i)! Truncating...\n", i, max_sequence_length, cur_sequence.length());
                 parsed_json[i]["sequence"] = cur_sequence.substr(0, max_sequence_length);
             }
-    
+
             if (cur_sequence.length() < max_sequence_length) {
                 printf("Level sequence #%i is too short (must be %i, is %i)! Padding...\n", i, max_sequence_length, cur_sequence.length());
                 parsed_json[i]["sequence"] = cur_sequence.insert(cur_sequence.end(), max_sequence_length - cur_sequence.length(), '.');
             }
-            
+
             continue;
         } else {
             parsed_json[i]["sequence"] = gen_sequence;
@@ -1188,7 +1187,7 @@ json parse_level_file(string file) {
 bool check_json_validity() {
     // returns false if the level json object is NULL
     // used in the level select in graphics.cpp
-    
+
     return json_file != NULL;
 }
 
@@ -1248,7 +1247,7 @@ void load_character_file() {
 void load_default_music(string name) {
     Mix_HaltMusic();
     Mix_FreeMusic(music);
-    
+
     string filename = "assets/music/" + name + ".ogg";
     printf("Loading music: %s\n", filename.c_str());
     music = Mix_LoadMUS(filename.c_str());
@@ -1268,7 +1267,7 @@ void load_stage_music() {
     string filename = level_paths[level_index] + "/song.ogg";
     printf("Loading music: %s\n", filename.c_str());
     music = Mix_LoadMUS(filename.c_str());
-    
+
     if(music == NULL) {
         printf("%s\n", Mix_GetError());
     }
@@ -1314,7 +1313,7 @@ Mix_Chunk* load_stage_sound(string file_name) {
 
 void unload_sounds() {
     // frees every sound file used in levels
-    
+
     Mix_FreeChunk(snd_up);
     Mix_FreeChunk(snd_down);
     Mix_FreeChunk(snd_left);
@@ -1327,7 +1326,7 @@ void unload_sounds() {
     Mix_FreeChunk(snd_scale_down);
     Mix_FreeChunk(snd_success);
     Mix_FreeChunk(snd_combo);
-    
+
     return;
 }
 
@@ -1416,12 +1415,12 @@ void reset_shapes() {
 void reset_sequences() {
     // resets sequences to blank strings
     int measure_length = get_level_measure_length();
-    
+
     cpu_sequence.clear();
     player_sequence.clear();
     cpu_sequence.insert(cpu_sequence.begin(), measure_length, '.');
     player_sequence.insert(player_sequence.begin(), measure_length, '.');
-    
+
     return;
 }
 
@@ -1575,7 +1574,7 @@ void morph_colors() {
     for (int i = 0; i < previous_shapes.size(); i++) {
         // skip any shapes with the erase color
         if (previous_shapes[i].color == 16) {continue;}
-        
+
         int new_color = (previous_shapes[i].color + 1) % 16;
         previous_shapes[i].color = new_color;
     }
@@ -1588,23 +1587,23 @@ bool check_available_sequence(int beat_side) {
     // only ONE input is registered, preventing "diagonals" for example
     // ----------------------------------------------------------
     // beat_side: returned from check_beat_timing_window(); 1 = beat end, 2 = beat start
-    
+
     int measure_length = get_level_measure_length();
     int start_offset = get_level_intro_delay();
     int current_beat_count = (beat_count - start_offset) % measure_length;
-    
+
     int index = 0;
     string sequence = get_player_sequence();
-    
+
     if (beat_side == 0) {return false;}
     if (beat_side == 1) {index = current_beat_count - 1;}
     if (beat_side == 2) {index = current_beat_count;}
-    
+
     if (index <= 0) {index = 0;}
     if (index >= measure_length) {index = measure_length;}
-    
+
     if (sequence[index] == '.') {return true;}
-    
+
     return false;
 }
 
@@ -1613,23 +1612,23 @@ string modify_sequence(char opcode, int beat_side) {
     // ----------------------------------------------------------
     // opcode: single letter that represents an action (see modify_current_shape())
     // beat_side: returned from check_beat_timing_window(); 1 = beat end, 2 = beat start
-    
+
     int measure_length = get_level_measure_length();
     int start_offset = get_level_intro_delay();
     int current_beat_count = (beat_count - start_offset) % measure_length;
-    
+
     int index = 0;
     string sequence = get_player_sequence();
-    
+
     if (beat_side == 0) {return sequence;}
     if (beat_side == 1) {index = current_beat_count - 1;}
     if (beat_side == 2) {index = current_beat_count;}
-    
+
     if (index <= 0) {index = 0;}
     if (index >= measure_length) {index = measure_length;}
-    
+
     sequence[index] = opcode;
-    
+
     return sequence;
 }
 
@@ -1638,7 +1637,7 @@ bool loop(json json_file, int start_offset, int time_signature_top, int time_sig
     int current_ticks = SDL_GetTicks();
     int measure_length = time_signature_top * time_signature_bottom;
     int shape_count = (beat_count - start_offset)/(measure_length*2);
-    
+
     // reset BG flags to false
     beat_advanced = false;
     shape_advanced = false;
@@ -1646,7 +1645,7 @@ bool loop(json json_file, int start_offset, int time_signature_top, int time_sig
     // locks off loop when lives are 0
     if (game_over == false) {
         if ((current_ticks - beat_start_time) >= length) {
-    
+
             // plays metronome sounds
             if (get_debug()) {
                 if ((beat_count - start_offset)%time_signature_top == 0) {
@@ -1655,52 +1654,52 @@ bool loop(json json_file, int start_offset, int time_signature_top, int time_sig
                     Mix_PlayChannel(1, snd_metronome_small, 0);
                 }
             }
-    
+
             // waits until the song's reached past the intro
             if (song_over == false && beat_count >= start_offset) {
-    
+
                 // triggers at the start of every shape (a.k.a, the start of every CPU/player phase)
                 if ((beat_count - start_offset)%(measure_length*2) == 0) {
                     if (beat_count == start_offset) {
                         song_beat_position = beat_count;
                     } else {
                         int song_step_amount = get_song_step((beat_count - (start_offset + 1))/(measure_length*2) + 1, measure_length*2);
-    
+
                         if (compare_shapes() == true) {
                             // reward player with life and points
                             modify_life(5);
                             combo++;
                             score += (calculate_score() * combo);
-                            
+
                             // triggers the combo effect when reaching multiples of 5
                             if (combo%5 == 0) {
                                 Mix_PlayChannel(-1, snd_combo, 0);
                                 set_combo_timer(3000);
                             }
-                            
+
                             // advances the song
                             float timer = (song_beat_position + song_step_amount) * ((60.f/bpm * 2.f) / time_signature_bottom);
                             Mix_SetMusicPosition(timer);
                             song_beat_position += song_step_amount;
                             shape_advanced = true;
-    
+
                             // pushes shapes to vector for drawing
                             active_shape.color = json_file[shape_count].value("color", 0);
                             previous_shapes.push_back(active_shape);
-    
+
                             // pushes auto_shapes as well, if present
                             if (json_file[shape_count].contains("auto_shapes") && json_file[shape_count]["auto_shapes"].is_array()) {
                                 if (get_debug()) {printf("Pushing auto-shapes to shape draw queue...\n");}
-    
+
                                 for (int i = 0; i < json_file[shape_count]["auto_shapes"].size(); i++) {
                                     shape temp;
-    
+
                                     temp.type   = json_file[shape_count]["auto_shapes"][i].value("shape", 0);
                                     temp.x      = json_file[shape_count]["auto_shapes"][i].value("x", 7);
                                     temp.y      = json_file[shape_count]["auto_shapes"][i].value("y", 7);
                                     temp.scale  = json_file[shape_count]["auto_shapes"][i].value("scale", 1);
                                     temp.color  = json_file[shape_count]["auto_shapes"][i].value("color", 0);
-    
+
                                     previous_shapes.push_back(temp);
                                 }
                             }
@@ -1709,47 +1708,47 @@ bool loop(json json_file, int start_offset, int time_signature_top, int time_sig
                             float timer = song_beat_position * ((60.f/bpm * 2.f) / time_signature_bottom);
                             Mix_SetMusicPosition(timer);
                             beat_count -= measure_length*2;
-                            
+
                             // re-calculates shape_count for cpu_sequence below
                             shape_count = (beat_count - start_offset)/(measure_length*2);
-                            
+
                             // penalize player's life and combo
                             modify_life(-25);
                             combo = 0;
                         }
                     }
-                    
+
                     // are we dead yet?
                     if (life == 0) {
                         printf("Game over!\n");
                         Mix_FadeOutMusic(5000);
                         game_over = true;
                     }
-    
+
                     reset_shapes();
                     reset_sequences();
                     cpu_sequence = json_file[fmin(shape_count + 1, json_file.size() - 1)].value("sequence", ".");
                 }
-    
+
                 // triggers at the start of every swap between CPU and player
                 if ((beat_count - start_offset) % measure_length == 0) {
                     reset_character_status();
                 }
-    
+
                 // triggers for every beat where the player has control
                 if ((beat_count - start_offset) % (measure_length*2) >= measure_length) {
                     if (beat_count%2 == 0) {rumble_controller();}
                 }
-    
+
                 // triggers for every beat where the CPU has control
                 if ((beat_count - start_offset) % (measure_length*2) < measure_length) {
                     int string_index = (((beat_count) - (start_offset))/(measure_length*2)) + 1;
-    
+
                     if (string_index <= json_file.size() - 1) {
                         // gets current position in sequence, performs action on shape
                         int index = ((beat_count + 1) - (start_offset + 1)) % measure_length;
                         char current_sequence_pos = cpu_sequence[index];
-    
+
                         // check to ensure we aren't reading out-of-bounds of the string
                         // also checks to make sure the game isn't over
                         if (index <= measure_length && game_over == false) {
@@ -1758,30 +1757,30 @@ bool loop(json json_file, int start_offset, int time_signature_top, int time_sig
                     }
                 }
             }
-    
+
             beat_advanced = true;
             beat_count++;
             beat_start_time += length;
         }
-        
+
         tick_character(frame_time);
 
         // this basically just says "give us 0 if it's negative, otherwise give us how many shapes have passed"
         // this gets offset by 1 since element 0 in level.json is a header
         shape_count = ((beat_count - start_offset) < 0) ? 0: (beat_count - (start_offset + 1))/(measure_length*2) + 1;
-    
+
         if (shape_count > json_file.size() - 1) {
-    
+
             if (song_over == false) {
                 printf("End of level reached.\n");
                 song_over = true;
             }
-    
+
             if (shape_count >= json_file.size() + 2 && check_fade_activity() == false) {
                 printf("Ending level...\n");
                 fade_out++;
             }
-    
+
             shape_count = json_file.size();
         }
     }
@@ -1840,13 +1839,13 @@ int main(int argc, char *argv[]) {
     } else {
         load_levels();
     }
-    
+
     // parses arguments related to skipping directly to a given game state
     if (parse_option(argv, argv+argc, "-sandbox")  || parse_option(argv, argv+argc, "-sb")) {
         transition_state = SANDBOX;
         fade_out = 255;
     }
-    
+
     // used to keep track of what's currently selected in various menus
     int menu_selected = 0;
     int sandbox_option_selected = 0;
@@ -1913,7 +1912,7 @@ int main(int argc, char *argv[]) {
                     timestamp = evt.key.timestamp;
                     input_value = keyboard_to_abstract_button(evt.key.keysym.sym, in_game);
                 }
-                
+
                 if (evt.type == SDL_CONTROLLERBUTTONDOWN) {
                     timestamp = evt.cbutton.timestamp;
                     input_value = gamepad_to_abstract_button(evt.cbutton.button);
@@ -1923,7 +1922,7 @@ int main(int argc, char *argv[]) {
                 if (evt.key.keysym.sym == SDLK_F12) {
                     take_screenshot();
                 }
-                
+
                 if (evt.key.keysym.sym == SDLK_F10) {
                     if (get_debug() == true) {printf("Crashing game on purpose...\n"); abort();}
                 }
@@ -2083,62 +2082,62 @@ int main(int argc, char *argv[]) {
                             // level exiting shouldn't be affected by timing windows
                             int beat_side = check_beat_timing_window(timestamp);
                             char op = '.';
-                            
+
                             if (input_value != SELECT) {
                                 // 0 means we're NOT within a timing window
                                 if (beat_side == 0) {break;}
-                                
+
                                 // this prevents multiple inputs from going through during a single window
                                 if (check_available_sequence(beat_side) == false) {break;}
                             }
-                            
+
                             switch(input_value) {
                                 case SELECT:
                                     Mix_PlayChannel(0, snd_menu_confirm, 0);
                                     fade_out++;
                                     break;
-    
+
                                 case UP:
                                     op = 'U';
                                     break;
-    
+
                                 case DOWN:
                                     op = 'D';
                                     break;
-    
+
                                 case LEFT:
                                     op = 'L';
                                     break;
-    
+
                                 case RIGHT:
                                     op = 'R';
                                     break;
-    
+
                                 case CIRCLE:
                                     op = 'Z';
                                     break;
-    
+
                                 case SQUARE:
                                     op = 'X';
                                     break;
-    
+
                                 case TRIANGLE:
                                     op = 'C';
                                     break;
-    
+
                                 case CROSS:
                                     op = 'V';
                                     break;
-    
+
                                 case LB:
                                     op = 'A';
                                     break;
-    
+
                                 case RB:
                                     op = 'S';
                                     break;
                             }
-                            
+
                             set_character_timer(60000/bpm);
                             active_shape    = modify_current_shape(op, active_shape, true);
                             player_sequence = modify_sequence(op, beat_side);
@@ -2160,7 +2159,7 @@ int main(int argc, char *argv[]) {
                                 fade_out++;
                                 break;
                         }
-                        
+
                         if (sandbox_menu_active) {
                             // inputs for when the sandbox menu is up
                             switch (input_value) {
@@ -2175,7 +2174,7 @@ int main(int argc, char *argv[]) {
                                     sandbox_option_selected++;
                                     if (sandbox_option_selected > sandbox_item_count - 1) {sandbox_option_selected = 0;}
                                     break;
-                                    
+
                                 case UP:
                                     switch (sandbox_option_selected) {
                                         case 0:
@@ -2183,11 +2182,11 @@ int main(int argc, char *argv[]) {
                                             active_shape.color++;
                                             if (active_shape.color > 16) {active_shape.color = 0;}
                                             break;
-                                        
+
                                         default: break;
                                     }
                                     break;
-                                    
+
                                 case DOWN:
                                     switch (sandbox_option_selected) {
                                         case 0:
@@ -2195,11 +2194,11 @@ int main(int argc, char *argv[]) {
                                             active_shape.color--;
                                             if (active_shape.color < 0) {active_shape.color = 16;}
                                             break;
-                                        
+
                                         default: break;
                                     }
                                     break;
-                                
+
                                 case CROSS:
                                 case CIRCLE:
                                 case SQUARE:
@@ -2210,32 +2209,32 @@ int main(int argc, char *argv[]) {
                                             active_shape.color++;
                                             if (active_shape.color > 16) {active_shape.color = 0;}
                                             break;
-                                            
+
                                         case 1:
                                             Mix_PlayChannel(0, snd_xplode, 0);
                                             morph_shapes();
                                             break;
-                                            
+
                                         case 2:
                                             Mix_PlayChannel(0, snd_xplode, 0);
                                             morph_colors();
                                             break;
-                                            
+
                                         case 3:
                                             Mix_PlayChannel(0, snd_xplode, 0);
                                             if (previous_shapes.size() > 0) {previous_shapes.pop_back();}
                                             break;
-                                            
+
                                         case 4:
                                             Mix_PlayChannel(0, snd_combo, 0);
                                             export_shapes();
                                             break;
-                                            
+
                                         case 5:
                                             Mix_PlayChannel(0, snd_xplode, 0);
                                             sandbox_lock = !sandbox_lock;
                                             break;
-                                            
+
                                         default: break;
                                     }
                                     break;
@@ -2246,53 +2245,53 @@ int main(int argc, char *argv[]) {
                                 case UP:
                                     active_shape = modify_current_shape('U', active_shape);
                                     break;
-    
+
                                 case DOWN:
                                     active_shape = modify_current_shape('D', active_shape);
                                     break;
-    
+
                                 case LEFT:
                                     active_shape = modify_current_shape('L', active_shape);
                                     break;
-    
+
                                 case RIGHT:
                                     active_shape = modify_current_shape('R', active_shape);
                                     break;
-    
+
                                 case CIRCLE:
                                     active_shape = modify_current_shape('Z', active_shape);
                                     break;
-    
+
                                 case SQUARE:
                                     active_shape = modify_current_shape('X', active_shape);
                                     break;
-    
+
                                 case TRIANGLE:
                                     active_shape = modify_current_shape('C', active_shape);
                                     break;
-    
+
                                 case CROSS:
                                     Mix_PlayChannel(-1, snd_success, 0);
                                     previous_shapes.push_back(active_shape);
-                                    
+
                                     if (!sandbox_lock) {
                                         reset_shapes();
                                         active_shape.type = 0;
                                     }
-                                    
+
                                     break;
-    
+
                                 case LB:
                                     active_shape = modify_current_shape('A', active_shape);
                                     break;
-    
+
                                 case RB:
                                     active_shape = modify_current_shape('S', active_shape);
                                     break;
                             }
                         }
                         break;
-                        
+
                     case TUTORIAL:
                         switch(input_value) {
                             case SELECT:
@@ -2301,12 +2300,12 @@ int main(int argc, char *argv[]) {
                                 transition_state = TITLE;
                                 fade_out++;
                                 break;
-                                
+
                             case CROSS:
                                 if (check_fade_activity()) {break;}
-                                
+
                                 tutorial_advance_message();
-                                
+
                                 if (check_tutorial_finished()) {
                                     transition_state = TITLE;
                                     fade_out++;
@@ -2321,23 +2320,23 @@ int main(int argc, char *argv[]) {
                                 printf("Skipping input #%i (%s)\n", get_rebind_index(), get_input_name().c_str());
                                 increment_rebind_index();
                             }
-                            
+
                             if (check_rebind_keys() && evt.type == SDL_KEYDOWN && evt.key.keysym.sym != SDLK_ESCAPE) {
                                 keymap[get_rebind_index()] = evt.key.keysym.sym;
                                 printf("Mapped keyboard key #%i (%s) to: %s\n", get_rebind_index(), get_input_name().c_str(), get_current_mapping().c_str());
                                 increment_rebind_index();
                             }
-                            
+
                             if (check_rebind_controller() && evt.type == SDL_CONTROLLERBUTTONDOWN) {
                                 buttonmap[get_rebind_index()] = (SDL_GameControllerButton)evt.cbutton.button;
                                 printf("Mapped controller button #%i (%s) to: %s\n", get_rebind_index(), get_input_name().c_str(), get_current_mapping().c_str());
                                 increment_rebind_index();
                             }
-                            
+
                             if (get_rebind_index() > 11) {
                                 reset_rebind_flags();
                             }
-                            
+
                             break;
                         } else switch(input_value) {
                             case START:
@@ -2423,15 +2422,15 @@ int main(int argc, char *argv[]) {
                     previous_shapes.clear();
                     load_default_music("menu");
                     break;
-                    
+
                 case TUTORIAL:
                     load_default_music("menu");
                     break;
-                    
+
                 case LEVEL_SELECT:
                     previous_shapes.clear();
                     break;
-                    
+
                 case GAME:
                     load_default_music("menu");
                     break;
@@ -2465,7 +2464,7 @@ int main(int argc, char *argv[]) {
                     }
 
                     break;
-                    
+
                 case SANDBOX:
                     printf("Loading sandbox mode...\n");
                     draw_loading(false);
@@ -2481,7 +2480,7 @@ int main(int argc, char *argv[]) {
                     sandbox_option_selected = 0;
                     sandbox_lock = false;
                     break;
-                    
+
                 case TUTORIAL:
                     printf("Loading tutorial mode...\n");
                     init_tutorial();
@@ -2540,7 +2539,7 @@ int main(int argc, char *argv[]) {
             case SANDBOX:
                 draw_sandbox(active_shape, previous_shapes, sandbox_menu_active, sandbox_lock, sandbox_option_selected, frame_time);
                 break;
-            
+
             case TUTORIAL:
                 tutorial_message_tick(frame_time);
                 draw_tutorial(frame_time);
@@ -2553,10 +2552,10 @@ int main(int argc, char *argv[]) {
             case EXIT:
                 program_running = false;
                 break;
-                
+
             default:
                 printf("[!] Invalid or unimplemented game state reached!\n");
-                SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "Unimplemented Game State", 
+                SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "Unimplemented Game State",
                 "Open Manifold has entered a game state that doesn't exist or hasn't been implemented yet.\n"
                 "If you got here and believe it to be a bug, please report it on our issues page.\n"
                 "The game will now close.", window);

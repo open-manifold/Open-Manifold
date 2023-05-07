@@ -1,5 +1,5 @@
 /*  Open Manifold source file
-*   
+*
 *   This program/source code is licensed under the MIT License:
 *
 *   Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -8,7 +8,7 @@
 *   to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 *   copies of the Software, and to permit persons to whom the Software is
 *   furnished to do so, subject to the following conditions:
-*   
+*
 *   The above copyright notice and this permission notice shall be included in all
 *   copies or substantial portions of the Software.
 *
@@ -114,14 +114,14 @@ void tick_character(int frame_time) {
     // handles the character timer
     // as long as "character_hold_timer" is >0, it will hold on
     // whatever status is currently present
-    
+
     character_hold_timer -= frame_time;
-    
+
     if (character_hold_timer <= 0) {
         character_hold_timer = 0;
         reset_character_status();
     }
-    
+
     return;
 }
 
@@ -129,7 +129,7 @@ void parse_character_file(json file) {
     // loads a JSON character file and puts its image coordinate data into frames
     // ----------------------------------------------------------
     // file: a JSON character object
-    
+
     // resets parameters
     character_scale_mode = SDL_ScaleModeLinear;
 
@@ -146,14 +146,14 @@ void parse_character_file(json file) {
         {0, 0, 0, 0},
         {0, 0, 0, 0}
     };
-    
+
     // set to 1 if a header is present
     int header_offset = 0;
-    
+
     // checks for a header (specifically its only parameter)
     if (file[0].contains("scale_mode")) {
         header_offset++;
-        
+
         std::string scale_mode = file[0].value("scale_mode", "linear");
         if (scale_mode == "linear") {character_scale_mode = SDL_ScaleModeLinear;}
         if (scale_mode == "nearest") {character_scale_mode = SDL_ScaleModeNearest;}
@@ -183,7 +183,7 @@ void parse_character_file(json file) {
         temp_rect.y = file[i].value("y", 0);
         temp_rect.w = file[i].value("w", 0);
         temp_rect.h = file[i].value("h", 0);
-        
+
         int j = i - header_offset;
 
         switch (j) {

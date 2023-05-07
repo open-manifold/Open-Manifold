@@ -76,32 +76,32 @@ void init_tutorial() {
 
 void tutorial_message_tick(int frame_time) {
     message_tick -= frame_time;
-    
+
     if (current_message.length() == messages[message_index].msg.length()) {
         message_finished = true;
         return;
     }
-    
+
     if (message_tick <= 0) {
         int append_amount = fmax(abs(message_tick) / message_tick_rate, 1);
-        
+
         current_message.append(messages[message_index].msg, current_message.length(), append_amount);
         message_tick = message_tick_rate;
-        
+
         if (current_message.length() % 4 == 0) {
             play_dialog_blip();
         }
     }
-    
+
     return;
 }
 
 void tutorial_advance_message() {
     message_tick_rate = 5;
-    
+
     if (message_finished && !tutorial_finished) {
         play_dialog_advance();
-        
+
         if (message_index >= std::size(messages) - 1) {
             tutorial_finished = true;
         } else {
@@ -112,7 +112,7 @@ void tutorial_advance_message() {
             message_finished = false;
         }
     }
-    
+
     return;
 }
 
