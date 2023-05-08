@@ -1558,6 +1558,19 @@ void draw_character(int beat_count = 0) {
 
     char_crop = get_character_rect(beat_count);
 
+    // apply integer scaling to the bounding box if the char is using nearest scaling
+    if (get_character_scale_mode() == SDL_ScaleModeNearest) {
+        int larger_size = fmax(char_crop.w, char_crop.h);
+        int new_max = larger_size;
+
+        while (new_max < max_char_size) {
+            if (new_max + larger_size > max_char_size) {break;}
+            new_max += larger_size;
+        }
+
+        max_char_size = new_max;
+    }
+
     char_coords.x = (grid_x - max_char_size) / 2;
     char_coords.y = height/2 - (max_char_size / 2);
     char_coords.w = char_coords.h = max_char_size;
