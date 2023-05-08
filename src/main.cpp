@@ -37,7 +37,6 @@
 #include <nlohmann/json.hpp>
 
 #include "graphics.h"
-#include "background.h"
 #include "character.h"
 #include "options.h"
 #include "tutorial.h"
