@@ -1541,23 +1541,31 @@ void draw_character(int beat_count = 0) {
     // beat_count: current beat value (used for calculating idle frame #)
 
     SDL_Rect char_coords, char_crop;
-    int scale = width/8;
+    int scale = height/22;
+    int grid_x = width/2 - (scale * 7.5) - (scale/3);
+    int grid_width = (scale * 15) + ((scale/3)*2);
+    int max_char_size = fmin((width - grid_width), grid_width) / 2;
 
     // skip rendering if char_texture is NULL (this happens if the texture can't be loaded for whatever reason)
     if (char_texture == NULL) {
         return;
     }
 
-    char_coords.x = width/8 - (scale/2);
-    char_coords.y = height/2 - (width/22 / 2) - (scale/2);
-    char_coords.w = width/22 + scale;
-    char_coords.h = char_coords.w;
+    // skip rendering if the maximum char size is zero, meaning it's not actually visible on screen
+    if (max_char_size <= 0) {
+        return;
+    }
 
     char_crop = get_character_rect(beat_count);
+
+    char_coords.x = (grid_x - max_char_size) / 2;
+    char_coords.y = height/2 - (max_char_size / 2);
+    char_coords.w = char_coords.h = max_char_size;
+
     SDL_RenderCopy(renderer, char_texture, &char_crop, &char_coords);
 
     // moves from the left side to right side
-    char_coords.x = width - (width/8 - (scale/2) + char_coords.w);
+    char_coords.x = width - max_char_size - ((grid_x - max_char_size) / 2);
     SDL_RenderCopy(renderer, char_texture, &char_crop, &char_coords);
 
     return;
