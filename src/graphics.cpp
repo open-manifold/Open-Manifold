@@ -1561,14 +1561,7 @@ void draw_character(int beat_count = 0) {
     // apply integer scaling to the bounding box if the char is using nearest scaling
     if (get_character_scale_mode() == SDL_ScaleModeNearest) {
         int larger_size = fmax(char_crop.w, char_crop.h);
-        int new_max = larger_size;
-
-        while (new_max < max_char_size) {
-            if (new_max + larger_size > max_char_size) {break;}
-            new_max += larger_size;
-        }
-
-        max_char_size = new_max;
+        max_char_size = larger_size * fmax((max_char_size/larger_size), 1);
     }
 
     char_coords.x = (grid_x - max_char_size) / 2;
