@@ -1544,7 +1544,7 @@ void draw_character(int beat_count = 0) {
     int scale = height/22;
     int grid_x = width/2 - (scale * 7.5) - (scale/3);
     int grid_width = (scale * 15) + ((scale/3)*2);
-    int max_char_size = fmin((width - grid_width), grid_width) / 2;
+    int max_char_size = fmin((width - grid_width)/2, grid_width);
 
     // skip rendering if char_texture is NULL (this happens if the texture can't be loaded for whatever reason)
     if (char_texture == NULL) {
