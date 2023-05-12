@@ -1,0 +1,264 @@
+[
+    {
+        "name": "Expired Uranium",
+        "song_author": "SuperFromND",
+        "level_author": "SuperFromND",
+        "genre": "Electronic",
+        "bpm": 92,
+        "bg_color": 12,
+        "background_effect": "starfield",
+        "color_table": [
+            "#FFF",
+            "#00F",
+            "#0F0",
+            "#0FF",
+            "#F00",
+            "#F0F",
+            "#F60",
+            "#AAA",
+            "#666",
+            "#66F",
+            "#6F6",
+            "#6FF",
+            "#606",
+            "#F6F",
+            "#FF2",
+            "#000"
+        ]
+    },
+    {
+        "shape": 0,
+        "color": 0,
+        "x": 4,
+        "y": 9,
+        "scale": 5,
+        "song_step": 0,
+        "sequence": "Z.SS.SS.LLL.D.D."
+    },
+    {
+        "shape": 0,
+        "color": 0,
+        "x": 10,
+        "y": 9,
+        "scale": 5,
+        "sequence": "Z.SS.SS.RRR.D.D."
+    },
+    {
+        "shape": 1,
+        "color": 0,
+        "x": 7,
+        "y": 10,
+        "scale": 4,
+        "song_step": 0,
+        "sequence": "X.S.S.S.D.D.D..."
+    },
+    {
+        "shape": 1,
+        "color": 0,
+        "x": 7,
+        "y": 8,
+        "scale": 4,
+        "song_step": 0,
+        "sequence": "X...S...S..S..D."
+    },
+    {
+        "shape": 0,
+        "color": 0,
+        "x": 7,
+        "y": 4,
+        "scale": 4,
+        "sequence": "Z...SS.S..UU.U.."
+    },
+    {
+        "shape": 0,
+        "color": 1,
+        "x": 4,
+        "y": 9,
+        "scale": 4,
+        "song_step": 0,
+        "sequence": "Z.S.S.S.LLL.D.D."
+    },
+    {
+        "shape": 0,
+        "color": 1,
+        "x": 10,
+        "y": 9,
+        "scale": 4,
+        "song_step": 0,
+        "sequence": "Z.SSS.R.R.R.D.D."
+    },
+    {
+        "shape": 0,
+        "color": 1,
+        "x": 7,
+        "y": 9,
+        "scale": 5,
+        "sequence": "Z.S.S.S.S.DUD.D."
+    },
+    {
+        "shape": 0,
+        "color": 3,
+        "x": 4,
+        "y": 9,
+        "scale": 3,
+        "song_step": 0,
+        "sequence": "ZRS.SLL.L.L.D.D."
+    },
+    {
+        "shape": 1,
+        "color": 3,
+        "x": 6,
+        "y": 9,
+        "scale": 3,
+        "sequence": "CSAZSAXSS.L.D.D.",
+        "auto_shapes": [
+            {
+                "shape": 0,
+                "color": 3,
+                "x": 10,
+                "y": 9,
+                "scale": 3
+            },
+            {
+                "shape": 1,
+                "color": 3,
+                "x": 8,
+                "y": 9,
+                "scale": 3
+            }
+        ]
+    },
+    {
+        "shape": 2,
+        "color": 5,
+        "x": 7,
+        "y": 11,
+        "scale": 2,
+        "song_step": 0,
+        "sequence": "C...S...D.D.D.D."
+    },
+    {
+        "shape": 1,
+        "color": 4,
+        "x": 7,
+        "y": 13,
+        "scale": 2,
+        "song_step": 0,
+        "sequence": "X..SD.D.D.D.D.D."
+    },
+    {
+        "shape": 2,
+        "color": 5,
+        "x": 4,
+        "y": 11,
+        "scale": 2,
+        "song_step": 0,
+        "sequence": "C.S.L.LLD.DUD.DD"
+    },
+    {
+        "shape": 1,
+        "color": 9,
+        "x": 4,
+        "y": 9,
+        "scale": 2,
+        "song_step": 0,
+        "sequence": "X.S.L...L.L.D.D."
+    },
+    {
+        "shape": 0,
+        "color": 11,
+        "x": 5,
+        "y": 9,
+        "scale": 1,
+        "sequence": "Z.U.Z.D.Z.L.L.DD",
+        "auto_shapes": [
+            {
+                "shape": 2,
+                "color": 5,
+                "x": 10,
+                "y": 11,
+                "scale": 2
+            },
+            {
+                "shape": 1,
+                "color": 9,
+                "x": 10,
+                "y": 9,
+                "scale": 2
+            },
+            {
+                "shape": 0,
+                "color": 11,
+                "x": 9,
+                "y": 9,
+                "scale": 1
+            }
+        ]
+    },
+    {
+        "shape": 0,
+        "color": 3,
+        "x": 7,
+        "y": 4,
+        "scale": 2,
+        "song_step": 0,
+        "sequence": "C.Z.S.S.U.U.U.A."
+    },
+    {
+        "shape": 2,
+        "color": 5,
+        "x": 7,
+        "y": 1,
+        "scale": 2,
+        "sequence": "Z.CS.U.U.U.U.U.U"
+    },
+    {
+        "shape": 1,
+        "color": 14,
+        "x": 4,
+        "y": 5,
+        "scale": 1,
+        "song_step": 0,
+        "sequence": "X.LULDL.D.U.U.U."
+    },
+    {
+        "shape": 0,
+        "color": 3,
+        "x": 2,
+        "y": 3,
+        "scale": 2,
+        "song_step": 0,
+        "sequence": "Z.S.LLLLLU.U.U.U"
+    },
+    {
+        "shape": 2,
+        "color": 5,
+        "x": 1,
+        "y": 1,
+        "scale": 2,
+        "sequence": "CS.LLLLLL.UUUUUU",
+        "auto_shapes": [
+            {
+                "shape": 1,
+                "color": 14,
+                "x": 10,
+                "y": 5,
+                "scale": 1
+            },
+            {
+                "shape": 0,
+                "color": 3,
+                "x": 12,
+                "y": 3,
+                "scale": 2
+            },
+            {
+                "shape": 2,
+                "color": 5,
+                "x": 13,
+                "y": 1,
+                "scale": 2
+            }
+        ]
+    }
+]
