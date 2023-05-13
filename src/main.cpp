@@ -2300,6 +2300,9 @@ int main(int argc, char *argv[]) {
                                 break;
 
                             case CROSS:
+                            case CIRCLE:
+                            case SQUARE:
+                            case TRIANGLE:
                                 if (check_fade_activity()) {break;}
 
                                 tutorial_advance_message();
