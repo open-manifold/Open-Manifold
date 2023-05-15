@@ -385,8 +385,13 @@ void load_settings(int argc, char* argv[]) {
 }
 
 void load_levels() {
+    // usually ran just once during game startup, so speed isn't *that* important here
+    // scans for level folders, then loads the level_paths vector with any valid levels
+
     const std::filesystem::path levels{"assets/levels"};
     unsigned int scanned_level_count = 0; // unsigned since a negative level count makes no sense
+    std::vector<std::filesystem::path> playlist_paths;
+    std::vector<std::filesystem::path> folder_paths;
 
     printf("Scanning for levels...\n");
 
@@ -395,24 +400,70 @@ void load_levels() {
         return;
     }
 
+    // scans the levels folder for all files and folders, populating two vectors to be processed separately
     for (auto& dir_entry: std::filesystem::directory_iterator{levels}) {
-
-        // check: is this entry a directory?
         if (std::filesystem::is_directory(dir_entry.path())) {
-            std::filesystem::path level_subdirectory(dir_entry.path());
+            folder_paths.push_back(dir_entry.path());
+            continue;
+        }
 
-            // checks for the existence of a level.json file within that directory
-            for (auto& subdir_entry: std::filesystem::directory_iterator{level_subdirectory}) {
-                string filename = subdir_entry.path().filename().string();
+        if (dir_entry.path().extension() == ".json") {
+            playlist_paths.push_back(dir_entry.path());
+            continue;
+        }
+    }
 
-                if (filename == "level.json") {
-                    string level_path = dir_entry.path().string();
-                    level_paths.push_back(level_path);
-                    scanned_level_count++;
+    // sorts the aeformentioned vectors alphabetically (not guaranteed by std::filesystem!)
+    std::sort(playlist_paths.begin(), playlist_paths.end());
+    std::sort(folder_paths.begin(), folder_paths.end());
 
-                    printf("Detected level: %s\n", level_path.c_str());
-                    break;
-                }
+    // processes playlist files
+    for (std::filesystem::path dir_entry: playlist_paths) {
+        std::ifstream ifs(dir_entry);
+        json playlist_data;
+
+        // checks to see if the JSON is valid JSON
+        try {
+            playlist_data = json::parse(ifs);
+        } catch(json::parse_error& err) {
+            printf("[!] Error parsing playlist file: %s\n", err.what());
+            continue;
+        }
+
+        printf("Parsing playlist: %s\n", playlist_data[0].value("name", "").c_str());
+
+        for (unsigned int i = 0; i < playlist_data[1]["levels"].size(); i++) {
+            std::filesystem::path playlist_level = levels / playlist_data[1]["levels"][i];
+
+            if (std::filesystem::exists(playlist_level.string())) {
+                // checks if the level isn't present already
+                if (std::find(level_paths.begin(), level_paths.end(), playlist_level.string()) != level_paths.end()) {continue;}
+
+                // okay it isn't, cool, add it to the list
+                level_paths.push_back(playlist_level.string());
+                scanned_level_count++;
+
+                printf("Added level from playlist: %s\n", playlist_level.string().c_str());
+            }
+        }
+    }
+
+    // processes level folders (making sure to not scan a level twice!)
+    for (std::filesystem::path dir_entry: folder_paths) {
+        // checks if the level isn't present from a playlist already
+        if (std::find(level_paths.begin(), level_paths.end(), dir_entry.string()) != level_paths.end()) {continue;}
+
+        // checks for the existence of a level.json file within the current directory
+        for (auto& subdir_entry: std::filesystem::directory_iterator{dir_entry}) {
+            string filename = subdir_entry.path().filename().string();
+
+            if (filename == "level.json") {
+                string level_path = dir_entry.string();
+                level_paths.push_back(level_path);
+                scanned_level_count++;
+
+                printf("Added level: %s\n", level_path.c_str());
+                break;
             }
         }
     }
@@ -424,9 +475,6 @@ void load_levels() {
     } else {
         printf("Found %i levels.\n", scanned_level_count);
     }
-
-    // sorts the level list alphabetically (std::filesystem does not guarantee this)
-    std::sort(level_paths.begin(), level_paths.end());
 
     return;
 }
