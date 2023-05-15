@@ -356,6 +356,9 @@ void load_settings(int argc, char* argv[]) {
         }
     }
 
+    // applies the newly-loaded frame cap values
+    set_frame_cap_ms();
+
     // note these parameters, they aren't exposed in the options and aren't saved in the config by default
     // however, they can still be added manually to a config if a user desires
     if (json_data.contains("game_width")) {width = json_data["game_width"];}
