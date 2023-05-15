@@ -439,6 +439,16 @@ void load_levels() {
                 // checks if the level isn't present already
                 if (std::find(level_paths.begin(), level_paths.end(), playlist_level.string()) != level_paths.end()) {continue;}
 
+                // checks if the folder contains a level.json
+                bool contains_level = false;
+
+                for (auto& file_entry: std::filesystem::directory_iterator{playlist_level}) {
+                    string filename = file_entry.path().filename().string();
+                    if (filename == "level.json") {contains_level = true; break;}
+                }
+
+                if (!contains_level) {continue;}
+
                 // okay it isn't, cool, add it to the list
                 level_paths.push_back(playlist_level.string());
                 scanned_level_count++;
