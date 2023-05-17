@@ -120,6 +120,7 @@ extern float fade_out;
 
 // stores file paths
 std::vector<string> level_paths;   // e.g. "assets/levels/Foo Bar"
+std::vector<string> level_playlists; // stores playlist names corresponding to level paths, TODO: merge this and level_paths into a single struct
 int level_index = 0;
 
 // contains the currently-loaded JSON level data
@@ -421,6 +422,7 @@ void load_levels() {
     for (std::filesystem::path dir_entry: playlist_paths) {
         std::ifstream ifs(dir_entry);
         json playlist_data;
+        string playlist_name;
 
         // checks to see if the JSON is valid JSON
         try {
@@ -430,7 +432,8 @@ void load_levels() {
             continue;
         }
 
-        printf("Parsing playlist: %s\n", playlist_data[0].value("name", "").c_str());
+        playlist_name = playlist_data[0].value("name", "Untitled Playlist");
+        printf("Parsing playlist: %s\n", playlist_name.c_str());
 
         for (unsigned int i = 0; i < playlist_data[1]["levels"].size(); i++) {
             std::filesystem::path playlist_level = levels / playlist_data[1]["levels"][i];
@@ -451,6 +454,7 @@ void load_levels() {
 
                 // okay it isn't, cool, add it to the list
                 level_paths.push_back(playlist_level.string());
+                level_playlists.push_back(playlist_name);
                 scanned_level_count++;
 
                 printf("Added level from playlist: %s\n", playlist_level.string().c_str());
@@ -470,6 +474,7 @@ void load_levels() {
             if (filename == "level.json") {
                 string level_path = dir_entry.string();
                 level_paths.push_back(level_path);
+                level_playlists.push_back("");
                 scanned_level_count++;
 
                 printf("Added level: %s\n", level_path.c_str());
@@ -927,6 +932,13 @@ string get_level_name() {
     if (json_file == NULL) {return "Untitled";}
 
     return json_file[0].value("name", "Untitled");
+}
+
+string get_level_playlist_name() {
+    string name = level_playlists[level_index];
+    if (name == "") {return "None";}
+
+    return name;
 }
 
 string get_genre() {

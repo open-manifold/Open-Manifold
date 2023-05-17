@@ -4,6 +4,7 @@ std::string get_level_background_effect_string();
 std::string get_background_tile_path();
 std::string get_character_tile_path();
 std::string get_level_name();
+std::string get_level_playlist_name();
 std::string get_genre();
 std::string get_level_author();
 std::string get_song_author();

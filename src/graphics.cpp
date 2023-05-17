@@ -1964,6 +1964,7 @@ bool draw_level_select(std::vector<shape> shapes, int frame_time) {
         draw_text(get_level_name(), width/2, grid_area.y - (font->h*(2+scale_mul)), scale_mul, 0);
         draw_text(std::to_string(get_level_bpm()) + " BPM", width/6, grid_area.y + grid_area.h + (font->h), 1, 1, width/3);
         draw_text("Genre: " + get_genre(), width/6, grid_area.y + grid_area.h + (font->h * 2), 1, 1, width/3);
+        draw_text("Playlist: " + get_level_playlist_name(), width/6, grid_area.y + grid_area.h + (font->h * 3), 1, 1);
         draw_text("Song: " + get_song_author(), width - (width/6), grid_area.y + grid_area.h + (font->h), 1, -1, width/3);
         draw_text("Level: " + get_level_author(), width - (width/6), grid_area.y + grid_area.h + (font->h * 2), 1, -1, width/3);
 
