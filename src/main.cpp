@@ -1100,161 +1100,6 @@ int calculate_score() {
     return score;
 }
 
-json parse_level_file(string file) {
-    // loads a JSON file and parses it, filling in blanks if needed; called every time a new level is hovered over via level select
-    // ----------------------------------------------------------
-    // file: a path to a file, usually supplied by get_level_json_path() ("assets/levels/foobar/level.json")
-
-    if (get_debug()) {printf("Parsing level file: %s\n", file.c_str());}
-
-    std::ifstream ifs(file);
-    json parsed_json;
-
-    // checks to make sure the file exists
-    if (std::filesystem::exists(file) == false) {
-        printf("[!] Couldn't parse level file: Does not exist.\n");
-        return NULL;
-    }
-
-    // checks to see if the JSON is valid JSON
-    try {
-        parsed_json = json::parse(ifs);
-    } catch(json::parse_error& err) {
-        printf("[!] Error parsing level file: %s\n", err.what());
-        return NULL;
-    }
-
-    // sets the current JSON to json_file, done to make get_level_bpm etc. function
-    // (this is a janky workaround; TODO: rewrite the get_level_ functions so this isn't necessary anymore)
-    json_file = parsed_json;
-    bpm = get_level_bpm();
-
-    // checks to see if a color_table exists, and if it does, try to load it
-    reset_color_table();
-
-    if (parsed_json[0].contains("color_table")) {
-        if (get_debug()) {printf("Parsing color table...\n");}
-
-        for (int i = 0; i < 16; i++) {
-            if (parsed_json[0]["color_table"][i] == NULL) {continue;}
-            if (parsed_json[0]["color_table"][i].is_string() == false) {continue;}
-
-            set_color_table(i, parsed_json[0]["color_table"][i]);
-        }
-    }
-
-    // this entire block generates sequences if they aren't present
-    // note that we generate these even if they're already present in order to ensure a level is actually beatable
-    // it also uses this opportunity to populate previous_shapes for the level select menu
-
-    int max_sequence_length = get_level_measure_length();
-    previous_shapes.clear();
-
-    for (int i = 1; i < parsed_json.size(); i++) {
-        int shape_type = parsed_json[i].value("shape", 0);
-        int x = parsed_json[i].value("x", 7);
-        int y = parsed_json[i].value("y", 7);
-        int scale = parsed_json[i].value("scale", 1);
-
-        bool sequence_exists = parsed_json[i].contains("sequence");
-        string gen_sequence;
-
-        // populates the previous_shapes struct
-        // used for displaying the full face in the level select
-        shape s = {
-            shape_type,
-            x,
-            y,
-            scale,
-            parsed_json[i].value("color", 0)
-        };
-
-        previous_shapes.push_back(s);
-
-        if (parsed_json[i].contains("auto_shapes") && parsed_json[i]["auto_shapes"].is_array()) {
-            for (int j = 0; j < parsed_json[i]["auto_shapes"].size(); j++) {
-                s = {
-                    parsed_json[i]["auto_shapes"][j].value("shape", 0),
-                    parsed_json[i]["auto_shapes"][j].value("x", 7),
-                    parsed_json[i]["auto_shapes"][j].value("y", 7),
-                    parsed_json[i]["auto_shapes"][j].value("scale", 1),
-                    parsed_json[i]["auto_shapes"][j].value("color", 0)
-                };
-
-                previous_shapes.push_back(s);
-            }
-        }
-
-        // sets the first action to changing shape
-        switch (shape_type) {
-            case 0: gen_sequence += "Z"; break;
-            case 1: gen_sequence += "X"; break;
-            case 2: gen_sequence += "C"; break;
-            default: gen_sequence += "Z"; break;
-        }
-
-        // scales up the shape to the needed size
-        if (scale > 1) {
-            for (int j = 1; j < scale; j++) {gen_sequence += "S";}
-        }
-
-        // moves across the X axis
-        if (x > 7) {
-            for (int j = 7; j < x; j++) {gen_sequence += "R";}
-        }
-
-        if (x < 7) {
-            for (int j = 7; j > x; j--) {gen_sequence += "L";}
-        }
-
-        // moves across the Y axis
-        if (y > 7) {
-            for (int j = 7; j < y; j++) {gen_sequence += "D";}
-        }
-
-        if (y < 7) {
-            for (int j = 7; j > y; j--) {gen_sequence += "U";}
-        }
-
-        // checks to see if the gen_sequence can fit within the allotted number of beats
-        if (gen_sequence.length() > max_sequence_length) {
-            printf("[!] Generated sequence #%i is longer than max number of beats! Level is not winnable.\n", i);
-        }
-
-        // pads the sequence with NOPs
-        if (gen_sequence.length() < max_sequence_length) {
-            gen_sequence.insert(gen_sequence.end(), max_sequence_length - gen_sequence.length(), '.');
-        }
-
-        if (get_debug()) {printf("gen_seq: %s\n", gen_sequence.c_str());}
-
-        // check if a sequence is defined for this shape, if not, use the generated one
-        // checking this AFTER making a sequence is inefficient, but also makes it much
-        // more likely to catch impossible levels and is negligible on performance
-        if (sequence_exists) {
-            string cur_sequence = parsed_json[i].value("sequence", ".");
-            if (get_debug()) {printf("cur_seq: %s\n", cur_sequence.c_str());}
-
-            // similar to the above checks for generated sequences
-            if (cur_sequence.length() > max_sequence_length) {
-                printf("Level sequence #%i is too long (must be %i, is %i)! Truncating...\n", i, max_sequence_length, cur_sequence.length());
-                parsed_json[i]["sequence"] = cur_sequence.substr(0, max_sequence_length);
-            }
-
-            if (cur_sequence.length() < max_sequence_length) {
-                printf("Level sequence #%i is too short (must be %i, is %i)! Padding...\n", i, max_sequence_length, cur_sequence.length());
-                parsed_json[i]["sequence"] = cur_sequence.insert(cur_sequence.end(), max_sequence_length - cur_sequence.length(), '.');
-            }
-
-            continue;
-        } else {
-            parsed_json[i]["sequence"] = gen_sequence;
-        }
-    }
-
-    return parsed_json;
-}
-
 bool check_json_validity() {
     // returns false if the level json object is NULL
     // used in the level select in graphics.cpp
@@ -1701,6 +1546,191 @@ string modify_sequence(char opcode, int beat_side) {
     sequence[index] = opcode;
 
     return sequence;
+}
+
+bool check_sequence_validity(string sequence, shape shape_result) {
+    // checks to see if a given sequence actually becomes the shape it corresponds to
+    // used in parse_level_file() below
+
+    // create blank shape to run sequence on
+    shape shape_test = {
+        -1,
+        7,
+        7,
+        1,
+        0
+    };
+
+    // run sequence on shape
+    for (int i = 0; i < sequence.length(); i++) {
+        char op = sequence[i];
+        shape_test = modify_current_shape(op, shape_test, false, false);
+        if (get_debug()) {printf("%c, shape_test: %i %i %i %i \n", op, shape_test.type, shape_test.x, shape_test.y, shape_test.scale);}
+    }
+
+    if (get_debug()) {printf("should be: %i %i %i %i \n", shape_result.type, shape_result.x, shape_result.y, shape_result.scale);}
+    return compare_shapes(shape_result, shape_test);
+}
+
+json parse_level_file(string file) {
+    // loads a JSON file and parses it, filling in blanks if needed; called every time a new level is hovered over via level select
+    // ----------------------------------------------------------
+    // file: a path to a file, usually supplied by get_level_json_path() ("assets/levels/foobar/level.json")
+
+    if (get_debug()) {printf("Parsing level file: %s\n", file.c_str());}
+
+    std::ifstream ifs(file);
+    json parsed_json;
+
+    // checks to make sure the file exists
+    if (std::filesystem::exists(file) == false) {
+        printf("[!] Couldn't parse level file: Does not exist.\n");
+        return NULL;
+    }
+
+    // checks to see if the JSON is valid JSON
+    try {
+        parsed_json = json::parse(ifs);
+    } catch(json::parse_error& err) {
+        printf("[!] Error parsing level file: %s\n", err.what());
+        return NULL;
+    }
+
+    // sets the current JSON to json_file, done to make get_level_bpm etc. function
+    // (this is a janky workaround; TODO: rewrite the get_level_ functions so this isn't necessary anymore)
+    json_file = parsed_json;
+    bpm = get_level_bpm();
+
+    // checks to see if a color_table exists, and if it does, try to load it
+    reset_color_table();
+
+    if (parsed_json[0].contains("color_table")) {
+        if (get_debug()) {printf("Parsing color table...\n");}
+
+        for (int i = 0; i < 16; i++) {
+            if (parsed_json[0]["color_table"][i] == NULL) {continue;}
+            if (parsed_json[0]["color_table"][i].is_string() == false) {continue;}
+
+            set_color_table(i, parsed_json[0]["color_table"][i]);
+        }
+    }
+
+    // this entire block generates sequences if they aren't present
+    // note that we generate these even if they're already present in order to ensure a level is actually beatable
+    // it also uses this opportunity to populate previous_shapes for the level select menu
+
+    int max_sequence_length = get_level_measure_length();
+    previous_shapes.clear();
+
+    for (int i = 1; i < parsed_json.size(); i++) {
+        int shape_type = parsed_json[i].value("shape", 0);
+        int x = parsed_json[i].value("x", 7);
+        int y = parsed_json[i].value("y", 7);
+        int scale = parsed_json[i].value("scale", 1);
+
+        bool sequence_exists = parsed_json[i].contains("sequence");
+        string gen_sequence;
+
+        // populates the previous_shapes struct
+        // used for displaying the full face in the level select
+        shape s = {
+            shape_type,
+            x,
+            y,
+            scale,
+            parsed_json[i].value("color", 0)
+        };
+
+        previous_shapes.push_back(s);
+
+        if (parsed_json[i].contains("auto_shapes") && parsed_json[i]["auto_shapes"].is_array()) {
+            for (int j = 0; j < parsed_json[i]["auto_shapes"].size(); j++) {
+                s = {
+                    parsed_json[i]["auto_shapes"][j].value("shape", 0),
+                    parsed_json[i]["auto_shapes"][j].value("x", 7),
+                    parsed_json[i]["auto_shapes"][j].value("y", 7),
+                    parsed_json[i]["auto_shapes"][j].value("scale", 1),
+                    parsed_json[i]["auto_shapes"][j].value("color", 0)
+                };
+
+                previous_shapes.push_back(s);
+            }
+        }
+
+        // sets the first action to changing shape
+        switch (shape_type) {
+            case 0: gen_sequence += "Z"; break;
+            case 1: gen_sequence += "X"; break;
+            case 2: gen_sequence += "C"; break;
+            default: gen_sequence += "Z"; break;
+        }
+
+        // scales up the shape to the needed size
+        if (scale > 1) {
+            for (int j = 1; j < scale; j++) {gen_sequence += "S";}
+        }
+
+        // moves across the X axis
+        if (x > 7) {
+            for (int j = 7; j < x; j++) {gen_sequence += "R";}
+        }
+
+        if (x < 7) {
+            for (int j = 7; j > x; j--) {gen_sequence += "L";}
+        }
+
+        // moves across the Y axis
+        if (y > 7) {
+            for (int j = 7; j < y; j++) {gen_sequence += "D";}
+        }
+
+        if (y < 7) {
+            for (int j = 7; j > y; j--) {gen_sequence += "U";}
+        }
+
+        // checks to see if the gen_sequence can fit within the allotted number of beats
+        if (gen_sequence.length() > max_sequence_length) {
+            printf("[!] Generated sequence #%i is longer than max number of beats! Level is not winnable.\n", i);
+        }
+
+        // pads the sequence with NOPs
+        if (gen_sequence.length() < max_sequence_length) {
+            gen_sequence.insert(gen_sequence.end(), max_sequence_length - gen_sequence.length(), '.');
+        }
+
+        if (get_debug()) {printf("gen_seq: %s\n", gen_sequence.c_str());}
+
+        // check if a sequence is defined for this shape, if not, use the generated one
+        // checking this AFTER making a sequence is inefficient, but also makes it much
+        // more likely to catch impossible levels and is negligible on performance
+        if (sequence_exists) {
+            string cur_sequence = parsed_json[i].value("sequence", ".");
+            if (get_debug()) {printf("cur_seq: %s\n", cur_sequence.c_str());}
+
+            // similar to the above checks for generated sequences
+            if (cur_sequence.length() > max_sequence_length) {
+                printf("Level sequence #%i is too long (must be %i, is %i)! Truncating...\n", i, max_sequence_length, cur_sequence.length());
+                parsed_json[i]["sequence"] = cur_sequence.substr(0, max_sequence_length);
+            }
+
+            if (cur_sequence.length() < max_sequence_length) {
+                printf("Level sequence #%i is too short (must be %i, is %i)! Padding...\n", i, max_sequence_length, cur_sequence.length());
+                parsed_json[i]["sequence"] = cur_sequence.insert(cur_sequence.end(), max_sequence_length - cur_sequence.length(), '.');
+            }
+
+            // we create a new shape here since s has been used for auto_shapes earlier
+            if (!check_sequence_validity(cur_sequence, {shape_type, x, y, scale, 0})) {
+                printf("[!] Sequence #%i does not match expected shape, using fallback...\n", i);
+                parsed_json[i]["sequence"] = gen_sequence;
+            }
+
+            continue;
+        } else {
+            parsed_json[i]["sequence"] = gen_sequence;
+        }
+    }
+
+    return parsed_json;
 }
 
 bool loop(json json_file, int start_offset, int time_signature_top, int time_signature_bottom, int song_start_time, int frame_time) {
