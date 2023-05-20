@@ -1524,13 +1524,13 @@ int check_beat_timing_window(unsigned int current_time) {
     return 0;
 }
 
-bool compare_shapes() {
+bool compare_shapes(shape shape_1, shape shape_2) {
     // returns true if the player and CPU shapes match properties
 
-    if (result_shape.x != active_shape.x) return false;
-    if (result_shape.y != active_shape.y) return false;
-    if (result_shape.type != active_shape.type) return false;
-    if (result_shape.scale != active_shape.scale) return false;
+    if (shape_1.x != shape_2.x) return false;
+    if (shape_1.y != shape_2.y) return false;
+    if (shape_1.type != shape_2.type) return false;
+    if (shape_1.scale != shape_2.scale) return false;
 
     return true;
 }
@@ -1736,7 +1736,7 @@ bool loop(json json_file, int start_offset, int time_signature_top, int time_sig
                     } else {
                         int song_step_amount = get_song_step((beat_count - (start_offset + 1))/(measure_length*2) + 1, measure_length*2);
 
-                        if (compare_shapes() == true) {
+                        if (compare_shapes(active_shape, result_shape) == true) {
                             // reward player with life and points
                             modify_life(5);
                             combo++;
