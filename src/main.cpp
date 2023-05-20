@@ -1535,7 +1535,7 @@ bool compare_shapes(shape shape_1, shape shape_2) {
     return true;
 }
 
-shape modify_current_shape(char opcode, shape current_shape, bool is_player = false) {
+shape modify_current_shape(char opcode, shape current_shape, bool is_player = false, bool play_sound = true) {
     // modifies the shape passed into it using an "opcode"
     // ----------------------------------------------------------
     // opcode: single letter that represents an action (corresponding to keyboard controls)
@@ -1557,7 +1557,7 @@ shape modify_current_shape(char opcode, shape current_shape, bool is_player = fa
     switch (opcode) {
         // circle
         case 'Z':
-            Mix_PlayChannel(-1, snd_circle, 0);
+            if (play_sound) {Mix_PlayChannel(-1, snd_circle, 0);}
             modified_shape.type = 0;
             modified_shape.x = 7;
             modified_shape.y = 7;
@@ -1566,7 +1566,7 @@ shape modify_current_shape(char opcode, shape current_shape, bool is_player = fa
 
         // square
         case 'X':
-            Mix_PlayChannel(-1, snd_square, 0);
+            if (play_sound) {Mix_PlayChannel(-1, snd_square, 0);}
             modified_shape.type = 1;
             modified_shape.x = 7;
             modified_shape.y = 7;
@@ -1575,7 +1575,7 @@ shape modify_current_shape(char opcode, shape current_shape, bool is_player = fa
 
         // triangle
         case 'C':
-            Mix_PlayChannel(-1, snd_triangle, 0);
+            if (play_sound) {Mix_PlayChannel(-1, snd_triangle, 0);}
             modified_shape.type = 2;
             modified_shape.x = 7;
             modified_shape.y = 7;
@@ -1584,42 +1584,42 @@ shape modify_current_shape(char opcode, shape current_shape, bool is_player = fa
 
         // x-plode (essentially a NOP)
         case 'V':
-            Mix_PlayChannel(-1, snd_xplode, 0);
+            if (play_sound) {Mix_PlayChannel(-1, snd_xplode, 0);}
             break;
 
         // shrink
         case 'A':
-            Mix_PlayChannel(-1, snd_scale_down, 0);
+            if (play_sound) {Mix_PlayChannel(-1, snd_scale_down, 0);}
             modified_shape.scale = fmax(1, modified_shape.scale - 1);
             break;
 
         // grow
         case 'S':
-            Mix_PlayChannel(-1, snd_scale_up, 0);
+            if (play_sound) {Mix_PlayChannel(-1, snd_scale_up, 0);}
             modified_shape.scale = fmin(8, modified_shape.scale + 1);
             break;
 
         // up
         case 'U':
-            Mix_PlayChannel(-1, snd_up, 0);
+            if (play_sound) {Mix_PlayChannel(-1, snd_up, 0);}
             modified_shape.y = fmax(modified_shape.y - 1, 0);
             break;
 
         // down
         case 'D':
-            Mix_PlayChannel(-1, snd_down, 0);
+            if (play_sound) {Mix_PlayChannel(-1, snd_down, 0);}
             modified_shape.y = fmin(modified_shape.y + 1, 14);
             break;
 
         // left
         case 'L':
-            Mix_PlayChannel(-1, snd_left, 0);
+            if (play_sound) {Mix_PlayChannel(-1, snd_left, 0);}
             modified_shape.x = fmax(modified_shape.x - 1, 0);
             break;
 
         // right
         case 'R':
-            Mix_PlayChannel(-1, snd_right, 0);
+            if (play_sound) {Mix_PlayChannel(-1, snd_right, 0);}
             modified_shape.x = fmin(modified_shape.x + 1, 14);
             break;
 
