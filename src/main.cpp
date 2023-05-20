@@ -1706,16 +1706,17 @@ json parse_level_file(string file) {
         if (sequence_exists) {
             string cur_sequence = parsed_json[i].value("sequence", ".");
             if (get_debug()) {printf("cur_seq: %s\n", cur_sequence.c_str());}
+            int cur_seq_length = cur_sequence.length(); // fixes GCC warning
 
             // similar to the above checks for generated sequences
-            if (cur_sequence.length() > max_sequence_length) {
-                printf("Level sequence #%i is too long (must be %i, is %i)! Truncating...\n", i, max_sequence_length, cur_sequence.length());
+            if (cur_seq_length > max_sequence_length) {
+                printf("Level sequence #%i is too long (must be %i, is %i)! Truncating...\n", i, max_sequence_length, cur_seq_length);
                 parsed_json[i]["sequence"] = cur_sequence.substr(0, max_sequence_length);
             }
 
-            if (cur_sequence.length() < max_sequence_length) {
-                printf("Level sequence #%i is too short (must be %i, is %i)! Padding...\n", i, max_sequence_length, cur_sequence.length());
-                parsed_json[i]["sequence"] = cur_sequence.insert(cur_sequence.end(), max_sequence_length - cur_sequence.length(), '.');
+            if (cur_seq_length < max_sequence_length) {
+                printf("Level sequence #%i is too short (must be %i, is %i)! Padding...\n", i, max_sequence_length, cur_seq_length);
+                parsed_json[i]["sequence"] = cur_sequence.insert(cur_sequence.end(), max_sequence_length - cur_seq_length, '.');
             }
 
             // we create a new shape here since s has been used for auto_shapes earlier
