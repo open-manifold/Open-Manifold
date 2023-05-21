@@ -1,9 +1,9 @@
 Open Manifold as a whole falls under a few different licenses.  This file contains headers preceding the relevant license, an explanation of what the license applies to, and a short summary of the full license text.
+Note that the "Applies to" sections assume you're viewing the Github repository's file layout, rather than a release builds.
 
 --------------------------------------------------------------------------------
 MIT License
-Applies to: Open Manifold's source code (src/*.cpp and *.h), res/assets contents
-(assets/logo.png, assets/font.png, assets/motd.txt)
+Applies to: Open Manifold's source code (src/*) and most assets (res/*, .github/*, etc.)
 
 In short, you are free to copy, modify, and redistribute the engine, with the 
 conditions that the license must be included and that no warranty is provided.
@@ -21,7 +21,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 
 --------------------------------------------------------------------------------
 Creative Commons Attribution-NonCommercial 4.0 (CC BY-NC 4.0)
-Applies to: release folder contents (assets/levels, assets/sound, assets/music)
+Applies to: Content included in release builds (release/*)
 
 In short, you  you are free to copy, modify, and redistribute these assets, 
 as long as you give credit, include a link to this license somewhere, and that 
@@ -35,7 +35,7 @@ To view a copy of this license, visit http://creativecommons.org/licenses/by-nc/
 
 --------------------------------------------------------------------------------
 zlib license
-Applies to: SDL 2, SDL2_image, SDL2_mixer
+Applies to: SDL 2, SDL2_image, SDL2_mixer (res/dll/*)
 --------------------------------------------------------------------------------
 
 This software is provided 'as-is', without any express or implied
