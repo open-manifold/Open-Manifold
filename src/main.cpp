@@ -418,7 +418,7 @@ void load_levels() {
     std::sort(playlist_paths.begin(), playlist_paths.end());
     std::sort(folder_paths.begin(), folder_paths.end());
 
-    // processes playlist files
+    printf("Processing playlists...\n");
     for (std::filesystem::path dir_entry: playlist_paths) {
         std::ifstream ifs(dir_entry);
         json playlist_data;
@@ -462,9 +462,9 @@ void load_levels() {
         }
     }
 
-    // processes level folders (making sure to not scan a level twice!)
+    printf("Processing level folders...\n");
     for (std::filesystem::path dir_entry: folder_paths) {
-        // checks if the level isn't present from a playlist already
+        // checks if the level isn't present from a playlist already, prevents duplicated levels
         if (std::find(level_paths.begin(), level_paths.end(), dir_entry.string()) != level_paths.end()) {continue;}
 
         // checks for the existence of a level.json file within the current directory
