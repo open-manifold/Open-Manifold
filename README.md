@@ -1,8 +1,8 @@
 ![](https://raw.githubusercontent.com/open-manifold/Open-Manifold/main/res/logo.svg)
 
-![](https://img.shields.io/github/v/release/open-manifold/Open-Manifold?style=plastic)
-![](https://img.shields.io/github/actions/workflow/status/open-manifold/Open-Manifold/makefile.yaml?style=plastic)
-![](https://img.shields.io/github/downloads/open-manifold/Open-Manifold/total?style=plastic)
+[![Latest Release](https://img.shields.io/github/v/release/open-manifold/Open-Manifold?style=plastic)](https://github.com/open-manifold/Open-Manifold/releases/latest)
+[![Build Status](https://img.shields.io/github/actions/workflow/status/open-manifold/Open-Manifold/makefile.yaml?style=plastic)](https://github.com/open-manifold/Open-Manifold/actions/workflows/makefile.yaml)
+[![Total Downloads](https://img.shields.io/github/downloads/open-manifold/Open-Manifold/total?style=plastic)](https://github.com/open-manifold/Open-Manifold/releases/)
 ---
 
 **Open Manifold** is a free and open-source rhythm game with the goal of cloning the gameplay of the PlayStation game *Rhythm 'N' Face* while offering several additional features, such as high resolutions, custom level support, and enhanced visual effects.
