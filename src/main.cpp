@@ -1565,10 +1565,9 @@ bool check_sequence_validity(string sequence, shape shape_result) {
     for (int i = 0; i < sequence.length(); i++) {
         char op = sequence[i];
         shape_test = modify_current_shape(op, shape_test, false, false);
-        if (get_debug()) {printf("%c, shape_test: %i %i %i %i \n", op, shape_test.type, shape_test.x, shape_test.y, shape_test.scale);}
     }
 
-    if (get_debug()) {printf("should be: %i %i %i %i \n", shape_result.type, shape_result.x, shape_result.y, shape_result.scale);}
+    if (get_debug()) {printf("shape_test: %i %i %i %i \nexpected: %i %i %i %i \n", shape_test.type, shape_test.x, shape_test.y, shape_test.scale, shape_result.type, shape_result.x, shape_result.y, shape_result.scale);}
     return compare_shapes(shape_result, shape_test);
 }
 
