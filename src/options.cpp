@@ -38,6 +38,7 @@ bool fps_toggle = false;
 bool fullscreen_toggle = false;
 bool true_fullscreen_toggle = false; // note: not used in the options menu!
 bool vsync_toggle = false;
+bool blindfold_toggle = false;
 bool grid_toggle = true;
 bool rumble_toggle = true;
 int controller_index = 0;
@@ -56,6 +57,7 @@ enum option_id {
     OPT_FRAME_CAP,
     OPT_TOGGLE_FPS,
     OPT_TOGGLE_GRID,
+    OPT_TOGGLE_BLINDFOLD,
     OPT_TOGGLE_RUMBLE,
     OPT_CONTROLLER_ID,
     OPT_REBIND_KEYBOARD,
@@ -78,6 +80,7 @@ struct option_item {
     {OPT_FRAME_CAP,         "Frame Cap",         "The maximum framerate the game runs at, if V-Sync is disabled."},
     {OPT_TOGGLE_FPS,        "Display FPS",       "Shows the framerate in the top-left corner."},
     {OPT_TOGGLE_GRID,       "Display Grid",      "Controls whether to display the grid overlay during gameplay."},
+    {OPT_TOGGLE_BLINDFOLD,  "Blindfold Mode",    "Makes all placed and player-controlled shapes invisible."},
     {OPT_TOGGLE_RUMBLE,     "Controller Rumble", "Controls whether to rumble the controller on every beat."},
     {OPT_CONTROLLER_ID,     "Controller Index",  "Sets which game controller to use."},
     {OPT_REBIND_KEYBOARD,   "Rebind Keyboard",   "Sets all bindings for the keyboard."},
@@ -141,6 +144,7 @@ string get_option_value(int index) {
         case OPT_FRAME_CAP: return std::to_string(frame_cap);
         case OPT_TOGGLE_FPS: return fps_toggle ? "Enabled" : "Disabled";
         case OPT_TOGGLE_GRID: return grid_toggle ? "Enabled" : "Disabled";
+        case OPT_TOGGLE_BLINDFOLD: return blindfold_toggle ? "Enabled" : "Disabled";
         case OPT_TOGGLE_RUMBLE: return rumble_toggle ? "Enabled" : "Disabled";
         case OPT_CONTROLLER_ID: return std::to_string(controller_index);
         default: return "";
@@ -221,6 +225,10 @@ int modify_current_option_button() {
 
         case OPT_TOGGLE_GRID:
             grid_toggle = !grid_toggle;
+            break;
+
+        case OPT_TOGGLE_BLINDFOLD:
+            blindfold_toggle = !blindfold_toggle;
             break;
 
         case OPT_TOGGLE_RUMBLE:

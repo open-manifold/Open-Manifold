@@ -1987,7 +1987,7 @@ bool draw_level_select(std::vector<shape> shapes, int frame_time) {
     return true;
 }
 
-bool draw_game(int beat_count, int start_offset, int measure_length, int song_start_time, float beat_start_time, int current_ticks, int intro_beat_length, bool beat_advanced, bool shape_advanced, shape active_shape, shape result_shape, std::vector<shape> previous_shapes, bool grid_toggle, bool song_over, bool game_over, int frame_time) {
+bool draw_game(int beat_count, int start_offset, int measure_length, int song_start_time, float beat_start_time, int current_ticks, int intro_beat_length, bool beat_advanced, bool shape_advanced, shape active_shape, shape result_shape, std::vector<shape> previous_shapes, bool grid_toggle, bool blindfold_toggle, bool song_over, bool game_over, int frame_time) {
     // Main function used during gameplay
     // ----------------------------------------------------------
     // TODO: the # of arguments here could be heavily reduced with "get_foobar"-style functions
@@ -2038,14 +2038,16 @@ bool draw_game(int beat_count, int start_offset, int measure_length, int song_st
     SDL_RenderClear(renderer);
 
     // draws every previous shape
-    for (int i = 0; i < previous_shapes.size(); i++) {
-        draw_shape(
-            previous_shapes[i].type,
-            previous_shapes[i].x,
-            previous_shapes[i].y,
-            previous_shapes[i].scale,
-            get_color(previous_shapes[i].color),
-            0, 0, grid_area.w/15);
+    if (!blindfold_toggle) {
+        for (int i = 0; i < previous_shapes.size(); i++) {
+            draw_shape(
+                previous_shapes[i].type,
+                previous_shapes[i].x,
+                previous_shapes[i].y,
+                previous_shapes[i].scale,
+                get_color(previous_shapes[i].color),
+                0, 0, grid_area.w/15);
+        }
     }
 
     if (song_over == false && game_over == false && beat_count > start_offset) {
@@ -2061,14 +2063,16 @@ bool draw_game(int beat_count, int start_offset, int measure_length, int song_st
         }
 
         // this draws the player's shape
-        if ((beat_count - 1 - start_offset)%(measure_length*2) >= measure_length) {
-            draw_shape(
-                active_shape.type,
-                active_shape.x,
-                active_shape.y,
-                active_shape.scale,
-                get_rainbow_color(current_ticks),
-                0, 0, grid_area.w/15);
+        if (!blindfold_toggle) {
+            if ((beat_count - 1 - start_offset)%(measure_length*2) >= measure_length) {
+                draw_shape(
+                    active_shape.type,
+                    active_shape.x,
+                    active_shape.y,
+                    active_shape.scale,
+                    get_rainbow_color(current_ticks),
+                    0, 0, grid_area.w/15);
+            }
         }
     }
 
