@@ -2027,6 +2027,11 @@ int main(int argc, char *argv[]) {
                     take_screenshot();
                 }
 
+                if (evt.key.keysym.sym == SDLK_F11) {
+                    fullscreen_toggle = !fullscreen_toggle;
+                    set_fullscreen();
+                }
+
                 if (evt.key.keysym.sym == SDLK_F10) {
                     if (get_debug() == true) {printf("Crashing game on purpose...\n"); abort();}
                 }
