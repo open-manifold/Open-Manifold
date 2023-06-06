@@ -28,12 +28,13 @@
 #include <nlohmann/json.hpp>
 
 using nlohmann::json;
+using std::vector;
 
 int character_hold_timer = 0;
 SDL_ScaleMode character_scale_mode = SDL_ScaleModeLinear;
 
 struct character_frames {
-    std::vector<SDL_Rect> idle;
+    vector<SDL_Rect> idle;
     SDL_Rect up;
     SDL_Rect down;
     SDL_Rect left;
@@ -160,7 +161,7 @@ void parse_character_file(json file) {
     }
 
     // write the idle frame array
-    std::vector<SDL_Rect> temp_vector;
+    vector<SDL_Rect> temp_vector;
 
     for (int i = 0; i < file[header_offset]["frames"].size(); i++) {
         SDL_Rect temp_rect;

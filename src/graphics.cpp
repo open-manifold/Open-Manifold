@@ -40,6 +40,7 @@
 
 using nlohmann::json;
 using std::string;
+using std::vector;
 
 extern SDL_Window* window;
 extern SDL_Renderer* renderer;
@@ -124,7 +125,7 @@ SDL_Color color_table[16] = {
 
 // used for the tile BGFX
 struct {
-    std::vector<SDL_Rect> frames;
+    vector<SDL_Rect> frames;
     unsigned int speed;
     bool fill_screen;
 } tile_data = {
@@ -290,7 +291,7 @@ void fallback_tile_frames() {
     // or if the provided tile.json doesn't exist or is invalid
 
     printf("Using fallback data for tile frames...\n");
-    std::vector<SDL_Rect> data;
+    vector<SDL_Rect> data;
 
     for (int i = 0; i < aux_texture_w; i += aux_texture_h) {
         SDL_Rect temp_rect;
@@ -316,7 +317,7 @@ void fallback_tile_frames() {
 void parse_tile_frames(json file) {
     // converts the JSON data from tile.json into SDL_Rects
 
-    std::vector<SDL_Rect> data;
+    vector<SDL_Rect> data;
 
     // parses parameters (if available)
     int tile_speed = file[0].value("speed", 120);
@@ -1895,7 +1896,7 @@ bool draw_options(int frame_time) {
     return true;
 }
 
-bool draw_level_select(std::vector<shape> shapes, int frame_time) {
+bool draw_level_select(vector<shape> shapes, int frame_time) {
     // Draws the level select menu
     // ----------------------------------------------------------
     // shapes: list of shapes to draw, created at parse-time in main.cpp
@@ -1986,7 +1987,7 @@ bool draw_level_select(std::vector<shape> shapes, int frame_time) {
     return true;
 }
 
-bool draw_game(int beat_count, int start_offset, int measure_length, int song_start_time, float beat_start_time, int current_ticks, int intro_beat_length, bool beat_advanced, bool shape_advanced, shape active_shape, shape result_shape, std::vector<shape> previous_shapes, bool grid_toggle, bool blindfold_toggle, bool song_over, bool game_over, int frame_time) {
+bool draw_game(int beat_count, int start_offset, int measure_length, int song_start_time, float beat_start_time, int current_ticks, int intro_beat_length, bool beat_advanced, bool shape_advanced, shape active_shape, shape result_shape, vector<shape> previous_shapes, bool grid_toggle, bool blindfold_toggle, bool song_over, bool game_over, int frame_time) {
     // Main function used during gameplay
     // ----------------------------------------------------------
     // TODO: the # of arguments here could be heavily reduced with "get_foobar"-style functions
@@ -2090,7 +2091,7 @@ bool draw_game(int beat_count, int start_offset, int measure_length, int song_st
     return true;
 }
 
-bool draw_sandbox(shape active_shape, std::vector<shape> previous_shapes, bool menu_open, bool sandbox_lock, int menu_item, int frame_time) {
+bool draw_sandbox(shape active_shape, vector<shape> previous_shapes, bool menu_open, bool sandbox_lock, int menu_item, int frame_time) {
     // Draws the screen during Sandbox mode
     // ----------------------------------------------------------
     // active_shape: The shape the player is currently controlling
@@ -2315,7 +2316,7 @@ bool draw_tutorial(int frame_time) {
     // splits message into chunks
     string message = get_tutorial_current_message();
     string temp;
-    std::vector<string> message_list;
+    vector<string> message_list;
     int char_width = floor(font->w/95) * scale_mul;
     int max_line_length = width / char_width;
 

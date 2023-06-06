@@ -29,6 +29,7 @@
 #include "main.h"
 
 using std::string;
+using std::vector;
 
 // various options
 int music_volume = 75;
@@ -80,7 +81,7 @@ struct option_item {
     const char* description = "";
 };
 
-std::vector<option_item> options_main = {
+vector<option_item> options_main = {
     {OPT_SUB_VIDEO,     "Video Settings",       "Change graphics settings here."},
     {OPT_SUB_AUDIO,     "Audio Settings",       "Change audio volume and panning here."},
     {OPT_SUB_CONTROLS,  "Controller Settings",  "Change controller bindings here."},
@@ -91,7 +92,7 @@ std::vector<option_item> options_main = {
     {OPT_EXIT,          "Exit",                 "Returns to the main menu. No changes will be saved."}
 };
 
-std::vector<option_item> options_video = {
+vector<option_item> options_video = {
     {OPT_FULLSCREEN,    "Fullscreen",   "Sets the game's resolution to your monitor's resolution; known as 'borderless' fullscreen."},
     {OPT_VSYNC,         "V-Sync",       "Syncs the game's framerate to your monitor's refresh rate."},
     {OPT_FRAME_CAP,     "Frame Cap",    "The maximum framerate the game runs at, if V-Sync is disabled."},
@@ -100,7 +101,7 @@ std::vector<option_item> options_video = {
     {OPT_BACK,          "Back",         "Return to the main options menu."}
 };
 
-std::vector<option_item> options_audio = {
+vector<option_item> options_audio = {
     {OPT_MUSIC,         "Music Volume",     "Controls the volume of music."},
     {OPT_SFX,           "SFX Volume",       "Controls the volume of sound effects."},
     {OPT_TOGGLE_MONO,   "Speaker Output",   "Controls whether to output audio in mono or stereo."},
@@ -108,7 +109,7 @@ std::vector<option_item> options_audio = {
     {OPT_BACK,          "Back",             "Return to the main options menu."}
 };
 
-std::vector<option_item> options_controls = {
+vector<option_item> options_controls = {
     {OPT_REBIND_KEYBOARD,   "Rebind Keyboard",   "Sets all bindings for the keyboard."},
     {OPT_REBIND_CONTROLLER, "Rebind Controller", "Sets all bindings for the controller."},
     {OPT_TOGGLE_RUMBLE,     "Controller Rumble", "Controls whether to rumble the controller on every beat."},
@@ -117,7 +118,7 @@ std::vector<option_item> options_controls = {
     {OPT_BACK,              "Back",              "Return to the main options menu."}
 };
 
-std::vector<option_item> options_gameplay = {
+vector<option_item> options_gameplay = {
     {OPT_TOGGLE_GRID,       "Display Grid",      "Controls whether to display the grid overlay during gameplay."},
     {OPT_TOGGLE_BLINDFOLD,  "Blindfold Mode",    "Makes all placed and player-controlled shapes invisible."},
     {OPT_NONE},
@@ -126,7 +127,7 @@ std::vector<option_item> options_gameplay = {
 
 option_id option_submenu_id = OPT_NONE;
 
-std::vector<option_item> options = options_main;
+vector<option_item> options = options_main;
 
 int option_selected = 0;
 

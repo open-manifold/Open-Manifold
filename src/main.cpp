@@ -44,6 +44,7 @@
 
 using nlohmann::json;
 using std::string;
+using std::vector;
 
 // basic window stuff
 SDL_Window* window;
@@ -120,8 +121,8 @@ extern float fade_in;
 extern float fade_out;
 
 // stores file paths
-std::vector<string> level_paths;   // e.g. "assets/levels/Foo Bar"
-std::vector<string> level_playlists; // stores playlist names corresponding to level paths, TODO: merge this and level_paths into a single struct
+vector<string> level_paths;   // e.g. "assets/levels/Foo Bar"
+vector<string> level_playlists; // stores playlist names corresponding to level paths, TODO: merge this and level_paths into a single struct
 int level_index = 0;
 
 // contains the currently-loaded JSON level data
@@ -131,7 +132,7 @@ json json_file;
 // previous_shapes is all the previous shapes in order
 // active shape is the one the CPU/player manipulates
 // result_shape is compared to at the end of a measure to see if a shape matches
-std::vector<shape> previous_shapes;
+vector<shape> previous_shapes;
 shape active_shape;
 shape result_shape;
 
@@ -394,8 +395,8 @@ void load_levels() {
 
     const std::filesystem::path levels{"assets/levels"};
     unsigned int scanned_level_count = 0; // unsigned since a negative level count makes no sense
-    std::vector<std::filesystem::path> playlist_paths;
-    std::vector<std::filesystem::path> folder_paths;
+    vector<std::filesystem::path> playlist_paths;
+    vector<std::filesystem::path> folder_paths;
 
     printf("Scanning for levels...\n");
 
