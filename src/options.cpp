@@ -24,6 +24,7 @@
 
 #include <cstdlib>
 #include <string>
+#include <vector>
 
 #include "main.h"
 
@@ -49,6 +50,11 @@ bool rebinding_keys = false;
 bool rebinding_controller = false;
 
 enum option_id {
+    OPT_SUB_VIDEO,
+    OPT_SUB_AUDIO,
+    OPT_SUB_CONTROLS,
+    OPT_SUB_GAMEPLAY,
+    OPT_SUB_MISC,
     OPT_MUSIC,
     OPT_SFX,
     OPT_TOGGLE_MONO,
@@ -64,32 +70,64 @@ enum option_id {
     OPT_REBIND_CONTROLLER,
     OPT_SAVE,
     OPT_EXIT,
+    OPT_BACK,
     OPT_NONE,
 };
 
 struct option_item {
-    const option_id id;
+    option_id id;
     const char* name = "";
     const char* description = "";
-} options[] = {
-    {OPT_MUSIC,             "Music Volume",      "Controls the volume of music."},
-    {OPT_SFX,               "SFX Volume",        "Controls the volume of sound effects."},
-    {OPT_TOGGLE_MONO,       "Speaker Output",    "Controls whether to output audio in mono or stereo."},
-    {OPT_FULLSCREEN,        "Fullscreen",        "Sets the game's resolution to your monitor's resolution; known as 'borderless' fullscreen."},
-    {OPT_VSYNC,             "V-Sync",            "Syncs the game's framerate to your monitor's refresh rate."},
-    {OPT_FRAME_CAP,         "Frame Cap",         "The maximum framerate the game runs at, if V-Sync is disabled."},
-    {OPT_TOGGLE_FPS,        "Display FPS",       "Shows the framerate in the top-left corner."},
-    {OPT_TOGGLE_GRID,       "Display Grid",      "Controls whether to display the grid overlay during gameplay."},
-    {OPT_TOGGLE_BLINDFOLD,  "Blindfold Mode",    "Makes all placed and player-controlled shapes invisible."},
-    {OPT_TOGGLE_RUMBLE,     "Controller Rumble", "Controls whether to rumble the controller on every beat."},
-    {OPT_CONTROLLER_ID,     "Controller Index",  "Sets which game controller to use."},
-    {OPT_REBIND_KEYBOARD,   "Rebind Keyboard",   "Sets all bindings for the keyboard."},
-    {OPT_REBIND_CONTROLLER, "Rebind Controller", "Sets all bindings for the controller."},
-    {OPT_SAVE,              "Save Settings",     "Saves your settings and returns to the main menu."},
-    {OPT_EXIT,              "Exit",              "Returns to the main menu. No changes will be saved."}
 };
 
-int option_count = std::size(options);
+std::vector<option_item> options_main = {
+    {OPT_SUB_VIDEO,     "Video Settings",       "Change graphics settings here."},
+    {OPT_SUB_AUDIO,     "Audio Settings",       "Change audio volume and panning here."},
+    {OPT_SUB_CONTROLS,  "Controller Settings",  "Change controller bindings here."},
+    {OPT_SUB_GAMEPLAY,  "Gameplay Settings",    "Change gameplay modifiers here."},
+    // {OPT_SUB_MISC,      "Other Settings",       "Change other settings here."},
+    {OPT_NONE},
+    {OPT_SAVE,          "Save Settings",        "Saves your settings and returns to the main menu."},
+    {OPT_EXIT,          "Exit",                 "Returns to the main menu. No changes will be saved."}
+};
+
+std::vector<option_item> options_video = {
+    {OPT_FULLSCREEN,    "Fullscreen",   "Sets the game's resolution to your monitor's resolution; known as 'borderless' fullscreen."},
+    {OPT_VSYNC,         "V-Sync",       "Syncs the game's framerate to your monitor's refresh rate."},
+    {OPT_FRAME_CAP,     "Frame Cap",    "The maximum framerate the game runs at, if V-Sync is disabled."},
+    {OPT_TOGGLE_FPS,    "Display FPS",  "Shows the framerate in the top-left corner."},
+    {OPT_NONE},
+    {OPT_BACK,          "Back",         "Return to the main options menu."}
+};
+
+std::vector<option_item> options_audio = {
+    {OPT_MUSIC,         "Music Volume",     "Controls the volume of music."},
+    {OPT_SFX,           "SFX Volume",       "Controls the volume of sound effects."},
+    {OPT_TOGGLE_MONO,   "Speaker Output",   "Controls whether to output audio in mono or stereo."},
+    {OPT_NONE},
+    {OPT_BACK,          "Back",             "Return to the main options menu."}
+};
+
+std::vector<option_item> options_controls = {
+    {OPT_REBIND_KEYBOARD,   "Rebind Keyboard",   "Sets all bindings for the keyboard."},
+    {OPT_REBIND_CONTROLLER, "Rebind Controller", "Sets all bindings for the controller."},
+    {OPT_TOGGLE_RUMBLE,     "Controller Rumble", "Controls whether to rumble the controller on every beat."},
+    {OPT_CONTROLLER_ID,     "Controller Index",  "Sets which game controller to use."},
+    {OPT_NONE},
+    {OPT_BACK,              "Back",              "Return to the main options menu."}
+};
+
+std::vector<option_item> options_gameplay = {
+    {OPT_TOGGLE_GRID,       "Display Grid",      "Controls whether to display the grid overlay during gameplay."},
+    {OPT_TOGGLE_BLINDFOLD,  "Blindfold Mode",    "Makes all placed and player-controlled shapes invisible."},
+    {OPT_NONE},
+    {OPT_BACK,              "Back",              "Return to the main options menu."}
+};
+
+option_id option_submenu_id = OPT_NONE;
+
+std::vector<option_item> options = options_main;
+
 int option_selected = 0;
 
 const char* get_option_name(int x = option_selected) {
@@ -100,6 +138,10 @@ const char* get_option_desc() {
     return options[option_selected].description;
 }
 
+int get_option_count() {
+    return std::size(options);
+}
+
 int get_option_selection() {
     return option_selected;
 }
@@ -108,8 +150,53 @@ int get_rebind_index() {
     return current_rebind_index;
 }
 
+void set_option_menu(option_id id) {
+    option_selected = 0;
+    option_submenu_id = id;
+
+    switch (option_submenu_id) {
+        case OPT_SUB_VIDEO:
+            options = options_video;
+            break;
+
+        case OPT_SUB_AUDIO:
+            options = options_audio;
+            break;
+
+        case OPT_SUB_CONTROLS:
+            options = options_controls;
+            break;
+
+        case OPT_SUB_GAMEPLAY:
+            options = options_gameplay;
+            break;
+
+        /*
+        case OPT_SUB_MISC:
+            options = options_misc;
+            break;
+        */
+
+        case OPT_BACK:
+        case OPT_NONE:
+            option_submenu_id = OPT_NONE;
+            options = options_main;
+            break;
+
+        default:
+            break;
+    }
+    return;
+}
+
 void increment_rebind_index() {
     current_rebind_index++;
+    return;
+}
+
+void reset_options_menu() {
+    option_selected = 0;
+    set_option_menu(OPT_NONE);
     return;
 }
 
@@ -203,6 +290,15 @@ int modify_current_option_button() {
     option_id current_selection = options[option_selected].id;
 
     switch(current_selection) {
+        case OPT_SUB_VIDEO:
+        case OPT_SUB_AUDIO:
+        case OPT_SUB_CONTROLS:
+        case OPT_SUB_GAMEPLAY:
+        case OPT_SUB_MISC:
+        case OPT_BACK:
+            set_option_menu(current_selection);
+            break;
+
         case OPT_TOGGLE_MONO:
             mono_toggle = !mono_toggle;
             set_channel_mix();
@@ -257,7 +353,12 @@ int modify_current_option_button() {
     return 0;
 }
 
+int options_back_button() {
+    if (option_submenu_id == OPT_NONE) {return 1;} else {reset_options_menu(); return 0;}
+}
+
 void move_option_selection(int x) {
+    int option_count = get_option_count();
     option_selected += x;
 
     while (options[option_selected].id == OPT_NONE) {

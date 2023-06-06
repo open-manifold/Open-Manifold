@@ -133,8 +133,6 @@ struct {
     false
 };
 
-extern int option_count;
-
 // similar data for the sandbox menu
 // TODO: split off this (and other sandbox functions) into their own file
 const char* sandbox_items[] = {
@@ -1827,6 +1825,7 @@ bool draw_options(int frame_time) {
     // ----------------------------------------------------------
     // See options.cpp for more info!
 
+    int option_count = get_option_count();
     int option_selection = get_option_selection();
     int scale_mul = fmax(floor(fmin(height, width)/360), 1);
     int char_height = font->h + 2;

@@ -2468,8 +2468,10 @@ int main(int argc, char *argv[]) {
                             case CIRCLE:
                                 if (check_fade_activity()) {break;}
                                 Mix_PlayChannel(0, snd_menu_confirm, 0);
-                                transition_state = TITLE;
-                                fade_out++;
+                                if (options_back_button() == 1) {
+                                    transition_state = TITLE;
+                                    fade_out++;
+                                }
                                 break;
 
                             case UP:
@@ -2597,6 +2599,10 @@ int main(int argc, char *argv[]) {
                     printf("Loading tutorial mode...\n");
                     init_tutorial();
                     load_default_music("tutorial");
+                    break;
+
+                case OPTIONS:
+                    reset_options_menu();
                     break;
 
                 case GAME:
