@@ -93,10 +93,10 @@ vector<option_item> options_main = {
 };
 
 vector<option_item> options_video = {
-    {OPT_FULLSCREEN,    "Fullscreen",   "Sets the game's resolution to your monitor's resolution; known as 'borderless' fullscreen."},
+    {OPT_FULLSCREEN,    "Fullscreen",   "Sets the game's resolution to your monitor's resolution."},
     {OPT_VSYNC,         "V-Sync",       "Syncs the game's framerate to your monitor's refresh rate."},
-    {OPT_FRAME_CAP,     "Frame Cap",    "The maximum framerate the game runs at, if V-Sync is disabled."},
-    {OPT_TOGGLE_FPS,    "Display FPS",  "Shows the framerate in the top-left corner."},
+    {OPT_FRAME_CAP,     "Frame Cap",    "The max framerate the game runs at, if V-Sync is disabled."},
+    {OPT_TOGGLE_FPS,    "Display FPS",  "Shows the frames-per-second and frame time."},
     {OPT_NONE},
     {OPT_BACK,          "Back",         "Return to the main options menu."}
 };
@@ -104,7 +104,7 @@ vector<option_item> options_video = {
 vector<option_item> options_audio = {
     {OPT_MUSIC,         "Music Volume",     "Controls the volume of music."},
     {OPT_SFX,           "SFX Volume",       "Controls the volume of sound effects."},
-    {OPT_TOGGLE_MONO,   "Speaker Output",   "Controls whether to output audio in mono or stereo."},
+    {OPT_TOGGLE_MONO,   "Speaker Output",   "Controls the number of audio channels to output to."},
     {OPT_NONE},
     {OPT_BACK,          "Back",             "Return to the main options menu."}
 };
