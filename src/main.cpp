@@ -97,6 +97,7 @@ int frame_cap_ms = (1000 / frame_cap);
 // sound effects
 Mix_Chunk *snd_menu_move;
 Mix_Chunk *snd_menu_confirm;
+Mix_Chunk *snd_menu_back;
 Mix_Chunk *snd_mono_test;
 Mix_Chunk *snd_metronome_small;
 Mix_Chunk *snd_metronome_big;
@@ -554,6 +555,11 @@ void load_common_sounds() {
     snd_menu_confirm = Mix_LoadWAV("assets/sound/confirm.ogg");
     if(snd_menu_confirm == NULL) {
         printf("[!] confirm.ogg: %s\n", Mix_GetError());
+    }
+
+    snd_menu_back = Mix_LoadWAV("assets/sound/back.ogg");
+    if(snd_menu_back == NULL) {
+        printf("[!] back.ogg: %s\n", Mix_GetError());
     }
 
     snd_mono_test = Mix_LoadWAV("assets/sound/mono_test.ogg");
@@ -2074,7 +2080,7 @@ int main(int argc, char *argv[]) {
                             case SELECT:
                             case CIRCLE:
                                 if (check_fade_activity()) {break;}
-                                Mix_PlayChannel(0, snd_menu_confirm, 0);
+                                Mix_PlayChannel(0, snd_menu_back, 0);
                                 menu_selected = 4;
                                 transition_state = EXIT;
                                 fade_out++;
@@ -2139,7 +2145,7 @@ int main(int argc, char *argv[]) {
                             case SELECT:
                             case CIRCLE:
                                 if (check_fade_activity()) {break;}
-                                Mix_PlayChannel(0, snd_menu_confirm, 0);
+                                Mix_PlayChannel(0, snd_menu_back, 0);
                                 transition_state = TITLE;
                                 fade_out++;
                                 break;
@@ -2203,7 +2209,7 @@ int main(int argc, char *argv[]) {
 
                             switch(input_value) {
                                 case SELECT:
-                                    Mix_PlayChannel(0, snd_menu_confirm, 0);
+                                    Mix_PlayChannel(0, snd_menu_back, 0);
                                     fade_out++;
                                     break;
 
@@ -2264,7 +2270,7 @@ int main(int argc, char *argv[]) {
                                 break;
 
                             case SELECT:
-                                Mix_PlayChannel(0, snd_menu_confirm, 0);
+                                Mix_PlayChannel(0, snd_menu_back, 0);
                                 transition_state = TITLE;
                                 fade_out++;
                                 break;
@@ -2406,7 +2412,7 @@ int main(int argc, char *argv[]) {
                         switch(input_value) {
                             case SELECT:
                                 if (check_fade_activity()) {break;}
-                                Mix_PlayChannel(0, snd_menu_confirm, 0);
+                                Mix_PlayChannel(0, snd_menu_back, 0);
                                 transition_state = TITLE;
                                 fade_out++;
                                 break;
@@ -2468,7 +2474,7 @@ int main(int argc, char *argv[]) {
                             case SELECT:
                             case CIRCLE:
                                 if (check_fade_activity()) {break;}
-                                Mix_PlayChannel(0, snd_menu_confirm, 0);
+                                Mix_PlayChannel(0, snd_menu_back, 0);
                                 if (options_back_button() == 1) {
                                     transition_state = TITLE;
                                     fade_out++;
