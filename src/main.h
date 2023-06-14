@@ -27,8 +27,10 @@ void set_vsync_renderer();
 void set_frame_cap_ms();
 void init_controller();
 void rumble_controller(int);
-
 int get_controller_count();
+void reset_controller_binds();
+void reset_keyboard_binds();
+
 int get_level_bpm();
 int get_bg_color();
 int check_beat_timing_window(unsigned int);

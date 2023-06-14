@@ -608,6 +608,54 @@ int get_controller_count() {
     return SDL_NumJoysticks() - 1;
 }
 
+void reset_keyboard_binds() {
+    SDL_KeyCode default_map[12] = {
+        SDLK_UP,
+        SDLK_DOWN,
+        SDLK_LEFT,
+        SDLK_RIGHT,
+        SDLK_z,
+        SDLK_x,
+        SDLK_c,
+        SDLK_v,
+        SDLK_a,
+        SDLK_s,
+        SDLK_RETURN,
+        SDLK_BACKSPACE
+    };
+
+    printf("Resetting keyboard binds...\n");
+    for (int i = 0; i < 12; i++) {
+        keymap[i] = default_map[i];
+    }
+
+    return;
+}
+
+void reset_controller_binds() {
+    SDL_GameControllerButton default_map[12] = {
+        SDL_CONTROLLER_BUTTON_DPAD_UP,
+        SDL_CONTROLLER_BUTTON_DPAD_DOWN,
+        SDL_CONTROLLER_BUTTON_DPAD_LEFT,
+        SDL_CONTROLLER_BUTTON_DPAD_RIGHT,
+        SDL_CONTROLLER_BUTTON_B,
+        SDL_CONTROLLER_BUTTON_X,
+        SDL_CONTROLLER_BUTTON_Y,
+        SDL_CONTROLLER_BUTTON_A,
+        SDL_CONTROLLER_BUTTON_LEFTSHOULDER,
+        SDL_CONTROLLER_BUTTON_RIGHTSHOULDER,
+        SDL_CONTROLLER_BUTTON_START,
+        SDL_CONTROLLER_BUTTON_BACK
+    };
+
+    printf("Resetting controller binds...\n");
+    for (int i = 0; i < 12; i++) {
+        buttonmap[i] = default_map[i];
+    }
+
+    return;
+}
+
 void rumble_controller(int ms = 120) {
     // wrapper that rumbles the controller
     // ms: how long in milliseconds to rumble the controller (optional!)

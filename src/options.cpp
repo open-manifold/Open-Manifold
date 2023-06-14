@@ -69,6 +69,8 @@ enum option_id {
     OPT_CONTROLLER_ID,
     OPT_REBIND_KEYBOARD,
     OPT_REBIND_CONTROLLER,
+    OPT_RESET_KEYBOARD,
+    OPT_RESET_CONTROLLER,
     OPT_SAVE,
     OPT_EXIT,
     OPT_BACK,
@@ -114,6 +116,9 @@ vector<option_item> options_controls = {
     {OPT_REBIND_CONTROLLER, "Rebind Controller", "Sets all bindings for the controller."},
     {OPT_TOGGLE_RUMBLE,     "Controller Rumble", "Controls whether to rumble the controller on every beat."},
     {OPT_CONTROLLER_ID,     "Controller Index",  "Sets which game controller to use."},
+    {OPT_NONE},
+    {OPT_RESET_KEYBOARD,    "Reset Keyboard",    "Resets all bindings for the keyboard."},
+    {OPT_RESET_CONTROLLER,  "Reset Controller",  "Resets all bindings for the controller."},
     {OPT_NONE},
     {OPT_BACK,              "Back",              "Return to the main options menu."}
 };
@@ -339,6 +344,14 @@ int modify_current_option_button() {
 
         case OPT_REBIND_CONTROLLER:
             rebinding_controller = true;
+            break;
+
+        case OPT_RESET_KEYBOARD:
+            reset_keyboard_binds();
+            break;
+
+        case OPT_RESET_CONTROLLER:
+            reset_controller_binds();
             break;
 
         case OPT_SAVE:
