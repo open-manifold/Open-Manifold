@@ -42,6 +42,7 @@ bool true_fullscreen_toggle = false; // note: not used in the options menu!
 bool vsync_toggle = false;
 bool blindfold_toggle = false;
 bool grid_toggle = true;
+bool hud_toggle = true;
 bool rumble_toggle = true;
 int controller_index = 0;
 
@@ -64,6 +65,7 @@ enum option_id {
     OPT_FRAME_CAP,
     OPT_TOGGLE_FPS,
     OPT_TOGGLE_GRID,
+    OPT_TOGGLE_HUD,
     OPT_TOGGLE_BLINDFOLD,
     OPT_TOGGLE_RUMBLE,
     OPT_CONTROLLER_ID,
@@ -131,6 +133,7 @@ vector<option_item> options_controls = {
 
 vector<option_item> options_gameplay = {
     {OPT_TOGGLE_GRID,       "Display Grid",      "Displays the shape grid overlay."},
+    {OPT_TOGGLE_HUD,        "Display HUD",       "Displays the heads-up display."},
     {OPT_TOGGLE_BLINDFOLD,  "Blindfold Mode",    "Makes all placed and player-controlled shapes invisible."},
     {OPT_NONE},
     option_back
@@ -243,6 +246,7 @@ string get_option_value(int index) {
         case OPT_FRAME_CAP: return std::to_string(frame_cap);
         case OPT_TOGGLE_FPS: return fps_toggle ? "Enabled" : "Disabled";
         case OPT_TOGGLE_GRID: return grid_toggle ? "Enabled" : "Disabled";
+        case OPT_TOGGLE_HUD: return hud_toggle ? "Enabled" : "Disabled";
         case OPT_TOGGLE_BLINDFOLD: return blindfold_toggle ? "Enabled" : "Disabled";
         case OPT_TOGGLE_RUMBLE: return rumble_toggle ? "Enabled" : "Disabled";
         case OPT_CONTROLLER_ID: return std::to_string(controller_index);
@@ -333,6 +337,10 @@ int modify_current_option_button() {
 
         case OPT_TOGGLE_GRID:
             grid_toggle = !grid_toggle;
+            break;
+
+        case OPT_TOGGLE_HUD:
+            hud_toggle = !hud_toggle;
             break;
 
         case OPT_TOGGLE_BLINDFOLD:

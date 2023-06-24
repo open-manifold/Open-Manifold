@@ -1987,7 +1987,7 @@ bool draw_level_select(vector<shape> shapes, int frame_time) {
     return true;
 }
 
-bool draw_game(int beat_count, int start_offset, int measure_length, int song_start_time, float beat_start_time, int current_ticks, int intro_beat_length, bool beat_advanced, bool shape_advanced, shape active_shape, shape result_shape, vector<shape> previous_shapes, bool grid_toggle, bool blindfold_toggle, bool song_over, bool game_over, int frame_time) {
+bool draw_game(int beat_count, int start_offset, int measure_length, int song_start_time, float beat_start_time, int current_ticks, int intro_beat_length, bool beat_advanced, bool shape_advanced, shape active_shape, shape result_shape, vector<shape> previous_shapes, bool grid_toggle, bool hud_toggle, bool blindfold_toggle, bool song_over, bool game_over, int frame_time) {
     // Main function used during gameplay
     // ----------------------------------------------------------
     // TODO: the # of arguments here could be heavily reduced with "get_foobar"-style functions
@@ -2084,7 +2084,7 @@ bool draw_game(int beat_count, int start_offset, int measure_length, int song_st
 
     // draws the HUD elements
     if (game_over) {draw_game_over(current_ticks);}
-    draw_hud(get_life(), get_score(), current_ticks, frame_time);
+    if (hud_toggle) {draw_hud(get_life(), get_score(), current_ticks, frame_time);}
 
     draw_level_intro_fade(song_start_time, current_ticks, intro_beat_length);
     draw_fade(255, 8, frame_time);

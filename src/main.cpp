@@ -63,6 +63,7 @@ extern bool fullscreen_toggle;
 extern bool true_fullscreen_toggle;
 extern bool vsync_toggle;
 extern bool grid_toggle;
+extern bool hud_toggle;
 extern bool blindfold_toggle;
 extern bool rumble_toggle;
 extern int controller_index;
@@ -292,6 +293,7 @@ void save_settings() {
     new_config["vsync"] = vsync_toggle;
     new_config["frame_cap"] = frame_cap;
     new_config["display_grid"] = grid_toggle;
+    new_config["display_hud"] = hud_toggle;
     new_config["blindfold_mode"] = blindfold_toggle;
     new_config["controller_rumble"] = rumble_toggle;
     new_config["controller_index"] = controller_index;
@@ -331,6 +333,7 @@ void load_settings(int argc, char* argv[]) {
     if (json_data.contains("vsync"))             {vsync_toggle = json_data["vsync"];}
     if (json_data.contains("frame_cap"))         {frame_cap = json_data["frame_cap"];}
     if (json_data.contains("display_grid"))      {grid_toggle = json_data["display_grid"];}
+    if (json_data.contains("display_hud"))       {grid_toggle = json_data["display_hud"];}
     if (json_data.contains("blindfold_mode"))    {blindfold_toggle = json_data["blindfold_mode"];}
     if (json_data.contains("music_volume"))      {music_volume = json_data["music_volume"];}
     if (json_data.contains("sfx_volume"))        {sfx_volume = json_data["sfx_volume"];}
@@ -2706,7 +2709,7 @@ int main(int argc, char *argv[]) {
 
             case GAME:
                 loop(json_file, get_level_intro_delay(), get_level_time_signature(true), get_level_time_signature(false), song_start_time, frame_time);
-                draw_game(beat_count, get_level_intro_delay(), get_level_measure_length(), song_start_time, beat_start_time, SDL_GetTicks(), intro_beat_length, beat_advanced, shape_advanced, active_shape, result_shape, previous_shapes, grid_toggle, blindfold_toggle, song_over, game_over, frame_time);
+                draw_game(beat_count, get_level_intro_delay(), get_level_measure_length(), song_start_time, beat_start_time, SDL_GetTicks(), intro_beat_length, beat_advanced, shape_advanced, active_shape, result_shape, previous_shapes, grid_toggle, hud_toggle, blindfold_toggle, song_over, game_over, frame_time);
                 break;
 
             case SANDBOX:

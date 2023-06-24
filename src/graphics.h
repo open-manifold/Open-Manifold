@@ -43,7 +43,7 @@ bool draw_warning(int);
 bool draw_title(int, int);
 bool draw_credits(int);
 bool draw_level_select(std::vector<shape>, int);
-bool draw_game(int, int, int, int, float, int, int, bool, bool, shape, shape, std::vector<shape>, bool, bool, bool, bool, int);
+bool draw_game(int, int, int, int, float, int, int, bool, bool, shape, shape, std::vector<shape>, bool, bool, bool, bool, bool, int);
 bool draw_options(int);
 bool draw_sandbox(shape, std::vector<shape>, bool, bool, int, int);
 bool draw_tutorial(int);
