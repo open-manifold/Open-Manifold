@@ -83,6 +83,12 @@ struct option_item {
     const char* description = "";
 };
 
+option_item option_back = {
+    OPT_BACK,
+    "Back",
+    "Return to the main options menu"
+};
+
 vector<option_item> options_main = {
     {OPT_SUB_VIDEO,     "Video Settings",       "Change graphics settings here."},
     {OPT_SUB_AUDIO,     "Audio Settings",       "Change audio settings here."},
@@ -100,7 +106,7 @@ vector<option_item> options_video = {
     {OPT_FRAME_CAP,     "Frame Cap",    "The max framerate the game runs at when V-Sync is off."},
     {OPT_TOGGLE_FPS,    "Display FPS",  "Shows the frames-per-second and frame time."},
     {OPT_NONE},
-    {OPT_BACK,          "Back",         "Return to the main options menu."}
+    option_back
 };
 
 vector<option_item> options_audio = {
@@ -108,7 +114,7 @@ vector<option_item> options_audio = {
     {OPT_SFX,           "SFX Volume",       "Controls the volume of sound effects."},
     {OPT_TOGGLE_MONO,   "Speaker Output",   "Controls the number of audio channels to output to."},
     {OPT_NONE},
-    {OPT_BACK,          "Back",             "Return to the main options menu."}
+    option_back
 };
 
 vector<option_item> options_controls = {
@@ -120,14 +126,14 @@ vector<option_item> options_controls = {
     {OPT_RESET_KEYBOARD,    "Reset Keyboard Binds",     "Resets all bindings for the keyboard."},
     {OPT_RESET_CONTROLLER,  "Reset Controller Binds",   "Resets all bindings for the controller."},
     {OPT_NONE},
-    {OPT_BACK,              "Back",                     "Return to the main options menu."}
+    option_back
 };
 
 vector<option_item> options_gameplay = {
     {OPT_TOGGLE_GRID,       "Display Grid",      "Displays the shape grid overlay."},
     {OPT_TOGGLE_BLINDFOLD,  "Blindfold Mode",    "Makes all placed and player-controlled shapes invisible."},
     {OPT_NONE},
-    {OPT_BACK,              "Back",              "Return to the main options menu."}
+    option_back
 };
 
 option_id option_submenu_id = OPT_NONE;
