@@ -85,9 +85,9 @@ struct option_item {
 
 vector<option_item> options_main = {
     {OPT_SUB_VIDEO,     "Video Settings",       "Change graphics settings here."},
-    {OPT_SUB_AUDIO,     "Audio Settings",       "Change audio volume and panning here."},
-    {OPT_SUB_CONTROLS,  "Controller Settings",  "Change controller bindings here."},
-    {OPT_SUB_GAMEPLAY,  "Gameplay Settings",    "Change gameplay modifiers here."},
+    {OPT_SUB_AUDIO,     "Audio Settings",       "Change audio settings here."},
+    {OPT_SUB_CONTROLS,  "Controller Settings",  "Change controller settings here."},
+    {OPT_SUB_GAMEPLAY,  "Gameplay Settings",    "Change gameplay settings here."},
     // {OPT_SUB_MISC,      "Other Settings",       "Change other settings here."},
     {OPT_NONE},
     {OPT_SAVE,          "Save Settings",        "Saves your settings and returns to the main menu."},
@@ -95,9 +95,9 @@ vector<option_item> options_main = {
 };
 
 vector<option_item> options_video = {
-    {OPT_FULLSCREEN,    "Fullscreen",   "Sets the game's resolution to your monitor's resolution."},
-    {OPT_VSYNC,         "V-Sync",       "Syncs the game's framerate to your monitor's refresh rate."},
-    {OPT_FRAME_CAP,     "Frame Cap",    "The max framerate the game runs at, if V-Sync is disabled."},
+    {OPT_FULLSCREEN,    "Fullscreen",   "Sets the game's resolution to your monitor resolution."},
+    {OPT_VSYNC,         "V-Sync",       "Syncs the game's video output to your monitor refresh rate."},
+    {OPT_FRAME_CAP,     "Frame Cap",    "The max framerate the game runs at when V-Sync is off."},
     {OPT_TOGGLE_FPS,    "Display FPS",  "Shows the frames-per-second and frame time."},
     {OPT_NONE},
     {OPT_BACK,          "Back",         "Return to the main options menu."}
@@ -112,19 +112,19 @@ vector<option_item> options_audio = {
 };
 
 vector<option_item> options_controls = {
-    {OPT_REBIND_KEYBOARD,   "Rebind Keyboard",   "Sets all bindings for the keyboard."},
-    {OPT_REBIND_CONTROLLER, "Rebind Controller", "Sets all bindings for the controller."},
-    {OPT_TOGGLE_RUMBLE,     "Controller Rumble", "Controls whether to rumble the controller on every beat."},
-    {OPT_CONTROLLER_ID,     "Controller Index",  "Sets which game controller to use."},
+    {OPT_REBIND_KEYBOARD,   "Rebind Keyboard",          "Sets all bindings for the keyboard."},
+    {OPT_REBIND_CONTROLLER, "Rebind Controller",        "Sets all bindings for the controller."},
+    {OPT_TOGGLE_RUMBLE,     "Controller Rumble",        "Rumbles the controller on every other beat."},
+    {OPT_CONTROLLER_ID,     "Controller Index",         "Sets which game controller to use."},
     {OPT_NONE},
-    {OPT_RESET_KEYBOARD,    "Reset Keyboard",    "Resets all bindings for the keyboard."},
-    {OPT_RESET_CONTROLLER,  "Reset Controller",  "Resets all bindings for the controller."},
+    {OPT_RESET_KEYBOARD,    "Reset Keyboard Binds",     "Resets all bindings for the keyboard."},
+    {OPT_RESET_CONTROLLER,  "Reset Controller Binds",   "Resets all bindings for the controller."},
     {OPT_NONE},
-    {OPT_BACK,              "Back",              "Return to the main options menu."}
+    {OPT_BACK,              "Back",                     "Return to the main options menu."}
 };
 
 vector<option_item> options_gameplay = {
-    {OPT_TOGGLE_GRID,       "Display Grid",      "Controls whether to display the grid overlay during gameplay."},
+    {OPT_TOGGLE_GRID,       "Display Grid",      "Displays the shape grid overlay."},
     {OPT_TOGGLE_BLINDFOLD,  "Blindfold Mode",    "Makes all placed and player-controlled shapes invisible."},
     {OPT_NONE},
     {OPT_BACK,              "Back",              "Return to the main options menu."}
