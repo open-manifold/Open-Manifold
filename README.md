@@ -1,4 +1,4 @@
-![](https://raw.githubusercontent.com/open-manifold/Open-Manifold/main/res/logo.svg)
+![](https://raw.githubusercontent.com/open-manifold/Open-Manifold/main/res/readme_logo.svg)
 
 [![Latest Release](https://img.shields.io/github/v/release/open-manifold/Open-Manifold?style=plastic)](https://github.com/open-manifold/Open-Manifold/releases/latest)
 [![Build Status](https://img.shields.io/github/actions/workflow/status/open-manifold/Open-Manifold/makefile.yaml?style=plastic)](https://github.com/open-manifold/Open-Manifold/actions/workflows/makefile.yaml)
