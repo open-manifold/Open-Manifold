@@ -2548,7 +2548,6 @@ int main(int argc, char *argv[]) {
                                 Mix_PlayChannel(0, snd_menu_confirm, 0);
 
                                 if (modify_current_option_button() == 1) {
-                                    Mix_PlayChannel(0, snd_menu_confirm, 0);
                                     transition_state = TITLE;
                                     fade_out++;
                                 }
