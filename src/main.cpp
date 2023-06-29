@@ -2012,6 +2012,8 @@ int main(int argc, char *argv[]) {
     int menu_selected = 0;
     int sandbox_option_selected = 0;
     bool sandbox_menu_active = false;
+    bool sandbox_quit_dialog_active = false;
+    bool sandbox_quit_dialog_selected = false; // only two options, hence bool instead of an int
     bool sandbox_lock = false;
 
     load_motd();
@@ -2314,22 +2316,45 @@ int main(int argc, char *argv[]) {
                     case SANDBOX:
                         if (check_fade_activity()) {break;}
 
-                        // inputs that are true regardless of the sandbox menu
-                        switch(input_value) {
-                            case START:
-                                sandbox_menu_active = !sandbox_menu_active;
-                                break;
+                        // inputs for the quit confirmation dialog when exiting sandbox mode
+                        if (sandbox_quit_dialog_active) {
+                            switch(input_value) {
+                                case LEFT:
+                                case RIGHT:
+                                    Mix_PlayChannel(0, snd_menu_move, 0);
+                                    sandbox_quit_dialog_selected = !sandbox_quit_dialog_selected;
+                                    break;
 
-                            case SELECT:
-                                Mix_PlayChannel(0, snd_menu_back, 0);
-                                transition_state = TITLE;
-                                fade_out++;
-                                break;
-                        }
+                                case SELECT:
+                                    sandbox_quit_dialog_selected = true;
+                                    Mix_PlayChannel(0, snd_menu_back, 0);
+                                    transition_state = TITLE;
+                                    fade_out++;
+                                    break;
 
-                        if (sandbox_menu_active) {
+                                case CROSS:
+                                case CIRCLE:
+                                case SQUARE:
+                                case TRIANGLE:
+                                    Mix_PlayChannel(0, snd_menu_back, 0);
+                                    if (sandbox_quit_dialog_selected) {
+                                        transition_state = TITLE;
+                                        fade_out++;
+                                    } else {
+                                        sandbox_quit_dialog_selected = false;
+                                        sandbox_quit_dialog_active = false;
+                                    }
+                                    break;
+
+                                break;
+                            }
+                        } else if (sandbox_menu_active) {
                             // inputs for when the sandbox menu is up
                             switch (input_value) {
+                                case START:
+                                    sandbox_menu_active = !sandbox_menu_active;
+                                    break;
+
                                 case LEFT:
                                     Mix_PlayChannel(0, snd_menu_move, 0);
                                     sandbox_option_selected--;
@@ -2409,6 +2434,14 @@ int main(int argc, char *argv[]) {
                         } else {
                             // inputs for "normal" sandbox play
                             switch (input_value) {
+                                case START:
+                                    sandbox_menu_active = !sandbox_menu_active;
+                                    break;
+
+                                case SELECT:
+                                    sandbox_quit_dialog_active = true;
+                                    break;
+
                                 case UP:
                                     active_shape = modify_current_shape('U', active_shape);
                                     break;
@@ -2649,6 +2682,8 @@ int main(int argc, char *argv[]) {
                     json_file[0]["background_effect"] = "wave";
                     init_background_effect();
                     sandbox_menu_active = false;
+                    sandbox_quit_dialog_active = false;
+                    sandbox_quit_dialog_selected = false;
                     sandbox_option_selected = 0;
                     sandbox_lock = false;
                     break;
@@ -2713,7 +2748,7 @@ int main(int argc, char *argv[]) {
                 break;
 
             case SANDBOX:
-                draw_sandbox(active_shape, previous_shapes, sandbox_menu_active, sandbox_lock, sandbox_option_selected, frame_time);
+                draw_sandbox(active_shape, previous_shapes, sandbox_menu_active, sandbox_lock, sandbox_option_selected, sandbox_quit_dialog_active, sandbox_quit_dialog_selected, frame_time);
                 break;
 
             case TUTORIAL:

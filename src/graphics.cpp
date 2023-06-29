@@ -2091,13 +2091,16 @@ bool draw_game(int beat_count, int start_offset, int measure_length, int song_st
     return true;
 }
 
-bool draw_sandbox(shape active_shape, vector<shape> previous_shapes, bool menu_open, bool sandbox_lock, int menu_item, int frame_time) {
+bool draw_sandbox(shape active_shape, vector<shape> previous_shapes, bool menu_open, bool sandbox_lock, int menu_item, bool quit_dialog_active, bool quit_dialog_selected, int frame_time) {
     // Draws the screen during Sandbox mode
     // ----------------------------------------------------------
     // active_shape: The shape the player is currently controlling
     // previous_shapes: Array of all previously-placed shapes
     // menu_open: Toggles whether or not the toolbar is visible
     // menu_item: The currently-selected toolbar item
+    // sandbox_lock: Whether or not shape-locking is active
+    // quit_dialog_active: Whether or not the "are you sure?" dialog box is open
+    // quit_dialog_selected: Selection of yes-or-no in the "are you sure?" dialog box
 
     int time = SDL_GetTicks();
 
@@ -2207,6 +2210,35 @@ bool draw_sandbox(shape active_shape, vector<shape> previous_shapes, bool menu_o
         }
 
         draw_text(sandbox_items[menu_item], width/2, height - icon_size - icon_padding - font->h, 1, 0);
+    }
+
+    // draws the "are you sure?" dialog box
+    if (quit_dialog_active) {
+        int char_height = font->h;
+        int scale_mul = fmax(floor(fmin(height, width)/360), 1);
+        SDL_Color text_color_1 = {255, 255, 96};
+        SDL_Color text_color_2 = {96, 96, 96};
+
+        if (quit_dialog_selected) {
+            SDL_Color temp = text_color_1;
+            text_color_1 = text_color_2;
+            text_color_2 = temp;
+        }
+
+        SDL_Rect rect;
+        rect.x = 0;
+        rect.y = height/2 - (char_height * scale_mul);
+        rect.w = width;
+        rect.h = (char_height * 3) * scale_mul;
+
+        SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
+        SDL_SetRenderDrawColor(renderer, 0, 0, 0, 192);
+        SDL_RenderFillRect(renderer, &rect);
+        SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_NONE);
+
+        draw_text("Are you sure you want to quit?", width/2, height/2 - (char_height/2 * scale_mul), scale_mul, 0);
+        draw_text("Yes", width/2 + (64*scale_mul), height/2 + (char_height/2 * scale_mul), scale_mul, -1, width, text_color_2);
+        draw_text("No", width/2 - (64*scale_mul), height/2 + (char_height/2 * scale_mul), scale_mul, 1, width, text_color_1);
     }
 
     draw_fade(16, 16, frame_time);
