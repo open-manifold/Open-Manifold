@@ -2337,6 +2337,7 @@ int main(int argc, char *argv[]) {
                                 case CIRCLE:
                                 case SQUARE:
                                 case TRIANGLE:
+                                case START:
                                     Mix_PlayChannel(0, snd_menu_back, 0);
                                     if (sandbox_quit_dialog_selected) {
                                         transition_state = TITLE;
