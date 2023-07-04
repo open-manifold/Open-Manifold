@@ -333,7 +333,7 @@ void load_settings(int argc, char* argv[]) {
     if (json_data.contains("vsync"))             {vsync_toggle = json_data["vsync"];}
     if (json_data.contains("frame_cap"))         {frame_cap = json_data["frame_cap"];}
     if (json_data.contains("display_grid"))      {grid_toggle = json_data["display_grid"];}
-    if (json_data.contains("display_hud"))       {grid_toggle = json_data["display_hud"];}
+    if (json_data.contains("display_hud"))       {hud_toggle = json_data["display_hud"];}
     if (json_data.contains("blindfold_mode"))    {blindfold_toggle = json_data["blindfold_mode"];}
     if (json_data.contains("music_volume"))      {music_volume = json_data["music_volume"];}
     if (json_data.contains("sfx_volume"))        {sfx_volume = json_data["sfx_volume"];}
