@@ -1,10 +1,10 @@
-# Builds Open Manifold releases whenever updating version.h
+# Builds Open Manifold releases whenever a tag is created
 name: Build Release
 
 on:
   push:
-    paths:
-      - 'src/version.h'
+    tags:
+    - '*'
 
 jobs:
   build-linux:
@@ -23,7 +23,7 @@ jobs:
       - name: Upload package
         uses: actions/upload-artifact@v3.1.2
         with:
-          name: Open-Manifold-v0.0.0-linux
+          name: Open-Manifold-${{ github.ref_name }}-linux
           path: release-tmp
           retention-days: 14
 
@@ -43,7 +43,7 @@ jobs:
       - name: Upload package
         uses: actions/upload-artifact@v3.1.2
         with:
-          name: Open-Manifold-v0.0.0-macOS
+          name: Open-Manifold-${{ github.ref_name }}-macOS
           path: release-tmp
           retention-days: 14
 
@@ -96,6 +96,6 @@ jobs:
       - name: Upload package
         uses: actions/upload-artifact@v3.1.2
         with:
-          name: Open-Manifold-v0.0.0-win64
+          name: Open-Manifold-${{ github.ref_name }}-win64
           path: release-tmp
           retention-days: 14
