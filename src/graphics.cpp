@@ -1282,6 +1282,17 @@ void draw_background_effect(bg_data bg_data, bool draw_debug_bg, int frame_time)
     return;
 }
 
+SDL_Rect get_grid_size(int x, int y, int scale) {
+    // returns a rect the same size and location as a grid drawn via draw_grid()
+    // actually *used* in draw_grid() below, but also useful for menus and things that rely on the grid for positioning (read: level select)
+    return {(int)(x - (scale * 7.5) - (scale/3)), (int)(y - (scale * 7.5) - (scale/3)), (scale * 15) + ((scale/3)*2), (scale * 15) + ((scale/3)*2)};
+}
+
+SDL_Rect get_grid_shape_area(int x, int y, int scale) {
+    // similar to above, but returns ONLY the area where shapes are drawn
+    return {(int)(x - (scale * 7.5)), (int)(y - (scale * 7.5)), scale * 15, scale * 15};
+}
+
 void draw_grid(int x = width/2, int y = height/2, int scale = height/22, SDL_Color rgb = {255, 255, 255, 255}, bool background_only = false) {
     // Draws the grid that shapes are placed on
     // ----------------------------------------------------------
@@ -1291,13 +1302,7 @@ void draw_grid(int x = width/2, int y = height/2, int scale = height/22, SDL_Col
     // background_only: toggles whether to draw the gridlines or not
 
     SDL_SetRenderDrawColor(renderer, rgb.r, rgb.g, rgb.b, rgb.a);
-    SDL_Rect gridbox;
-
-    // draws grid background
-    gridbox.x = x - (scale * 7.5) - (scale/3);
-    gridbox.y = y - (scale * 7.5) - (scale/3);
-    gridbox.w = (scale * 15) + ((scale/3)*2);
-    gridbox.h = gridbox.w;
+    SDL_Rect gridbox = get_grid_size(x, y, scale);
 
     SDL_RenderFillRect(renderer, &gridbox);
     SDL_SetRenderDrawColor(renderer, abs(rgb.r - 64), abs(rgb.g - 64), abs(rgb.b - 64), 255);
@@ -1904,11 +1909,7 @@ bool draw_level_select(vector<shape> shapes, int frame_time) {
     int scale_mul = fmax(floor(fmin(height, width)/300), 1);
 
     // calculates the size of the shape grid; this will be used to create a texture that our shapes are drawn on later
-    SDL_Rect grid_area;
-    grid_area.x = width/2 - (height/22 * 7.5);
-    grid_area.y =  height/2 - (height/22 * 7.5);
-    grid_area.w =  (height/22) * 15;
-    grid_area.h =  grid_area.w;
+    SDL_Rect grid_area = get_grid_shape_area(width/2, height/2, height/22);
 
     // json_file is set to NULL if it cannot be parsed properly
     // if it returns NULL, we draw an error screen instead
@@ -1961,7 +1962,12 @@ bool draw_level_select(vector<shape> shapes, int frame_time) {
         SDL_RenderCopy(renderer, shape_texture, NULL, &grid_area);
         SDL_DestroyTexture(shape_texture);
 
-        draw_text(get_level_name(), width/2, grid_area.y - (font->h*(2+scale_mul)), scale_mul, 0);
+        // display name and hiscore
+        int lower_limit = get_grid_size(width/2, height/2, height/22).y;
+        draw_text(get_level_name(), width/2, lower_limit/2 - (font->h), scale_mul, 0);
+        //draw_text("Hiscore: " + std::to_string(i_didnt_implement_this_yet_silly_dont_uncomment_this_line_or_the_game_wont_build_anymore_colon_left_parentheses_emoticon_here()), width/2, lower_limit/2 + (font->h * (scale_mul-1)), 1, 0);
+
+        // display metadata
         draw_text(std::to_string(get_level_bpm()) + " BPM", width/6, grid_area.y + grid_area.h + (font->h), 1, 1, width/3);
         draw_text("Genre: " + get_genre(), width/6, grid_area.y + grid_area.h + (font->h * 2), 1, 1, width/3);
         draw_text("Playlist: " + get_level_playlist_name(), width/6, grid_area.y + grid_area.h + (font->h * 3), 1, 1);
@@ -2023,10 +2029,7 @@ bool draw_game(int beat_count, int start_offset, int measure_length, int song_st
     draw_character(character_beat_count);
     draw_grid(width/2, height/2, height/22, bg_color, !grid_toggle);
 
-    SDL_Rect grid_area;
-    grid_area.x = width/2 - (height/22 * 7.5);
-    grid_area.y = height/2 - (height/22 * 7.5);
-    grid_area.w = grid_area.h = (height/22) * 15;
+    SDL_Rect grid_area = get_grid_shape_area(width/2, height/2, height/22);
 
     // all shapes are rendered to a texture in order to allow for "erase" colors to function
     SDL_Texture *shape_texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, grid_area.w, grid_area.w);
@@ -2121,11 +2124,7 @@ bool draw_sandbox(shape active_shape, vector<shape> previous_shapes, bool menu_o
     draw_background_effect(bg_data, false, frame_time);
     draw_grid(width/2, height/2, height/22, get_color(15));
 
-    SDL_Rect grid_area;
-    grid_area.x = width/2 - (height/22 * 7.5);
-    grid_area.y =  height/2 - (height/22 * 7.5);
-    grid_area.w =  (height/22) * 15;
-    grid_area.h =  grid_area.w;
+    SDL_Rect grid_area = get_grid_shape_area(width/2, height/2, height/22);
 
     // all shapes are rendered to a texture in order to allow for "erase" colors to function
     SDL_Texture *shape_texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, grid_area.w, grid_area.w);
