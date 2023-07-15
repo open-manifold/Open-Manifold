@@ -1965,7 +1965,7 @@ bool draw_level_select(vector<shape> shapes, int frame_time) {
         // display name and hiscore
         int lower_limit = get_grid_size(width/2, height/2, height/22).y;
         draw_text(get_level_name(), width/2, lower_limit/2 - (font->h), scale_mul, 0);
-        //draw_text("Hiscore: " + std::to_string(i_didnt_implement_this_yet_silly_dont_uncomment_this_line_or_the_game_wont_build_anymore_colon_left_parentheses_emoticon_here()), width/2, lower_limit/2 + (font->h * (scale_mul-1)), 1, 0);
+        draw_text("Hiscore: " + std::to_string(get_hiscore()), width/2, lower_limit/2 + (font->h * (scale_mul-1)), 1, 0);
 
         // display metadata
         draw_text(std::to_string(get_level_bpm()) + " BPM", width/6, grid_area.y + grid_area.h + (font->h), 1, 1, width/3);

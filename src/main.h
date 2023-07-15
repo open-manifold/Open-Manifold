@@ -39,6 +39,7 @@ bool get_debug();
 
 int get_life();
 int get_score();
+int get_hiscore();
 int get_combo();
 
 void load_tile_frame_file();

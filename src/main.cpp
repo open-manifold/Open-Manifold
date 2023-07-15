@@ -71,6 +71,7 @@ bool debug_toggle;
 
 // main-game variables
 int score = 0;
+int hiscore = 0;
 int combo = 0;
 int life = 100;
 
@@ -1161,6 +1162,68 @@ int calculate_score() {
     return score;
 }
 
+void load_hiscore() {
+    int score = 0;
+    string current_level = get_level_name();
+    std::ifstream ifs("hiscores.json");
+
+    if (ifs.good()) {
+        try {
+            json json_data = json::parse(ifs);
+
+            if (json_data.contains(current_level)) {
+                score = json_data[current_level];
+            }
+        } catch(json::parse_error& err) {
+            printf("[!] Error parsing hiscores.json: %s\n", err.what());
+        }
+
+        ifs.close();
+    }
+
+    hiscore = score;
+    return;
+}
+
+int get_hiscore() {
+    return hiscore;
+}
+
+void save_score() {
+    // saves the current score value to the currently selected level's entry in hiscores.json
+    int current_hiscore = 0;
+    int new_score = get_score();
+    string current_level = get_level_name();
+
+    json json_data;
+    std::ifstream ifs("hiscores.json");
+
+    if (ifs.good()) {
+        try {
+            json_data = json::parse(ifs);
+        } catch(json::parse_error& err) {
+            printf("[!] Error parsing hiscores.json: %s\n", err.what());
+        }
+
+        ifs.close();
+    }
+
+    // check if level has a saved hiscore already
+    if (json_data.contains(current_level)) {
+        current_hiscore = json_data[current_level];
+    }
+
+    // compare old score to new score, save it only if it's higher!
+    if (new_score > current_hiscore) {
+        printf("Saving new hi-score for %s...\n", current_level.c_str());
+        json_data[current_level] = new_score;
+        std::ofstream file("hiscores.json");
+        file << json_data.dump(4);
+    }
+
+    return;
+}
+
 bool check_json_validity() {
     // returns false if the level json object is NULL
     // used in the level select in graphics.cpp
@@ -1939,6 +2002,7 @@ bool loop(json json_file, int start_offset, int time_signature_top, int time_sig
             }
 
             if (shape_count >= json_file.size() + 2 && check_fade_activity() == false) {
+                save_score();
                 printf("Ending level...\n");
                 fade_out++;
             }
@@ -2097,6 +2161,11 @@ int main(int argc, char *argv[]) {
                     if (get_debug() == true) {printf("Crashing game on purpose...\n"); abort();}
                 }
 
+                if (evt.key.keysym.sym == SDLK_F8) {
+                    if (get_debug() == true) {save_score();}
+                    set_fullscreen();
+                }
+
                 // THE SWITCH OF DOOM(tm)
                 // this controls what the buttons do depending on the current game state
                 switch (current_state) {
@@ -2185,6 +2254,7 @@ int main(int argc, char *argv[]) {
 
                                         printf("Attempting to reload the current file...\n");
                                         json_file = parse_level_file(get_level_json_path());
+                                        load_hiscore();
 
                                         break;
                                     }
@@ -2211,6 +2281,7 @@ int main(int argc, char *argv[]) {
                                     level_index--;
                                     if (level_index < 0) {level_index = level_paths.size() - 1;}
                                     json_file = parse_level_file(get_level_json_path());
+                                    load_hiscore();
                                 }
                                 break;
 
@@ -2221,6 +2292,7 @@ int main(int argc, char *argv[]) {
                                     level_index++;
                                     if (level_index >= level_paths.size()) {level_index = 0;}
                                     json_file = parse_level_file(get_level_json_path());
+                                    load_hiscore();
                                 }
                                 break;
                         }
@@ -2667,6 +2739,7 @@ int main(int argc, char *argv[]) {
                         json_file = NULL;
                     } else {
                         json_file = parse_level_file(get_level_json_path());
+                        load_hiscore();
                     }
 
                     break;
