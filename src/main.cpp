@@ -71,9 +71,15 @@ bool debug_toggle;
 
 // main-game variables
 int score = 0;
-int hiscore = 0;
 int combo = 0;
 int life = 100;
+
+// metadata storage for level select
+struct {
+    unsigned int hiscore;
+    unsigned int play_count;
+    bool cleared;
+} metadata  = {0, 0, false};
 
 // BG flags
 // set to true for one frame when applicable
@@ -1021,6 +1027,18 @@ string get_song_author() {
     return json_file[0].value("song_author", "Anonymous");
 }
 
+int get_hiscore() {
+    return metadata.hiscore;
+}
+
+int get_play_count() {
+    return metadata.play_count;
+}
+
+bool get_cleared() {
+    return metadata.cleared;
+}
+
 string get_cpu_sequence() {
     return cpu_sequence;
 }
@@ -1162,8 +1180,10 @@ int calculate_score() {
     return score;
 }
 
-void load_hiscore() {
+void load_metadata() {
     int score = 0;
+    int play_count = 0;
+    bool cleared = false;
     string current_level = get_level_name();
     std::ifstream ifs("hiscores.json");
 
@@ -1173,6 +1193,8 @@ void load_hiscore() {
 
             if (json_data.contains(current_level)) {
                 score = json_data[current_level].value("score", 0);
+                play_count = json_data[current_level].value("play_count", 0);
+                cleared = json_data[current_level].value("cleared", false);
             }
         } catch(json::parse_error& err) {
             printf("[!] Error parsing hiscores.json: %s\n", err.what());
@@ -1181,12 +1203,10 @@ void load_hiscore() {
         ifs.close();
     }
 
-    hiscore = score;
+    metadata.hiscore = score;
+    metadata.play_count = play_count;
+    metadata.cleared = cleared;
     return;
-}
-
-int get_hiscore() {
-    return hiscore;
 }
 
 void save_score() {
@@ -1221,6 +1241,73 @@ void save_score() {
         file << json_data.dump(4);
     }
 
+    return;
+}
+
+void save_play_count() {
+    // saves the current play count to the currently selected level's entry in hiscores.json
+    // or more accurately it just increments it by 1
+    unsigned int play_count = metadata.play_count;
+    string current_level = get_level_name();
+
+    json json_data;
+    std::ifstream ifs("hiscores.json");
+
+    if (ifs.good()) {
+        try {
+            json_data = json::parse(ifs);
+        } catch(json::parse_error& err) {
+            printf("[!] Error parsing hiscores.json: %s\n", err.what());
+        }
+
+        ifs.close();
+    }
+
+    printf("Saving play count for %s...\n", current_level.c_str());
+    json_data[current_level]["play_count"] = play_count + 1;
+    std::ofstream file("hiscores.json");
+    file << json_data.dump(4);
+
+    return;
+}
+
+void save_cleared() {
+    // saves a cleared flag to the currently selected level's entry in hiscores.json
+    bool cleared = false;
+    string current_level = get_level_name();
+
+    json json_data;
+    std::ifstream ifs("hiscores.json");
+
+    if (ifs.good()) {
+        try {
+            json_data = json::parse(ifs);
+        } catch(json::parse_error& err) {
+            printf("[!] Error parsing hiscores.json: %s\n", err.what());
+        }
+
+        ifs.close();
+    }
+
+    // check if level has been cleared already
+    if (json_data.contains(current_level)) {
+        cleared = json_data[current_level].value("cleared", false);
+    }
+
+    // save cleared flag if it hasn't been cleared before
+    if (metadata.cleared && !cleared) {
+        printf("Saving level clear flag for %s...\n", current_level.c_str());
+        json_data[current_level]["cleared"] = true;
+        std::ofstream file("hiscores.json");
+        file << json_data.dump(4);
+    }
+}
+
+void save_metadata() {
+    // wrapper for the above three functions
+    save_score();
+    save_play_count();
+    save_cleared();
     return;
 }
 
@@ -1999,10 +2086,11 @@ bool loop(json json_file, int start_offset, int time_signature_top, int time_sig
             if (song_over == false) {
                 printf("End of level reached.\n");
                 song_over = true;
+                metadata.cleared = true;
             }
 
             if (shape_count >= json_file.size() + 2 && check_fade_activity() == false) {
-                save_score();
+                save_metadata();
                 printf("Ending level...\n");
                 fade_out++;
             }
@@ -2162,7 +2250,7 @@ int main(int argc, char *argv[]) {
                 }
 
                 if (evt.key.keysym.sym == SDLK_F8) {
-                    if (get_debug() == true) {save_score();}
+                    if (get_debug() == true) {save_metadata();}
                     set_fullscreen();
                 }
 
@@ -2254,7 +2342,7 @@ int main(int argc, char *argv[]) {
 
                                         printf("Attempting to reload the current file...\n");
                                         json_file = parse_level_file(get_level_json_path());
-                                        load_hiscore();
+                                        load_metadata();
 
                                         break;
                                     }
@@ -2281,7 +2369,7 @@ int main(int argc, char *argv[]) {
                                     level_index--;
                                     if (level_index < 0) {level_index = level_paths.size() - 1;}
                                     json_file = parse_level_file(get_level_json_path());
-                                    load_hiscore();
+                                    load_metadata();
                                 }
                                 break;
 
@@ -2292,7 +2380,7 @@ int main(int argc, char *argv[]) {
                                     level_index++;
                                     if (level_index >= level_paths.size()) {level_index = 0;}
                                     json_file = parse_level_file(get_level_json_path());
-                                    load_hiscore();
+                                    load_metadata();
                                 }
                                 break;
                         }
@@ -2316,6 +2404,7 @@ int main(int argc, char *argv[]) {
                                 case CROSS:
                                 case LB:
                                 case RB:
+                                    save_play_count();
                                     Mix_PlayChannel(0, snd_menu_confirm, 0);
                                     fade_out++;
                                     break;
@@ -2739,7 +2828,7 @@ int main(int argc, char *argv[]) {
                         json_file = NULL;
                     } else {
                         json_file = parse_level_file(get_level_json_path());
-                        load_hiscore();
+                        load_metadata();
                     }
 
                     break;

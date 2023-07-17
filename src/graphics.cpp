@@ -1962,17 +1962,24 @@ bool draw_level_select(vector<shape> shapes, int frame_time) {
         SDL_RenderCopy(renderer, shape_texture, NULL, &grid_area);
         SDL_DestroyTexture(shape_texture);
 
-        // display name and hiscore
+        // display level name and playlist
+        // also set up some variables that'll be used for alignment
         int lower_limit = get_grid_size(width/2, height/2, height/22).y;
-        draw_text(get_level_name(), width/2, lower_limit/2 - (font->h), scale_mul, 0);
-        draw_text("Hiscore: " + std::to_string(get_hiscore()), width/2, lower_limit/2 + (font->h * (scale_mul-1)), 1, 0);
+        int bottom_of_grid = grid_area.y + grid_area.h;
 
-        // display metadata
-        draw_text(std::to_string(get_level_bpm()) + " BPM", width/6, grid_area.y + grid_area.h + (font->h), 1, 1, width/3);
-        draw_text("Genre: " + get_genre(), width/6, grid_area.y + grid_area.h + (font->h * 2), 1, 1, width/3);
-        draw_text("Playlist: " + get_level_playlist_name(), width/6, grid_area.y + grid_area.h + (font->h * 3), 1, 1);
-        draw_text("Song: " + get_song_author(), width - (width/6), grid_area.y + grid_area.h + (font->h), 1, -1, width/3);
-        draw_text("Level: " + get_level_author(), width - (width/6), grid_area.y + grid_area.h + (font->h * 2), 1, -1, width/3);
+        draw_text(get_level_name(), width/2, lower_limit/2 - (font->h), scale_mul, 0);
+        draw_text("Playlist: " + get_level_playlist_name(), width/2, lower_limit/2 + (font->h * (scale_mul-1)), 1, 0);
+
+        // display hiscore/user metadata
+        draw_text("Hiscore: " + std::to_string(get_hiscore()), width/2, bottom_of_grid + (font->h), 1, 0);
+        draw_text("Play Count: " + std::to_string(get_play_count()), width/2, bottom_of_grid + (font->h * 2), 1, 0);
+        draw_text(get_cleared() ? "Cleared" : "Not Cleared", width/2, bottom_of_grid + (font->h * 3), 1, 0);
+
+        // display level metadata
+        draw_text(std::to_string(get_level_bpm()) + " BPM", width/6, bottom_of_grid + (font->h), 1, 1, width/3);
+        draw_text("Genre: " + get_genre(), width/6, bottom_of_grid + (font->h * 2), 1, 1, width/3);
+        draw_text("Song: " + get_song_author(), width - (width/6), bottom_of_grid + (font->h), 1, -1, width/3);
+        draw_text("Level: " + get_level_author(), width - (width/6), bottom_of_grid + (font->h * 2), 1, -1, width/3);
 
         if (get_debug()) {
             for (int i = 0; i < 16; i++) {
