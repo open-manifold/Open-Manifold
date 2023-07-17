@@ -1172,7 +1172,7 @@ void load_hiscore() {
             json json_data = json::parse(ifs);
 
             if (json_data.contains(current_level)) {
-                score = json_data[current_level];
+                score = json_data[current_level].value("score", 0);
             }
         } catch(json::parse_error& err) {
             printf("[!] Error parsing hiscores.json: %s\n", err.what());
@@ -1210,13 +1210,13 @@ void save_score() {
 
     // check if level has a saved hiscore already
     if (json_data.contains(current_level)) {
-        current_hiscore = json_data[current_level];
+        current_hiscore = json_data[current_level].value("score", 0);
     }
 
     // compare old score to new score, save it only if it's higher!
     if (new_score > current_hiscore) {
         printf("Saving new hi-score for %s...\n", current_level.c_str());
-        json_data[current_level] = new_score;
+        json_data[current_level]["score"] = new_score;
         std::ofstream file("hiscores.json");
         file << json_data.dump(4);
     }
