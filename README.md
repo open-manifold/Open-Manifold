@@ -18,7 +18,7 @@ If you run into any bugs or have feature suggestions, you can [file an issue tic
 
 ## Background
 
-*Rhythm 'N' Face* was a rhythm game released exclusively in Japan for the [PlayStation](https://en.wikipedia.org/wiki/PlayStation_%28console%29) in 2000. It was developed by Outside Directors, best known for the cult-classic exploration game _[LSD: Dream Emulator](https://en.wikipedia.org/wiki/LSD:_Dream_Emulator)_ and for their geometry-based, psychidelic art style which *Rhythm 'N' Face* is based around.
+*Rhythm 'N' Face* was a rhythm game released exclusively in Japan for the [PlayStation](https://en.wikipedia.org/wiki/PlayStation_%28console%29) in 2000. It was developed by Outside Directors, best known for the cult-classic exploration game _[LSD: Dream Emulator](https://en.wikipedia.org/wiki/LSD:_Dream_Emulator)_ and for their geometry-based, psychedelic art style which *Rhythm 'N' Face* is based around.
   
 The object of the game was to create "faces" by moving and resizing a series of circles, squares, and triangles - corresponding to the respective buttons on a PlayStation controller - to the beat of a song. (The remaining button, X, is used for a "stall" function, referred to by this game as an "X-plode").
 
