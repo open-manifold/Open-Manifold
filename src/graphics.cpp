@@ -1162,6 +1162,34 @@ void draw_background_bigbang(bg_data bg_data, int frame_time) {
     return;
 }
 
+void draw_background_kefrens(bg_data bg_data, int frame_time) {
+    float scroll_speed = bg_data.song_tick * 0.001;
+    float magnitude = width/4;
+    int bar_count = 100;
+
+    draw_gradient(0, 0, width, height, {8, 0, 32, 255}, {32, 0, 64, 255});
+    SDL_Rect bar;
+    for (int i = 0; i < bar_count; i++) {
+
+        magnitude += (magnitude / bar_count);
+        SDL_SetRenderDrawColor(renderer, (255 * i)/bar_count, (192 * i)/bar_count, 128, 255);
+
+        bar.w = width / 10.f;
+        bar.x = (width/2 + (magnitude * sin(scroll_speed + i/8.f) * sin(scroll_speed*2 + i/4.f))) - (bar.w/2.f);
+        bar.y = (height/(float)bar_count) * i;
+        bar.h = height - bar.y;
+
+        SDL_RenderFillRect(renderer, &bar);
+
+        SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
+        bar.x += bar.w / 4;
+        bar.w = bar.w / 2;
+        bar.h = height / (float)bar_count;
+        SDL_RenderFillRect(renderer, &bar);
+    }
+    return;
+}
+
 background_effect get_level_background_effect() {
     // converts a background_effect's value to an enum used internally
     // we do this for readability, and because comparing ints are faster than comparing strings
@@ -1180,6 +1208,7 @@ background_effect get_level_background_effect() {
     if (background_name == "munching")      return munching;
     if (background_name == "lasers")        return lasers;
     if (background_name == "bigbang")       return bigbang;
+    if (background_name == "kefrens")       return kefrens;
 
     return none;
 }
@@ -1271,6 +1300,7 @@ void draw_background_effect(bg_data bg_data, bool draw_debug_bg, int frame_time)
         case munching:      draw_background_munching    (bg_data, frame_time);  break;
         case lasers:        draw_background_lasers      (bg_data, frame_time);  break;
         case bigbang:       draw_background_bigbang     (bg_data, frame_time);  break;
+        case kefrens:       draw_background_kefrens     (bg_data, frame_time);  break;
         case none:
         default: break;
     }
