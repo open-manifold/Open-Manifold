@@ -40,6 +40,7 @@
 
 using nlohmann::json;
 using std::string;
+using std::to_string;
 using std::vector;
 
 extern SDL_Window* window;
@@ -550,7 +551,7 @@ void draw_background_test(bg_data bg_data, int frame_time) {
 
     SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
     SDL_RenderFillRect(renderer, &shape);
-    draw_text(std::to_string(bg_data.song_tick), 0, shape.y, 1, 1);
+    draw_text(to_string(bg_data.song_tick), 0, shape.y, 1, 1);
 
     // green bar that shows beat length
     shape.y = height - 64;
@@ -558,7 +559,7 @@ void draw_background_test(bg_data bg_data, int frame_time) {
 
     SDL_SetRenderDrawColor(renderer, 0, 255, 0, 255);
     SDL_RenderFillRect(renderer, &shape);
-    draw_text(std::to_string(bg_data.beat_tick), 0, shape.y, 1, 1);
+    draw_text(to_string(bg_data.beat_tick), 0, shape.y, 1, 1);
 
     // yellow bar that shows peak of last beat
     shape.y = height - 96;
@@ -566,7 +567,7 @@ void draw_background_test(bg_data bg_data, int frame_time) {
 
     SDL_SetRenderDrawColor(renderer, 255, 172, 0, 255);
     SDL_RenderFillRect(renderer, &shape);
-    draw_text(std::to_string(peak_beat_length), 0, shape.y, 1, 1);
+    draw_text(to_string(peak_beat_length), 0, shape.y, 1, 1);
 
     // box that pulses on every beat, also shows the beat count
     // color shows timing window; red=none, green=left, blue=right
@@ -592,7 +593,7 @@ void draw_background_test(bg_data bg_data, int frame_time) {
     }
 
     SDL_RenderFillRect(renderer, &shape);
-    draw_text(std::to_string(bg_data.beat_count), shape.x + (shape.w*0.5), shape.y + (shape.h*0.5), 2, 0);
+    draw_text(to_string(bg_data.beat_count), shape.x + (shape.w*0.5), shape.y + (shape.h*0.5), 2, 0);
 
     // shows sequence strings on-screen for debugging
     draw_text(get_cpu_sequence(), width/2, height - font->h, 1, 0, width, {128, 64, 64, 255});
@@ -1357,7 +1358,7 @@ void draw_hud(int life, int score, int time, int frame_time) {
     // Draws the HUD during the main game
 
     int scale_mul = fmax(floor(height/360), 1);
-    string score_string = std::to_string(score);
+    string score_string = to_string(score);
     score_string.insert(0, 8 - score_string.length(), '0');
 
     // draws the underlay (the black part)
@@ -1384,12 +1385,12 @@ void draw_hud(int life, int score, int time, int frame_time) {
     SDL_RenderFillRect(renderer, &life_bar);
 
     // draws text versions of life bar, and score
-    draw_text(std::to_string(life) + "%", life_bar.x, life_bar.y, scale_mul, 1, hud_bar.w);
+    draw_text(to_string(life) + "%", life_bar.x, life_bar.y, scale_mul, 1, hud_bar.w);
     draw_text(score_string, width - life_bar.x, life_bar.y, scale_mul, -1, hud_bar.w);
 
     if (combo_display_timer > 0) {
         int combo = get_combo();
-        string combo_str = std::to_string(combo) + "x combo!";
+        string combo_str = to_string(combo) + "x combo!";
 
         Uint8 color_pulse = abs(sin(time*4.f/180)) * 200;
         draw_text(combo_str, width/2, life_bar.y, scale_mul, 0, hud_bar.w/2, {255, color_pulse, 255, 255});
@@ -1634,8 +1635,8 @@ void draw_menu_background(int frame_time) {
 
 void draw_fps(bool toggle, int fps, int frame_time) {
     if (toggle) {
-        string fps_string = std::to_string(fps).append(" FPS");
-        string frame_time_string = std::to_string(frame_time).append(" ms");
+        string fps_string = to_string(fps).append(" FPS");
+        string frame_time_string = to_string(frame_time).append(" ms");
 
         // draws a black, transparent rectangle underneath the FPS text
         SDL_Rect rect;
@@ -2001,12 +2002,12 @@ bool draw_level_select(vector<shape> shapes, int frame_time) {
         draw_text("Playlist: " + get_level_playlist_name(), width/2, lower_limit/2 + (font->h * (scale_mul-1)), 1, 0);
 
         // display hiscore/user metadata
-        draw_text("Hiscore: " + std::to_string(get_hiscore()), width/2, bottom_of_grid + (font->h), 1, 0);
-        draw_text("Play Count: " + std::to_string(get_play_count()), width/2, bottom_of_grid + (font->h * 2), 1, 0);
+        draw_text("Hiscore: " + to_string(get_hiscore()), width/2, bottom_of_grid + (font->h), 1, 0);
+        draw_text("Play Count: " + to_string(get_play_count()), width/2, bottom_of_grid + (font->h * 2), 1, 0);
         draw_text(get_cleared() ? "Cleared" : "Not Cleared", width/2, bottom_of_grid + (font->h * 3), 1, 0);
 
         // display level metadata
-        draw_text(std::to_string(get_level_bpm()) + " BPM", width/6, bottom_of_grid + (font->h), 1, 1, width/3);
+        draw_text(to_string(get_level_bpm()) + " BPM", width/6, bottom_of_grid + (font->h), 1, 1, width/3);
         draw_text("Genre: " + get_genre(), width/6, bottom_of_grid + (font->h * 2), 1, 1, width/3);
         draw_text("Song: " + get_song_author(), width - (width/6), bottom_of_grid + (font->h), 1, -1, width/3);
         draw_text("Level: " + get_level_author(), width - (width/6), bottom_of_grid + (font->h * 2), 1, -1, width/3);

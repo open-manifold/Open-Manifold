@@ -29,6 +29,7 @@
 #include "main.h"
 
 using std::string;
+using std::to_string;
 using std::vector;
 
 // various options
@@ -238,18 +239,18 @@ string get_option_value(int index) {
     option_id id = options[index].id;
 
     switch (id) {
-        case OPT_MUSIC: return std::to_string(music_volume).append("%");
-        case OPT_SFX: return std::to_string(sfx_volume).append("%");
+        case OPT_MUSIC: return to_string(music_volume).append("%");
+        case OPT_SFX: return to_string(sfx_volume).append("%");
         case OPT_TOGGLE_MONO: return mono_toggle ? "Mono" : "Stereo";
         case OPT_FULLSCREEN: return fullscreen_toggle ? "Enabled" : "Disabled";
         case OPT_VSYNC: return vsync_toggle ? "Enabled" : "Disabled";
-        case OPT_FRAME_CAP: return std::to_string(frame_cap);
+        case OPT_FRAME_CAP: return to_string(frame_cap);
         case OPT_TOGGLE_FPS: return fps_toggle ? "Enabled" : "Disabled";
         case OPT_TOGGLE_GRID: return grid_toggle ? "Enabled" : "Disabled";
         case OPT_TOGGLE_HUD: return hud_toggle ? "Enabled" : "Disabled";
         case OPT_TOGGLE_BLINDFOLD: return blindfold_toggle ? "Enabled" : "Disabled";
         case OPT_TOGGLE_RUMBLE: return rumble_toggle ? "Enabled" : "Disabled";
-        case OPT_CONTROLLER_ID: return std::to_string(controller_index);
+        case OPT_CONTROLLER_ID: return to_string(controller_index);
         default: return "";
     }
 }

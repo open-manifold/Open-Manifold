@@ -44,6 +44,7 @@
 
 using nlohmann::json;
 using std::string;
+using std::to_string;
 using std::vector;
 
 // basic window stuff
@@ -232,7 +233,7 @@ char *parse_option_value(char **argc, char **argv, const string& opt) {
 }
 
 string get_version_string() {
-    return "v" + std::to_string(VERSION_MAJOR) + "." + std::to_string(VERSION_MINOR) + "." + std::to_string(VERSION_PATCH);
+    return "v" + to_string(VERSION_MAJOR) + "." + to_string(VERSION_MINOR) + "." + to_string(VERSION_PATCH);
 }
 
 void print_header() {
@@ -732,7 +733,7 @@ void play_dialog_advance() {
 
 void set_vsync_renderer() {
     // sets VSYNC flag in SDL2 and re-creates the renderer
-    SDL_SetHint(SDL_HINT_RENDER_VSYNC, std::to_string(vsync_toggle).c_str());
+    SDL_SetHint(SDL_HINT_RENDER_VSYNC, to_string(vsync_toggle).c_str());
 
     SDL_DestroyRenderer(renderer);
     renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_TARGETTEXTURE);
@@ -856,7 +857,7 @@ bool init(int argc, char *argv[]) {
     load_settings(argc, argv);
 
     // sets VSYNC render hint
-    SDL_SetHint(SDL_HINT_RENDER_VSYNC, std::to_string(vsync_toggle).c_str());
+    SDL_SetHint(SDL_HINT_RENDER_VSYNC, to_string(vsync_toggle).c_str());
 
     // sets preferred backend to openGL
     // this fixes, among other things (likely), the starfield BGFX
