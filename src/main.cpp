@@ -1127,6 +1127,22 @@ string get_current_mapping() {
 
 }
 
+string get_current_mapping_explicit(bool type, unsigned int index) {
+    // similar to the above but you can manually specify which index and type to get
+    // used only for options.cpp right now, and probably not necessary with a refactor, but this is the easiest way to implement it
+
+    if (type == true) {
+        return SDL_GetKeyName(keymap[index]);
+    }
+
+    if (type == false) {
+        return SDL_GameControllerGetStringForButton(buttonmap[index]);
+    }
+
+    return "?";
+
+}
+
 string get_input_name() {
     // used in the options menu when rebinding
     // returns a string of the abstract controller that everything is mapped onto; named after the PS1 pad

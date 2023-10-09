@@ -13,6 +13,7 @@ std::string get_cpu_sequence();
 std::string get_player_sequence();
 std::string get_version_string();
 std::string get_current_mapping();
+std::string get_current_mapping_explicit(bool, unsigned int);
 std::string get_input_name();
 
 void save_settings();
