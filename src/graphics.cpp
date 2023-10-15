@@ -137,7 +137,7 @@ struct {
 
 // similar data for the sandbox menu
 // TODO: split off this (and other sandbox functions) into their own file
-const char* sandbox_items[] = {
+string sandbox_items[] = {
     "Change Color",
     "Shape Morph",
     "Color Morph",
@@ -1799,7 +1799,7 @@ bool draw_title(int menu_selection, int frame_time) {
     // ----------------------------------------------------------
     // menu_selection: What is currently selected (range 0-3)
 
-    const char *menu_items[5] = {"Play", "Sandbox", "Tutorial", "Options", "Quit"};
+    string menu_items[5] = {"Play", "Sandbox", "Tutorial", "Options", "Quit"};
 
     int scale_mul = fmax(floor(fmin(height, width)/360), 1);
     int char_height = font->h + 2;
