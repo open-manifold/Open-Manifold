@@ -2274,8 +2274,8 @@ bool draw_sandbox(shape active_shape, vector<shape> previous_shapes, bool menu_o
         SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_NONE);
 
         draw_text("Are you sure you want to quit?", width/2, height/2 - (char_height/2 * scale_mul), scale_mul, 0);
-        draw_text("Yes", width/2 + (64*scale_mul), height/2 + (char_height/2 * scale_mul), scale_mul, -1, width, text_color_2);
-        draw_text("No", width/2 - (64*scale_mul), height/2 + (char_height/2 * scale_mul), scale_mul, 1, width, text_color_1);
+        draw_text("No", width/2 + (64*scale_mul), height/2 + (char_height/2 * scale_mul), scale_mul, -1, width, text_color_1);
+        draw_text("Yes", width/2 - (64*scale_mul), height/2 + (char_height/2 * scale_mul), scale_mul, 1, width, text_color_2);
     }
 
     draw_fade(16, 16, frame_time);
