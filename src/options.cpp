@@ -210,11 +210,11 @@ vector<option_item> options = options_main;
 
 int option_selected = 0;
 
-const char* get_option_name(int x = option_selected) {
+string get_option_name(int x = option_selected) {
     return options[x].name;
 }
 
-const char* get_option_desc() {
+string get_option_desc() {
     return options[option_selected].description;
 }
 

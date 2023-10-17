@@ -2,8 +2,8 @@
 
 int get_option_count();
 int get_option_selection();
-const char* get_option_name(int);
-const char* get_option_desc();
+std::string get_option_name(int);
+std::string get_option_desc();
 std::string get_option_value(int);
 int get_rebind_index();
 void increment_rebind_index();
