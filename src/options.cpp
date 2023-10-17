@@ -110,96 +110,96 @@ enum option_id {
 
 struct option_item {
     option_id id;
-    const char* name = "";
-    const char* description = "";
+    string name = "";
+    string description = "";
 };
 
 option_item option_back = {
     OPT_BACK,
-    "Back",
-    "Return to the main options menu."
+    "options.back",
+    "options.back.desc"
 };
 
 vector<option_item> options_main = {
-    {OPT_SUB_VIDEO,     "Video Settings",       "Change graphics settings here."},
-    {OPT_SUB_AUDIO,     "Audio Settings",       "Change audio settings here."},
-    {OPT_SUB_CONTROLS,  "Controller Settings",  "Change controller settings here."},
-    {OPT_SUB_GAMEPLAY,  "Gameplay Settings",    "Change gameplay settings here."},
-    // {OPT_SUB_MISC,      "Other Settings",       "Change other settings here."},
+    {OPT_SUB_VIDEO,     "options.video",       "options.video.desc"},
+    {OPT_SUB_AUDIO,     "options.audio",       "options.audio.desc"},
+    {OPT_SUB_CONTROLS,  "options.controls",    "options.controls.desc"},
+    {OPT_SUB_GAMEPLAY,  "options.gameplay",    "options.gameplay.desc"},
+    // {OPT_SUB_MISC,      "options.misc",        "options.misc.desc"},
     {OPT_NONE},
-    {OPT_SAVE,          "Save & Exit",        "Saves your settings and returns to the main menu."},
-    {OPT_EXIT,          "Exit",                 "Returns to the main menu. No changes will be saved."}
+    {OPT_SAVE,          "options.save",        "options.save.desc"},
+    {OPT_EXIT,          "options.exit",        "options.exit.desc"}
 };
 
 vector<option_item> options_video = {
-    {OPT_FULLSCREEN,    "Fullscreen",   "Sets the game's resolution to your monitor resolution."},
-    {OPT_VSYNC,         "V-Sync",       "Syncs the game's video output to your monitor refresh rate."},
-    {OPT_FRAME_CAP,     "Frame Cap",    "The max framerate the game runs at when V-Sync is off."},
-    {OPT_TOGGLE_FPS,    "Display FPS",  "Shows the frames-per-second and frame time."},
+    {OPT_FULLSCREEN,    "options.video.fullscreen", "options.video.fullscreen.desc"},
+    {OPT_VSYNC,         "options.video.vsync",      "options.video.vsync.desc"},
+    {OPT_FRAME_CAP,     "options.video.framecap",   "options.video.framecap.desc"},
+    {OPT_TOGGLE_FPS,    "options.video.fps",        "options.video.fps.desc"},
     {OPT_NONE},
     option_back
 };
 
 vector<option_item> options_audio = {
-    {OPT_MUSIC,         "Music Volume",     "Controls the volume of music."},
-    {OPT_SFX,           "SFX Volume",       "Controls the volume of sound effects."},
-    {OPT_TOGGLE_MONO,   "Speaker Output",   "Controls the number of audio channels to output to."},
+    {OPT_MUSIC,         "options.audio.music",     "options.audio.music.desc"},
+    {OPT_SFX,           "options.audio.sfx",       "options.audio.sfx.desc"},
+    {OPT_TOGGLE_MONO,   "options.audio.speaker",   "options.audio.speaker.desc"},
     {OPT_NONE},
     option_back
 };
 
 vector<option_item> options_controls = {
-    {OPT_SUB_KEYBOARD,      "Rebind Keyboard",          "Set bindings for the keyboard."},
-    {OPT_SUB_CONTROLLER,    "Rebind Controller",        "Set bindings for the controller."},
-    {OPT_TOGGLE_RUMBLE,     "Controller Rumble",        "Rumbles the controller on every other beat."},
-    {OPT_CONTROLLER_ID,     "Controller Index",         "Sets which game controller to use."},
+    {OPT_SUB_KEYBOARD,      "options.controls.rebind.kb",   "options.controls.rebind.kb.desc"},
+    {OPT_SUB_CONTROLLER,    "options.controls.rebind.ctrl", "options.controls.rebind.ctrl.desc"},
+    {OPT_TOGGLE_RUMBLE,     "options.controls.rumble",      "options.controls.rumble.desc"},
+    {OPT_CONTROLLER_ID,     "options.controls.ctrlindex",   "options.controls.ctrlindex.desc"},
     {OPT_NONE},
-    {OPT_RESET_KEYBOARD,    "Reset Keyboard Binds",     "Resets all bindings for the keyboard."},
-    {OPT_RESET_CONTROLLER,  "Reset Controller Binds",   "Resets all bindings for the controller."},
+    {OPT_RESET_KEYBOARD,    "options.controls.reset.kb",    "options.controls.reset.kb.desc"},
+    {OPT_RESET_CONTROLLER,  "options.controls.reset.ctrl",  "options.controls.reset.ctrl.desc"},
     {OPT_NONE},
     option_back
 };
 
 vector<option_item> options_controls_kb = {
-    {OPT_REBIND_KB_UP,          "Up",           "Rebind this keyboard button."},
-    {OPT_REBIND_KB_DOWN,        "Down",         "Rebind this keyboard button."},
-    {OPT_REBIND_KB_LEFT,        "Left",         "Rebind this keyboard button."},
-    {OPT_REBIND_KB_RIGHT,       "Right",        "Rebind this keyboard button."},
-    {OPT_REBIND_KB_CROSS,       "Cross",        "Rebind this keyboard button."},
-    {OPT_REBIND_KB_CIRCLE,      "Circle",       "Rebind this keyboard button."},
-    {OPT_REBIND_KB_SQUARE,      "Square",       "Rebind this keyboard button."},
-    {OPT_REBIND_KB_TRIANGLE,    "Triangle",     "Rebind this keyboard button."},
-    {OPT_REBIND_KB_LB,          "L1",           "Rebind this keyboard button."},
-    {OPT_REBIND_KB_RB,          "R1",           "Rebind this keyboard button."},
-    {OPT_REBIND_KB_START,       "Start",        "Rebind this keyboard button."},
-    {OPT_REBIND_KB_BACK,        "Back",         "Rebind this keyboard button."},
+    {OPT_REBIND_KB_UP,          "button.0",             "options.rebind.kb.desc"},
+    {OPT_REBIND_KB_DOWN,        "button.1",             "options.rebind.kb.desc"},
+    {OPT_REBIND_KB_LEFT,        "button.2",             "options.rebind.kb.desc"},
+    {OPT_REBIND_KB_RIGHT,       "button.3",             "options.rebind.kb.desc"},
+    {OPT_REBIND_KB_CROSS,       "button.4",             "options.rebind.kb.desc"},
+    {OPT_REBIND_KB_CIRCLE,      "button.5",             "options.rebind.kb.desc"},
+    {OPT_REBIND_KB_SQUARE,      "button.6",             "options.rebind.kb.desc"},
+    {OPT_REBIND_KB_TRIANGLE,    "button.7",             "options.rebind.kb.desc"},
+    {OPT_REBIND_KB_LB,          "button.8",             "options.rebind.kb.desc"},
+    {OPT_REBIND_KB_RB,          "button.9",             "options.rebind.kb.desc"},
+    {OPT_REBIND_KB_START,       "button.10",            "options.rebind.kb.desc"},
+    {OPT_REBIND_KB_BACK,        "button.11",            "options.rebind.kb.desc"},
     {OPT_NONE},
-    {OPT_REBIND_KEYBOARD,       "Rebind All",   "Set all bindings for the keyboard."},
-    {OPT_CONTROLS_BACK,         "Back",         "Return to the controls menu."}
+    {OPT_REBIND_KEYBOARD,       "options.rebindall",    "options.rebindall.kb.desc"},
+    {OPT_CONTROLS_BACK,         "options.ctrl.back",    "options.ctrl.back.desc"}
 };
 
 vector<option_item> options_controls_ctrl = {
-    {OPT_REBIND_CTRL_UP,        "Up",           "Rebind this controller button."},
-    {OPT_REBIND_CTRL_DOWN,      "Down",         "Rebind this controller button."},
-    {OPT_REBIND_CTRL_LEFT,      "Left",         "Rebind this controller button."},
-    {OPT_REBIND_CTRL_RIGHT,     "Right",        "Rebind this controller button."},
-    {OPT_REBIND_CTRL_CROSS,     "Cross",        "Rebind this controller button."},
-    {OPT_REBIND_CTRL_CIRCLE,    "Circle",       "Rebind this controller button."},
-    {OPT_REBIND_CTRL_SQUARE,    "Square",       "Rebind this controller button."},
-    {OPT_REBIND_CTRL_TRIANGLE,  "Triangle",     "Rebind this controller button."},
-    {OPT_REBIND_CTRL_LB,        "L1",           "Rebind this controller button."},
-    {OPT_REBIND_CTRL_RB,        "R1",           "Rebind this controller button."},
-    {OPT_REBIND_CTRL_START,     "Start",        "Rebind this controller button."},
-    {OPT_REBIND_CTRL_BACK,      "Back",         "Rebind this controller button."},
+    {OPT_REBIND_CTRL_UP,        "button.0",         "options.rebind.ctrl.desc"},
+    {OPT_REBIND_CTRL_DOWN,      "button.1",         "options.rebind.ctrl.desc"},
+    {OPT_REBIND_CTRL_LEFT,      "button.2",         "options.rebind.ctrl.desc"},
+    {OPT_REBIND_CTRL_RIGHT,     "button.3",         "options.rebind.ctrl.desc"},
+    {OPT_REBIND_CTRL_CROSS,     "button.4",         "options.rebind.ctrl.desc"},
+    {OPT_REBIND_CTRL_CIRCLE,    "button.5",         "options.rebind.ctrl.desc"},
+    {OPT_REBIND_CTRL_SQUARE,    "button.6",         "options.rebind.ctrl.desc"},
+    {OPT_REBIND_CTRL_TRIANGLE,  "button.7",         "options.rebind.ctrl.desc"},
+    {OPT_REBIND_CTRL_LB,        "button.8",         "options.rebind.ctrl.desc"},
+    {OPT_REBIND_CTRL_RB,        "button.9",         "options.rebind.ctrl.desc"},
+    {OPT_REBIND_CTRL_START,     "button.10",        "options.rebind.ctrl.desc"},
+    {OPT_REBIND_CTRL_BACK,      "button.11",        "options.rebind.ctrl.desc"},
     {OPT_NONE},
-    {OPT_REBIND_CONTROLLER,     "Rebind All",   "Set all bindings for the controller."},
-    {OPT_CONTROLS_BACK,         "Back",         "Return to the controls menu."}
+    {OPT_REBIND_CONTROLLER,     "options.rebindall",    "options.rebindall.ctrl.desc"},
+    {OPT_CONTROLS_BACK,         "options.ctrl.back",    "options.ctrl.back.desc"}
 };
 
 vector<option_item> options_gameplay = {
-    {OPT_TOGGLE_GRID,       "Display Grid",      "Displays the shape grid overlay."},
-    {OPT_TOGGLE_HUD,        "Display HUD",       "Displays the heads-up display."},
-    {OPT_TOGGLE_BLINDFOLD,  "Blindfold Mode",    "Makes all placed and player-controlled shapes invisible."},
+    {OPT_TOGGLE_GRID,       "options.gameplay.grid",      "options.gameplay.grid.desc"},
+    {OPT_TOGGLE_HUD,        "options.gameplay.hud",       "options.gameplay.hud.desc"},
+    {OPT_TOGGLE_BLINDFOLD,  "options.gameplay.blindfold", "options.gameplay.blindfold.desc"},
     {OPT_NONE},
     option_back
 };
@@ -211,11 +211,11 @@ vector<option_item> options = options_main;
 int option_selected = 0;
 
 string get_option_name(int x = option_selected) {
-    return options[x].name;
+    return get_lang_string(options[x].name);
 }
 
 string get_option_desc() {
-    return options[option_selected].description;
+    return get_lang_string(options[option_selected].description);
 }
 
 int get_option_count() {
@@ -316,19 +316,21 @@ bool check_rebind() {
 
 string get_option_value(int index) {
     option_id id = options[index].id;
+    string on = get_lang_string("options.on");
+    string off = get_lang_string("options.off");
 
     switch (id) {
         case OPT_MUSIC: return to_string(music_volume).append("%");
         case OPT_SFX: return to_string(sfx_volume).append("%");
-        case OPT_TOGGLE_MONO: return mono_toggle ? "Mono" : "Stereo";
-        case OPT_FULLSCREEN: return fullscreen_toggle ? "Enabled" : "Disabled";
-        case OPT_VSYNC: return vsync_toggle ? "Enabled" : "Disabled";
+        case OPT_TOGGLE_MONO: return mono_toggle ? get_lang_string("options.audio.speaker.mono") : get_lang_string("options.audio.speaker.stereo");
+        case OPT_FULLSCREEN: return fullscreen_toggle ? on : off;
+        case OPT_VSYNC: return vsync_toggle ? on : off;
         case OPT_FRAME_CAP: return to_string(frame_cap);
-        case OPT_TOGGLE_FPS: return fps_toggle ? "Enabled" : "Disabled";
-        case OPT_TOGGLE_GRID: return grid_toggle ? "Enabled" : "Disabled";
-        case OPT_TOGGLE_HUD: return hud_toggle ? "Enabled" : "Disabled";
-        case OPT_TOGGLE_BLINDFOLD: return blindfold_toggle ? "Enabled" : "Disabled";
-        case OPT_TOGGLE_RUMBLE: return rumble_toggle ? "Enabled" : "Disabled";
+        case OPT_TOGGLE_FPS: return fps_toggle ? on : off;
+        case OPT_TOGGLE_GRID: return grid_toggle ? on : off;
+        case OPT_TOGGLE_HUD: return hud_toggle ? on : off;
+        case OPT_TOGGLE_BLINDFOLD: return blindfold_toggle ? on : off;
+        case OPT_TOGGLE_RUMBLE: return rumble_toggle ? on : off;
         case OPT_CONTROLLER_ID: return to_string(controller_index);
         case OPT_REBIND_KB_UP: return get_current_mapping_explicit(true, 0);
         case OPT_REBIND_KB_DOWN: return get_current_mapping_explicit(true, 1);

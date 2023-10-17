@@ -53,6 +53,133 @@ SDL_Renderer* renderer;
 extern int width;
 extern int height;
 
+// fallback / default strings, in English
+const json language_fallback = json::object({
+    {"warning.header",                      "PHOTOSENSITIVITY WARNING"},
+    {"warning.line1",                       "This game contains bright colors and rapidly-flashing lights."},
+    {"warning.line2",                       "These effects can trigger seizures in a small percentage of people."},
+    {"warning.line3",                       "If you or your relatives have a history of photo-sensitive epilepsy,"},
+    {"warning.line4",                       "then do not play this game without first consulting a physician."},
+    {"warning.start",                       "Press Start to continue."},
+    {"menu.play",                           "Play"},
+    {"menu.sandbox",                        "Sandbox"},
+    {"menu.tutorial",                       "Tutorial"},
+    {"menu.options",                        "Options"},
+    {"menu.quit",                           "Quit"},
+    {"button.0",                            "Up"},
+    {"button.1",                            "Down"},
+    {"button.2",                            "Left"},
+    {"button.3",                            "Right"},
+    {"button.4",                            "Cross"},
+    {"button.5",                            "Circle"},
+    {"button.6",                            "Square"},
+    {"button.7",                            "Triangle"},
+    {"button.8",                            "L1"},
+    {"button.9",                            "R1"},
+    {"button.10",                           "Start"},
+    {"button.11",                           "Back"},
+    {"options.ctrl.back",                   "Back"},
+    {"options.rebindall",                   "Rebind All"},
+    {"options.rebind.dialog1",              "Rebinding input"},
+    {"options.rebind.dialog2",              "Currently mapped to"},
+    {"options.rebind.kb.desc",              "Rebind this keyboard key."},
+    {"options.rebind.ctrl.desc",            "Rebind this controller button."},
+    {"options.rebindall.kb.desc",           "Set all bindings for the keyboard."},
+    {"options.rebindall.ctrl.desc",         "Set all bindings for the controller."},
+    {"options.ctrl.back.desc",              "Return to the controls menu."},
+    {"options.back",                        "Back"},
+    {"options.back.desc",                   "Return to the main options menu."},
+    {"options.video.desc",                  "Change graphics settings here."},
+    {"options.audio.desc",                  "Change audio settings here."},
+    {"options.controls.desc",               "Change controller settings here."},
+    {"options.gameplay.desc",               "Change gameplay settings here."},
+    {"options.misc.desc",                   "Change other settings here."},
+    {"options.save.desc",                   "Saves your settings and returns to the main menu."},
+    {"options.exit.desc",                   "Returns to the main menu. No changes will be saved."},
+    {"options.video",                       "Video Settings"},
+    {"options.audio",                       "Audio Settings"},
+    {"options.controls",                    "Controller Settings"},
+    {"options.gameplay",                    "Gameplay Settings"},
+    {"options.misc",                        "Other Settings"},
+    {"options.save",                        "Save & Exit"},
+    {"options.exit",                        "Exit"},
+    {"options.on",                          "Enabled"},
+    {"options.off",                         "Disabled"},
+    {"options.video.fullscreen",            "Fullscreen"},
+    {"options.video.vsync",                 "V-Sync"},
+    {"options.video.framecap",              "Frame Cap"},
+    {"options.video.fps",                   "Display FPS"},
+    {"options.video.fullscreen.desc",       "Sets the game's resolution to your monitor resolution."},
+    {"options.video.vsync.desc",            "Syncs the game's video output to your monitor refresh rate."},
+    {"options.video.framecap.desc",         "The max framerate the game runs at when V-Sync is off."},
+    {"options.video.fps.desc",              "Shows the frames-per-second and frame time."},
+    {"options.audio.music",                 "Music Volume"},
+    {"options.audio.sfx",                   "SFX Volume"},
+    {"options.audio.speaker",               "Speaker Output"},
+    {"options.audio.speaker.mono",          "Mono"},
+    {"options.audio.speaker.stereo",        "Stereo"},
+    {"options.audio.music.desc",            "Controls the volume of music."},
+    {"options.audio.sfx.desc",              "Controls the volume of sound effects."},
+    {"options.audio.speaker.desc",          "Controls the number of audio channels to output to."},
+    {"options.controls.rebind.kb",          "Rebind Keyboard"},
+    {"options.controls.rebind.ctrl",        "Rebind Controller"},
+    {"options.controls.reset.kb",           "Reset Keyboard Binds"},
+    {"options.controls.reset.ctrl",         "Reset Controller Binds"},
+    {"options.controls.rumble",             "Controller Rumble"},
+    {"options.controls.ctrlindex",          "Controller Index"},
+    {"options.controls.rebind.kb.desc",     "Set bindings for the keyboard."},
+    {"options.controls.rebind.ctrl.desc",   "Set bindings for the controller."},
+    {"options.controls.reset.kb.desc",      "Resets all bindings for the keyboard."},
+    {"options.controls.reset.ctrl.desc",    "Resets all bindings for the controller."},
+    {"options.controls.rumble.desc",        "Rumbles the controller on every other beat."},
+    {"options.controls.ctrlindex.desc",     "Sets which game controller to use."},
+    {"options.gameplay.grid",               "Display Grid"},
+    {"options.gameplay.grid.desc",          "Displays the shape grid overlay."},
+    {"options.gameplay.hud",                "Display HUD"},
+    {"options.gameplay.hud.desc",           "Displays the heads-up display."},
+    {"options.gameplay.blindfold",          "Blindfold Mode"},
+    {"options.gameplay.blindfold.desc",     "Makes all placed and player-controlled shapes invisible."},
+    {"levelselect.error1",                  "An error has occurred while trying to load a level."},
+    {"levelselect.error2",                  "Check the console or log file for details."},
+    {"levelselect.playlist",                "Playlist"},
+    {"levelselect.hiscore",                 "Hiscore"},
+    {"levelselect.playcount",               "Play Count"},
+    {"levelselect.clear.yes",               "Cleared"},
+    {"levelselect.clear.no",                "Not Cleared"},
+    {"levelselect.bpm",                     "BPM"},
+    {"levelselect.genre",                   "Genre"},
+    {"levelselect.songauth",                "Song"},
+    {"levelselect.levelauth",               "Level"},
+    {"sandbox.color",                       "Change Color"},
+    {"sandbox.shapemorph",                  "Shape Morph"},
+    {"sandbox.colormorph",                  "Color Morph"},
+    {"sandbox.undo",                        "Undo Last Shape"},
+    {"sandbox.json",                        "Export to JSON"},
+    {"sandbox.lock",                        "Lock Shape"},
+    {"sandbox.dialog",                      "Are you sure you want to exit?"},
+    {"sandbox.dialog.yes",                  "Yes"},
+    {"sandbox.dialog.no",                   "No"},
+    {"tutorial.message.intro",              "Welcome to Open Manifold! In this guide, we will walk through the basics of playing the game."},
+    {"tutorial.message.basic",              "Open Manifold is a rhythm game where the goal is to create patterns called 'faces'."},
+    {"tutorial.message.shapes",             "To make faces, you create and manipulate shapes. There are three kinds of shapes: circles, squares, and triangles."},
+    {"tutorial.message.make",               "To create a shape, press one of the three face buttons. Each button corresponds to one shape."},
+    {"tutorial.message.move",               "You can freely move the shape's position along the grid with the directional buttons."},
+    {"tutorial.message.resize",             "You can also resize the shape with the shoulder buttons. The shape can be resized anywhere, even at the edges of the grid."},
+    {"tutorial.message.timing",             "Your actions must be timed to the beat of the song. If your input timing isn't on-beat, then nothing will happen. You only get so many beats to work with, so make 'em count!"},
+    {"tutorial.message.callresp",           "Levels play out in a call-and-response fashion. First the computer will create a shape and move it into position, and then you must replicate that shape."},
+    {"tutorial.message.life",               "You also have a lifebar. Fail to replicate a shape, and you'll lose some life. Complete a shape, and you'll get some of it back. If it hits zero, that's a game over!"},
+    {"tutorial.message.outro",              "That should cover the basics of play. Have fun, and enjoy playing Open Manifold!"},
+    {"tutorial.cpu",                        "CPU"},
+    {"tutorial.player",                     "PLAYER"},
+    {"game.combo",                          "combo!"},
+    {"game.over",                           "GAME OVER"},
+    {"game.over.msg",                       "Press any button to return to the menu."},
+    {"",                                    ""}
+});
+
+// stores the current language's strings
+json language_data = language_fallback;
+
 // various options
 extern int sandbox_item_count;
 extern int music_volume;
@@ -265,6 +392,32 @@ void set_frame_cap_ms() {
     return;
 }
 
+void load_language(string language) {
+    std::ifstream ifs("assets/lang/" + language + ".json");
+    json language_out = language_fallback;
+
+    if (ifs.fail()) {
+        printf("[!] Language file %s.json not found, using fallback...\n", language.c_str());
+    } else {
+        try {
+            language_out = json::parse(ifs);
+        } catch(json::parse_error& err) {
+            printf("[!] Error parsing language file: %s\n", err.what());
+        }
+
+        ifs.close();
+    }
+
+    language_data = language_out;
+    return;
+}
+
+string get_lang_string(string key) {
+    if (language_data.is_null()) {return "!";}
+    if (language_fallback.is_null()) {return "!";}
+    return language_data.value(key, language_fallback.value(key, "?"));
+}
+
 void save_settings() {
     nlohmann::ordered_json new_config;
 
@@ -375,6 +528,8 @@ void load_settings(int argc, char* argv[]) {
 
     // applies the newly-loaded frame cap values
     set_frame_cap_ms();
+
+    load_language("en-US");
 
     // note these parameters, they aren't exposed in the options and aren't saved in the config by default
     // however, they can still be added manually to a config if a user desires
@@ -1148,22 +1303,7 @@ string get_input_name() {
     // returns a string of the abstract controller that everything is mapped onto; named after the PS1 pad
     // see controller_buttons above
     unsigned int index = get_rebind_index();
-
-    switch (index) {
-        case 0: return "Up";
-        case 1: return "Down";
-        case 2: return "Left";
-        case 3: return "Right";
-        case 4: return "Circle";
-        case 5: return "Square";
-        case 6: return "Triangle";
-        case 7: return "Cross";
-        case 8: return "L1";
-        case 9: return "R1";
-        case 10: return "Start";
-        case 11: return "Back";
-        default: return "?";
-    }
+    return get_lang_string("button." + to_string(index));
 }
 
 int calculate_score() {

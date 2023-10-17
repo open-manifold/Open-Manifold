@@ -52,16 +52,16 @@ struct {
     tutorial_states state;
     string msg;
 } messages[] = {
-    TUT_NONE, "Welcome to Open Manifold! In this guide, we will walk through the basics of playing the game.",
-    TUT_FACE, "Open Manifold is a rhythm game where the goal is to create patterns called 'faces'.",
-    TUT_SHAPES, "To make faces, you create and manipulate shapes. There are three kinds of shapes: circles, squares, and triangles.",
-    TUT_GRID_TYPE, "To create a shape, press one of the three face buttons. Each button corresponds to one shape.",
-    TUT_GRID_MOVE, "You can freely move the shape's position along the grid with the directional buttons. ",
-    TUT_GRID_SIZE, "You can also resize the shape with the shoulder buttons. The shape can be resized anywhere, even at the edges of the grid.",
-    TUT_NONE, "Your actions must be timed to the beat of the song. If your input timing isn't on-beat, then nothing will happen. You only get so many beats to work with, so make 'em count!",
-    TUT_CALL_RESP, "Levels play out in a call-and-response fashion. First the computer will create a shape and move it into position, and then you must replicate that shape.",
-    TUT_LIFE, "You also have a lifebar. Fail to replicate a shape, and you'll lose some life. Complete a shape, and you'll get some of it back. If it hits zero, that's a game over!",
-    TUT_FACE, "That should cover the basics of play. Have fun, and enjoy playing Open Manifold!"
+    TUT_NONE, "tutorial.message.intro",
+    TUT_FACE, "tutorial.message.basic",
+    TUT_SHAPES, "tutorial.message.shapes",
+    TUT_GRID_TYPE, "tutorial.message.make",
+    TUT_GRID_MOVE, "tutorial.message.move",
+    TUT_GRID_SIZE, "tutorial.message.resize",
+    TUT_NONE, "tutorial.message.timing",
+    TUT_CALL_RESP, "tutorial.message.callresp",
+    TUT_LIFE, "tutorial.message.life",
+    TUT_FACE, "tutorial.message.outro"
 };
 
 void init_tutorial() {
@@ -76,8 +76,9 @@ void init_tutorial() {
 
 void tutorial_message_tick(int frame_time) {
     message_tick -= frame_time;
+    string message = get_lang_string(messages[message_index].msg);
 
-    if (current_message.length() == messages[message_index].msg.length()) {
+    if (current_message.length() == message.length()) {
         message_finished = true;
         return;
     }
@@ -85,7 +86,7 @@ void tutorial_message_tick(int frame_time) {
     if (message_tick <= 0) {
         int append_amount = fmax(abs(message_tick) / message_tick_rate, 1);
 
-        current_message.append(messages[message_index].msg, current_message.length(), append_amount);
+        current_message.append(message, current_message.length(), append_amount);
         message_tick = message_tick_rate;
 
         if (current_message.length() % 4 == 0) {

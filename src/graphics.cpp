@@ -138,12 +138,12 @@ struct {
 // similar data for the sandbox menu
 // TODO: split off this (and other sandbox functions) into their own file
 string sandbox_items[] = {
-    "Change Color",
-    "Shape Morph",
-    "Color Morph",
-    "Undo Last Shape",
-    "Export to JSON",
-    "Lock Shape"
+    "sandbox.color",
+    "sandbox.shapemorph",
+    "sandbox.colormorph",
+    "sandbox.undo",
+    "sandbox.json",
+    "sandbox.lock"
 };
 
 int sandbox_item_count = std::size(sandbox_items);
@@ -1390,7 +1390,7 @@ void draw_hud(int life, int score, int time, int frame_time) {
 
     if (combo_display_timer > 0) {
         int combo = get_combo();
-        string combo_str = to_string(combo) + "x combo!";
+        string combo_str = to_string(combo) + "x " + get_lang_string("game.combo");
 
         Uint8 color_pulse = abs(sin(time*4.f/180)) * 200;
         draw_text(combo_str, width/2, life_bar.y, scale_mul, 0, hud_bar.w/2, {255, color_pulse, 255, 255});
@@ -1414,8 +1414,8 @@ void draw_game_over(int time) {
     // color-cycle for game over text color
     Uint8 color_pulse = abs(sin(time*0.4/180)) * 200;
 
-    draw_text("GAME OVER", width/2, height/2 - font_height, scale_mul * 2, 0, width, {255, color_pulse, 0, 255});
-    draw_text("Press any button to return to the menu.", width/2, height/2 + font_height, scale_mul, 0, width);
+    draw_text(get_lang_string("game.over"), width/2, height/2 - font_height, scale_mul * 2, 0, width, {255, color_pulse, 0, 255});
+    draw_text(get_lang_string("game.over.msg"), width/2, height/2 + font_height, scale_mul, 0, width);
 
     return;
 }
@@ -1764,11 +1764,11 @@ bool draw_warning(int frame_time) {
     draw_shape(2, 7, 3, 1, {255, 255, 255, 255},    width/2 - height/22 * 7.5, height/2 - height/22 * 7.5);
 
     // Draws all the warning text
-    draw_text("PHOTOSENSITIVITY WARNING", width/2, height/12, scale_mul + 1, 0);
-    draw_text("This game contains bright colors and rapidly-flashing lights.",        width/2, height/2 + (20*scale_mul), 1, 0);
-    draw_text("These effects can trigger seizures in a small percentage of people.",    width/2, height/2 + (40*scale_mul), 1, 0);
-    draw_text("If you or your relatives have a history of photo-sensitive epilepsy,",   width/2, height/2 + (60*scale_mul), 1, 0);
-    draw_text("then do not play this game without first consulting a physician.",       width/2, height/2 + (80*scale_mul), 1, 0);
+    draw_text(get_lang_string("warning.header"), width/2, height/12, scale_mul + 1, 0);
+    draw_text(get_lang_string("warning.line1"),        width/2, height/2 + (20*scale_mul), 1, 0);
+    draw_text(get_lang_string("warning.line2"),    width/2, height/2 + (40*scale_mul), 1, 0);
+    draw_text(get_lang_string("warning.line3"),   width/2, height/2 + (60*scale_mul), 1, 0);
+    draw_text(get_lang_string("warning.line4"),       width/2, height/2 + (80*scale_mul), 1, 0);
 
     // Calculates and draws fade on text
     if (fade_in == 0) {
@@ -1778,7 +1778,7 @@ bool draw_warning(int frame_time) {
         int enter_text_startcoord = height/1.25;
         SDL_Rect enterText = {0, enter_text_startcoord, width, (scale_mul+1)*40};
 
-        draw_text("Press Start to continue.", width/2, height/1.25, scale_mul+1, 0);
+        draw_text(get_lang_string("warning.start"), width/2, height/1.25, scale_mul+1, 0);
 
         SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
         SDL_SetRenderDrawColor(renderer, 64, 64, 72, text_fade);
@@ -1799,7 +1799,7 @@ bool draw_title(int menu_selection, int frame_time) {
     // ----------------------------------------------------------
     // menu_selection: What is currently selected (range 0-3)
 
-    string menu_items[5] = {"Play", "Sandbox", "Tutorial", "Options", "Quit"};
+    string menu_items[5] = {"menu.play", "menu.sandbox", "menu.tutorial", "menu.options", "menu.quit"};
 
     int scale_mul = fmax(floor(fmin(height, width)/360), 1);
     int char_height = font->h + 2;
@@ -1843,7 +1843,7 @@ bool draw_title(int menu_selection, int frame_time) {
 
         if (i == menu_selection) {text_highlight = {255, 255, 96};}
 
-        draw_text(menu_items[i], width/2, height/1.5 + ((i * char_height) * scale_mul), scale_mul, 0, width, text_highlight);
+        draw_text(get_lang_string(menu_items[i]), width/2, height/1.5 + ((i * char_height) * scale_mul), scale_mul, 0, width, text_highlight);
     }
 
     // draws version number
@@ -1868,6 +1868,8 @@ bool draw_options(int frame_time) {
     int char_height = font->h + 2;
     int left_edge = width/8;
     int right_edge = width - (left_edge * 2);
+    string on = get_lang_string("options.on");
+    string off = get_lang_string("options.off");
     SDL_Rect rect;
 
     rect.h = char_height * scale_mul;
@@ -1896,8 +1898,8 @@ bool draw_options(int frame_time) {
         option_value = get_option_value(i);
 
         // colorize "Enabled" and "Disabled" strings
-        if (option_value == "Enabled") {text_highlight = {96, 255, 96};}
-        if (option_value == "Disabled") {text_highlight = {255, 96, 96};}
+        if (option_value == on) {text_highlight = {96, 255, 96};}
+        if (option_value == off) {text_highlight = {255, 96, 96};}
 
         // draw the value of the option
         draw_text(option_value, left_edge + right_edge - 8, height/16 + ((i * char_height) * scale_mul), scale_mul, -1, width/4, text_highlight);
@@ -1913,8 +1915,8 @@ bool draw_options(int frame_time) {
 
     // draws remap overlay if we're remapping something
     if (check_rebind()) {
-        string rebind_count = "Rebinding input: " + get_input_name();
-        string rebind_info = "Currently mapped to: " + get_current_mapping();
+        string rebind_count = get_lang_string("options.rebind.dialog1") + ": " + get_input_name();
+        string rebind_info = get_lang_string("options.rebind.dialog2") + ": " + get_current_mapping();
 
         rect.x = 0;
         rect.y = height/2 - (char_height * scale_mul);
@@ -1963,8 +1965,8 @@ bool draw_level_select(vector<shape> shapes, int frame_time) {
         draw_shape(1, 7, 6,  1, {0, 0, 0, 255},     grid_area.x, grid_area.y, grid_area.w/15);
         draw_shape(1, 7, 5,  1, {0, 0, 0, 255},     grid_area.x, grid_area.y, grid_area.w/15);
 
-        draw_text("An error has occurred while trying to load a level.", width/2, grid_area.y + grid_area.h + 16, scale_mul, 0, width, {255, 192, 32});
-        draw_text("Check the console or log file for details.", width/2, grid_area.y + grid_area.h + (font->h * scale_mul) + 16, scale_mul, 0);
+        draw_text(get_lang_string("levelselect.error1"), width/2, grid_area.y + grid_area.h + 16, scale_mul, 0, width, {255, 192, 32});
+        draw_text(get_lang_string("levelselect.error2"), width/2, grid_area.y + grid_area.h + (font->h * scale_mul) + 16, scale_mul, 0);
     } else {
         draw_gradient(0, 0, width, height, {0, 0, 255});
         draw_grid(width/2, height/2, height/22, get_color(get_bg_color()), true);
@@ -1999,18 +2001,18 @@ bool draw_level_select(vector<shape> shapes, int frame_time) {
         int bottom_of_grid = grid_area.y + grid_area.h;
 
         draw_text(get_level_name(), width/2, lower_limit/2 - (font->h), scale_mul, 0);
-        draw_text("Playlist: " + get_level_playlist_name(), width/2, lower_limit/2 + (font->h * (scale_mul-1)), 1, 0);
+        draw_text(get_lang_string("levelselect.playlist") + ": " + get_level_playlist_name(), width/2, lower_limit/2 + (font->h * (scale_mul-1)), 1, 0);
 
         // display hiscore/user metadata
-        draw_text("Hiscore: " + to_string(get_hiscore()), width/2, bottom_of_grid + (font->h), 1, 0);
-        draw_text("Play Count: " + to_string(get_play_count()), width/2, bottom_of_grid + (font->h * 2), 1, 0);
-        draw_text(get_cleared() ? "Cleared" : "Not Cleared", width/2, bottom_of_grid + (font->h * 3), 1, 0);
+        draw_text(get_lang_string("levelselect.hiscore") + ": " + to_string(get_hiscore()), width/2, bottom_of_grid + (font->h), 1, 0);
+        draw_text(get_lang_string("levelselect.playcount") + ": " + to_string(get_play_count()), width/2, bottom_of_grid + (font->h * 2), 1, 0);
+        draw_text(get_cleared() ? get_lang_string("levelselect.clear.yes") : get_lang_string("levelselect.clear.no"), width/2, bottom_of_grid + (font->h * 3), 1, 0);
 
         // display level metadata
-        draw_text(to_string(get_level_bpm()) + " BPM", width/6, bottom_of_grid + (font->h), 1, 1, width/3);
-        draw_text("Genre: " + get_genre(), width/6, bottom_of_grid + (font->h * 2), 1, 1, width/3);
-        draw_text("Song: " + get_song_author(), width - (width/6), bottom_of_grid + (font->h), 1, -1, width/3);
-        draw_text("Level: " + get_level_author(), width - (width/6), bottom_of_grid + (font->h * 2), 1, -1, width/3);
+        draw_text(to_string(get_level_bpm()) + " " + get_lang_string("levelselect.bpm"), width/6, bottom_of_grid + (font->h), 1, 1, width/3);
+        draw_text(get_lang_string("levelselect.genre") + ": " + get_genre(), width/6, bottom_of_grid + (font->h * 2), 1, 1, width/3);
+        draw_text(get_lang_string("levelselect.songauth") + ": " + get_song_author(), width - (width/6), bottom_of_grid + (font->h), 1, -1, width/3);
+        draw_text(get_lang_string("levelselect.levelauth") + ": " + get_level_author(), width - (width/6), bottom_of_grid + (font->h * 2), 1, -1, width/3);
 
         if (get_debug()) {
             for (int i = 0; i < 16; i++) {
@@ -2246,7 +2248,7 @@ bool draw_sandbox(shape active_shape, vector<shape> previous_shapes, bool menu_o
             }
         }
 
-        draw_text(sandbox_items[menu_item], width/2, height - icon_size - icon_padding - font->h, 1, 0);
+        draw_text(get_lang_string(sandbox_items[menu_item]), width/2, height - icon_size - icon_padding - font->h, 1, 0);
     }
 
     // draws the "are you sure?" dialog box
@@ -2273,9 +2275,9 @@ bool draw_sandbox(shape active_shape, vector<shape> previous_shapes, bool menu_o
         SDL_RenderFillRect(renderer, &rect);
         SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_NONE);
 
-        draw_text("Are you sure you want to quit?", width/2, height/2 - (char_height/2 * scale_mul), scale_mul, 0);
-        draw_text("No", width/2 + (64*scale_mul), height/2 + (char_height/2 * scale_mul), scale_mul, -1, width, text_color_1);
-        draw_text("Yes", width/2 - (64*scale_mul), height/2 + (char_height/2 * scale_mul), scale_mul, 1, width, text_color_2);
+        draw_text(get_lang_string("sandbox.dialog"), width/2, height/2 - (char_height/2 * scale_mul), scale_mul, 0);
+        draw_text(get_lang_string("sandbox.dialog.no"), width/2 + (64*scale_mul), height/2 + (char_height/2 * scale_mul), scale_mul, -1, width, text_color_1);
+        draw_text(get_lang_string("sandbox.dialog.yes"), width/2 - (64*scale_mul), height/2 + (char_height/2 * scale_mul), scale_mul, 1, width, text_color_2);
     }
 
     draw_fade(16, 16, frame_time);
@@ -2366,9 +2368,9 @@ bool draw_tutorial(int frame_time) {
             draw_shape(0, call_response_data[time/240%8][0], call_response_data[time/240%8][1], call_response_data[time/240%8][2], get_rainbow_color(time), grid_w, grid_h, grid_scale);
 
             if (time/240%16 >= 8) {
-                draw_text("CPU", width/2, grid_h - (font->h * scale_mul), scale_mul, 0, width, {255, 0, 64, 255});
+                draw_text(get_lang_string("tutorial.cpu"), width/2, grid_h - (font->h * scale_mul), scale_mul, 0, width, {255, 0, 64, 255});
             } else {
-                draw_text("PLAYER", width/2, grid_h - (font->h * scale_mul), scale_mul, 0, width, {64, 0, 255, 255});
+                draw_text(get_lang_string("tutorial.player"), width/2, grid_h - (font->h * scale_mul), scale_mul, 0, width, {64, 0, 255, 255});
             }
 
             break;

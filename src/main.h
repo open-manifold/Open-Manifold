@@ -15,7 +15,9 @@ std::string get_version_string();
 std::string get_current_mapping();
 std::string get_current_mapping_explicit(bool, unsigned int);
 std::string get_input_name();
+std::string get_lang_string(std::string);
 
+void load_language(std::string);
 void save_settings();
 void set_music_volume();
 void set_sfx_volume();
