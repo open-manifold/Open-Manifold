@@ -393,6 +393,8 @@ void set_frame_cap_ms() {
 }
 
 void load_language(string language) {
+    // Loads a language.json file's contents into the language_data struct
+    // Currently forced to load "en_US.json" only
     std::ifstream ifs("assets/lang/" + language + ".json");
     json language_out = language_fallback;
 
@@ -2999,7 +3001,7 @@ int main(int argc, char *argv[]) {
                     reset_color_table();
                     reset_shapes();
                     active_shape.type = 0;
-                    json_file[0]["background_effect"] = "wave";
+                    json_file[0]["background_effect"] = "wave"; // hack to force loading a specific BGFX; TODO: make the init function take an optional param to do this instead
                     init_background_effect();
                     sandbox_menu_active = false;
                     sandbox_quit_dialog_active = false;
